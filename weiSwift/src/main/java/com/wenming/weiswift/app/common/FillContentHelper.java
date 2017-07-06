@@ -3,6 +3,7 @@ package com.wenming.weiswift.app.common;
 import android.text.TextUtils;
 
 import com.wenming.weiswift.app.common.entity.Comment;
+import com.wenming.weiswift.app.common.entity.Question;
 import com.wenming.weiswift.app.common.entity.Status;
 
 import java.util.Random;
@@ -72,6 +73,26 @@ public class FillContentHelper {
      *
      * @param status
      */
+//    public static void setImgUrl(Status status) {
+//        //如果微博存在图片
+//        if (status.pic_urls != null && status.pic_urls.size() > 0) {
+//            //如果本地私有字段已经被处理过了，就不需要再处理
+//            if (status.bmiddle_pic_urls.size() > 0) {
+//                return;
+//            }
+//            for (Status.PicUrlsBean picUrlsBean : status.pic_urls) {
+//                status.thumbnail_pic_urls.add(picUrlsBean.thumbnail_pic);
+//                status.bmiddle_pic_urls.add(picUrlsBean.thumbnail_pic.replace("thumbnail", "bmiddle"));
+//                if (!picUrlsBean.thumbnail_pic.endsWith(".gif")) {
+//                    status.origin_pic_urls.add(picUrlsBean.thumbnail_pic.replace("thumbnail", "large"));
+//                } else {
+//                    status.origin_pic_urls.add(picUrlsBean.thumbnail_pic.replace("thumbnail", "bmiddle"));
+//                }
+//            }
+//        }
+//
+//
+//    }
     public static void setImgUrl(Status status) {
         //如果微博存在图片
         if (status.pic_urls != null && status.pic_urls.size() > 0) {
@@ -89,10 +110,22 @@ public class FillContentHelper {
                 }
             }
         }
-
-
     }
+    public static void setImgUrl(Status status, Question questions) {
+        //如果微博存在图片
+        if (questions.getAttach()!= null && questions.getAttach().size() > 0) {
+            //如果本地私有字段已经被处理过了，就不需要再处理    后面需要优化
+//            if (status.bmiddle_pic_urls.size() > 0) {
+//                return;
+//            }
+            for (Question.AttachBean attacths: questions.getAttach()  ) {
+                status.thumbnail_pic_urls.add(attacths.getAttach_small());
+                status.bmiddle_pic_urls.add(attacths.getAttach_middle());
+                status.origin_pic_urls.add(attacths.getAttach_url());
 
+            }
+        }
+    }
     /**
      * 如果这条微博只包含一张图，就给这张图片设置一个随机的尺寸，
      * 注意：

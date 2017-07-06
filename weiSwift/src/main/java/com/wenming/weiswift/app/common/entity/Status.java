@@ -24,6 +24,7 @@ import com.sina.weibo.sdk.openapi.models.Geo;
 import com.sina.weibo.sdk.openapi.models.Visible;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 微博结构体。
@@ -128,17 +129,17 @@ public class Status implements Parcelable {
     /**
      * 暂未支持
      */
-    public int mlevel;
+  //  public int mlevel;
     /**
      * 微博的可见性及指定可见分组信息。该 object 中 type 取值，
      * 0：普通微博，1：私密微博，3：指定分组微博，4：密友微博；
      * list_id为分组的组号
      */
-    public Visible visible;
+    //public Visible visible;
     /**
      * 微博来源是否允许点击，如果允许
      */
-    public int source_allowclick;
+//    public int source_allowclick;
 
     /**
      * 微博图片字段
@@ -318,9 +319,9 @@ public class Status implements Parcelable {
         dest.writeInt(this.reposts_count);
         dest.writeInt(this.comments_count);
         dest.writeInt(this.attitudes_count);
-        dest.writeInt(this.mlevel);
-        dest.writeParcelable(this.visible, flags);
-        dest.writeInt(this.source_allowclick);
+//        dest.writeInt(this.mlevel);
+//        dest.writeParcelable(this.visible, flags);
+//        dest.writeInt(this.source_allowclick);
         dest.writeTypedList(this.pic_urls);
         dest.writeStringList(this.thumbnail_pic_urls);
         dest.writeStringList(this.bmiddle_pic_urls);
@@ -352,9 +353,9 @@ public class Status implements Parcelable {
         this.reposts_count = in.readInt();
         this.comments_count = in.readInt();
         this.attitudes_count = in.readInt();
-        this.mlevel = in.readInt();
-        this.visible = in.readParcelable(Visible.class.getClassLoader());
-        this.source_allowclick = in.readInt();
+//        this.mlevel = in.readInt();
+//        this.visible = in.readParcelable(Visible.class.getClassLoader());
+//        this.source_allowclick = in.readInt();
         this.pic_urls = in.createTypedArrayList(PicUrlsBean.CREATOR);
         this.thumbnail_pic_urls = in.createStringArrayList();
         this.bmiddle_pic_urls = in.createStringArrayList();
@@ -373,4 +374,79 @@ public class Status implements Parcelable {
             return new Status[size];
         }
     };
+    public static class AttachBean {
+        /**
+         * attach_id : 78
+         * attach_name : 595dc32282af1.jpg
+         * attach_url : http://192.168.1.176/thinksns_v3.0/data/upload/2017/0706/14/595ddc8e5c416.jpg
+         * extension : jpg
+         * size : 2124
+         * attach_small : http://192.168.1.176/thinksns_v3.0/data/upload/2017/0706/14/595ddc8e5c416_100_100.jpg
+         * attach_middle : http://192.168.1.176/thinksns_v3.0/data/upload/2017/0706/14/595ddc8e5c416_550_auto.jpg
+         */
+
+        private String attach_id;
+        private String attach_name;
+        private String attach_url;
+        private String extension;
+        private String size;
+        private String attach_small;
+        private String attach_middle;
+
+        public String getAttach_id() {
+            return attach_id;
+        }
+
+        public void setAttach_id(String attach_id) {
+            this.attach_id = attach_id;
+        }
+
+        public String getAttach_name() {
+            return attach_name;
+        }
+
+        public void setAttach_name(String attach_name) {
+            this.attach_name = attach_name;
+        }
+
+        public String getAttach_url() {
+            return attach_url;
+        }
+
+        public void setAttach_url(String attach_url) {
+            this.attach_url = attach_url;
+        }
+
+        public String getExtension() {
+            return extension;
+        }
+
+        public void setExtension(String extension) {
+            this.extension = extension;
+        }
+
+        public String getSize() {
+            return size;
+        }
+
+        public void setSize(String size) {
+            this.size = size;
+        }
+
+        public String getAttach_small() {
+            return attach_small;
+        }
+
+        public void setAttach_small(String attach_small) {
+            this.attach_small = attach_small;
+        }
+
+        public String getAttach_middle() {
+            return attach_middle;
+        }
+
+        public void setAttach_middle(String attach_middle) {
+            this.attach_middle = attach_middle;
+        }
+    }
 }

@@ -7,30 +7,31 @@ import java.util.List;
 public class Question {
 
     /**
-     * feed_id : 3
+     * feed_id : 9
      * uid : 1
-     * type : post
+     * type : postimage
      * app : public
-     * publish_time : 1498878228
+     * publish_time : 1499323559
      * is_del : 0
      * from : 0
-     * comment_count : 1
+     * comment_count : 0
      * repost_count : 0
-     * comment_all_count : 1
+     * comment_all_count : 0
      * digg_count : 0
      * is_repost : 0
      * client_ip : 192.168.1.176
-     * feed_content : test频道。
-     * ctime : 2017-07-01 11:03
-     * content : test频道。
+     * feed_content : test多组图
+     * ctime : 2017-07-06 14:45
+     * content : test多组图
      * uname : 管理员
      * user_group : []
      * avatar_big : http://192.168.1.176/thinksns_v3.0/addons/theme/stv1/_static/image/noavatar/big.jpg
      * avatar_middle : http://192.168.1.176/thinksns_v3.0/addons/theme/stv1/_static/image/noavatar/middle.jpg
      * avatar_small : http://192.168.1.176/thinksns_v3.0/addons/theme/stv1/_static/image/noavatar/small.jpg
-     * has_attach : 0
-     * feedType : post
-     * iscoll : {"source_table_name":"feed","source_id":3,"source_app":"public","uid":1,"ctime":1499233019,"collection_id":1,"colled":1}
+     * has_attach : 1
+     * attach : [{"attach_id":"78","attach_name":"595dc32282af1.jpg","attach_url":"http://192.168.1.176/thinksns_v3.0/data/upload/2017/0706/14/595ddc8e5c416.jpg","extension":"jpg","size":"2124","attach_small":"http://192.168.1.176/thinksns_v3.0/data/upload/2017/0706/14/595ddc8e5c416_100_100.jpg","attach_middle":"http://192.168.1.176/thinksns_v3.0/data/upload/2017/0706/14/595ddc8e5c416_550_auto.jpg"},{"attach_id":"79","attach_name":"截图.png","attach_url":"http://192.168.1.176/thinksns_v3.0/data/upload/2017/0706/14/595ddc9c21890.png","extension":"png","size":"37340","attach_small":"http://192.168.1.176/thinksns_v3.0/data/upload/2017/0706/14/595ddc9c21890_100_100.png","attach_middle":"http://192.168.1.176/thinksns_v3.0/data/upload/2017/0706/14/595ddc9c21890_550_auto.png"}]
+     * feedType : postimage
+     * iscoll : {"colled":0}
      * api_source : null
      * is_digg : 0
      */
@@ -61,6 +62,7 @@ public class Question {
     private Object api_source;
     private int is_digg;
     private List<?> user_group;
+    private List<AttachBean> attach;
 
     public int getFeed_id() {
         return feed_id;
@@ -270,72 +272,20 @@ public class Question {
         this.user_group = user_group;
     }
 
+    public List<AttachBean> getAttach() {
+        return attach;
+    }
+
+    public void setAttach(List<AttachBean> attach) {
+        this.attach = attach;
+    }
+
     public static class IscollBean {
         /**
-         * source_table_name : feed
-         * source_id : 3
-         * source_app : public
-         * uid : 1
-         * ctime : 1499233019
-         * collection_id : 1
-         * colled : 1
+         * colled : 0
          */
 
-        private String source_table_name;
-        private int source_id;
-        private String source_app;
-        private int uid;
-        private int ctime;
-        private int collection_id;
         private int colled;
-
-        public String getSource_table_name() {
-            return source_table_name;
-        }
-
-        public void setSource_table_name(String source_table_name) {
-            this.source_table_name = source_table_name;
-        }
-
-        public int getSource_id() {
-            return source_id;
-        }
-
-        public void setSource_id(int source_id) {
-            this.source_id = source_id;
-        }
-
-        public String getSource_app() {
-            return source_app;
-        }
-
-        public void setSource_app(String source_app) {
-            this.source_app = source_app;
-        }
-
-        public int getUid() {
-            return uid;
-        }
-
-        public void setUid(int uid) {
-            this.uid = uid;
-        }
-
-        public int getCtime() {
-            return ctime;
-        }
-
-        public void setCtime(int ctime) {
-            this.ctime = ctime;
-        }
-
-        public int getCollection_id() {
-            return collection_id;
-        }
-
-        public void setCollection_id(int collection_id) {
-            this.collection_id = collection_id;
-        }
 
         public int getColled() {
             return colled;
@@ -343,6 +293,82 @@ public class Question {
 
         public void setColled(int colled) {
             this.colled = colled;
+        }
+    }
+
+    public static class AttachBean {
+        /**
+         * attach_id : 78
+         * attach_name : 595dc32282af1.jpg
+         * attach_url : http://192.168.1.176/thinksns_v3.0/data/upload/2017/0706/14/595ddc8e5c416.jpg
+         * extension : jpg
+         * size : 2124
+         * attach_small : http://192.168.1.176/thinksns_v3.0/data/upload/2017/0706/14/595ddc8e5c416_100_100.jpg
+         * attach_middle : http://192.168.1.176/thinksns_v3.0/data/upload/2017/0706/14/595ddc8e5c416_550_auto.jpg
+         */
+
+        private String attach_id;
+        private String attach_name;
+        private String attach_url;
+        private String extension;
+        private String size;
+        private String attach_small;
+        private String attach_middle;
+
+        public String getAttach_id() {
+            return attach_id;
+        }
+
+        public void setAttach_id(String attach_id) {
+            this.attach_id = attach_id;
+        }
+
+        public String getAttach_name() {
+            return attach_name;
+        }
+
+        public void setAttach_name(String attach_name) {
+            this.attach_name = attach_name;
+        }
+
+        public String getAttach_url() {
+            return attach_url;
+        }
+
+        public void setAttach_url(String attach_url) {
+            this.attach_url = attach_url;
+        }
+
+        public String getExtension() {
+            return extension;
+        }
+
+        public void setExtension(String extension) {
+            this.extension = extension;
+        }
+
+        public String getSize() {
+            return size;
+        }
+
+        public void setSize(String size) {
+            this.size = size;
+        }
+
+        public String getAttach_small() {
+            return attach_small;
+        }
+
+        public void setAttach_small(String attach_small) {
+            this.attach_small = attach_small;
+        }
+
+        public String getAttach_middle() {
+            return attach_middle;
+        }
+
+        public void setAttach_middle(String attach_middle) {
+            this.attach_middle = attach_middle;
         }
     }
 }

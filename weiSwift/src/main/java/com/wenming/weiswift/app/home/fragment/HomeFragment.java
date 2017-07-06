@@ -80,7 +80,7 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
     private User mCurrentUser;
     private boolean mComeFromAccoutActivity;
     private String mUserName;
-
+    private Question question[];
     private QuestionList questionList;
     /**
      * 顶部导航栏
@@ -122,7 +122,6 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
         mSwipeRefreshLayout = (SwipeRefreshLayout) mView.findViewById(R.id.swipe_refresh_widget);
         mToastTv = (TextView) mView.findViewById(R.id.toast_msg);
         mToastBg = (RelativeLayout) mView.findViewById(R.id.toast_bg);
-        getJson();
         initRecyclerView();
         initRefreshLayout();
         //屏蔽tittle的点击事件。by qhn
@@ -477,25 +476,5 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
     public User getCurrentUser() {
         return mCurrentUser;
     }
-    //json
 
-    private  void  getJson(){
-        final Gson gson=new Gson();
-        HttpUtils httpUtils=new HttpUtils();
-        httpUtils.send(HttpRequest.HttpMethod.GET,
-                "http://192.168.1.176/thinksns_v3.0/index.php?app=api&mod=Channel&act=get_channel_feed&oauth_token=553cb8005c5dff47cca58aabefd74de7&oauth_token_secret=4dfa52f77ffe6d55fb1039fe70c70436&category_id=1",
-
-                new RequestCallBack<String>() {
-                    @Override
-                    public void onSuccess(ResponseInfo<String> responseInfo) {
-                        Log.d(TAG, "onSuccess: 成功"+responseInfo.result);
-                     //   questionList=gson.fromJson(responseInfo.result, QuestionList.class);
-                      //  Log.d(TAG, "onSuccess: 获取的json "+question[0].getFeed_content());
-                    }
-                    @Override
-                    public void onFailure(HttpException e, String s) {
-                        Log.d(TAG, "onFailues: 失败"+ s);
-                    }
-                });
-    }
 }

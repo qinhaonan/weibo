@@ -22,9 +22,11 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.wenming.weiswift.app.common.entity.Question;
 import com.wenming.weiswift.app.common.entity.Status;
 import com.wenming.weiswift.app.common.FillContentHelper;
 
+import java.io.Console;
 import java.util.ArrayList;
 
 /**
@@ -45,17 +47,44 @@ public class StatusList implements Parcelable {
     public long since_id;
     public long max_id;
     public long has_unread;
+    public static Question[] questions;
+    public static int i;
+
+    public static StatusList myParse(String origin, String self) {
+        i = 0;
+        questions = new Gson().fromJson(self, Question[].class);
+        StatusList statusList = StatusList.parse(origin);
+
+
+        for (Status status : statusList.statuses) {
+            status.text = questions[i].getFeed_content();
+//            //转发字段
+//            status.retweeted_status = null;
+//            status.created_at=questions[2].getPublish_time();
+//            status.id=questions[2].getUid();
+            status.source="";
+//            status.favorited=false;
+//            //    status.attach=questions[i].getAttach();
+//            //   status.pic_urls=questions[i].getAttach();
+            FillContentHelper.setImgUrl(status,questions[i]);
+            i++;
+            if (i>=questions.length)
+               break;
+        }
+        return statusList;
+
+    }
 
 
     public static StatusList parse(String jsonString) {
+
         if (TextUtils.isEmpty(jsonString)) {
             return null;
         }
         StatusList statuses = new Gson().fromJson(jsonString, StatusList.class);
 
-        //对status中的本地私有字段进行赋值
+//       对status中的本地私有字段进行赋值
         for (Status status : statuses.statuses) {
-            Log.d(TAG, "parse: 用户"+status.user.name);
             //服务器并没有返回我们单张图片的随机尺寸，这里我们手动需要随机赋值
             FillContentHelper.setSingleImgSizeType(status);
             //提取微博来源的关键字
@@ -70,8 +99,8 @@ public class StatusList implements Parcelable {
                 //设置三种类型图片的url地址
                 FillContentHelper.setImgUrl(status.retweeted_status);
             }
-        }
 
+        }
 
         return statuses;
     }
