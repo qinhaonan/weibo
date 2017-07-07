@@ -181,11 +181,12 @@ public abstract class WeiboAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        if (mDatas.get(position).retweeted_status != null) {
-            return TYPE_RETWEET_ITEM;
-        } else {
-            return TYPE_ORINGIN_ITEM;
-        }
+        return TYPE_ORINGIN_ITEM;
+//        if (mDatas.get(position).retweeted_status != null) {
+//            return TYPE_RETWEET_ITEM;
+//        } else {
+//            return TYPE_ORINGIN_ITEM;
+//        }
     }
 
     public void setData(ArrayList<Status> data) {

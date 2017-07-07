@@ -64,8 +64,7 @@ public class StatusList implements Parcelable {
 //            status.id=questions[2].getUid();
             status.source="";
 //            status.favorited=false;
-//            //    status.attach=questions[i].getAttach();
-//            //   status.pic_urls=questions[i].getAttach();
+
             FillContentHelper.setImgUrl(status,questions[i]);
             i++;
             if (i>=questions.length)
@@ -82,7 +81,8 @@ public class StatusList implements Parcelable {
             return null;
         }
         StatusList statuses = new Gson().fromJson(jsonString, StatusList.class);
-
+//        Status.PicUrlsBean pic=new Status.PicUrlsBean();
+//        pic.thumbnail_pic="http://192.168.1.176/thinksns_v3.0/data/upload/2017/0706/18/595e0fa9cc4ea.png";
 //       对status中的本地私有字段进行赋值
         for (Status status : statuses.statuses) {
             //服务器并没有返回我们单张图片的随机尺寸，这里我们手动需要随机赋值
@@ -90,7 +90,8 @@ public class StatusList implements Parcelable {
             //提取微博来源的关键字
             FillContentHelper.setSource(status);
             //设置三种类型图片的url地址
-            FillContentHelper.setImgUrl(status);
+//            FillContentHelper.setImgUrl(status);
+//            status.pic_urls.add(pic);
             if (status.retweeted_status != null) {
                 //服务器并没有返回我们单张图片的随机尺寸，这里我们手动需要随机赋值
                 FillContentHelper.setSingleImgSizeType(status.retweeted_status);

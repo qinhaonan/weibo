@@ -119,8 +119,8 @@ public class FillContentHelper {
 //                return;
 //            }
             for (Question.AttachBean attacths: questions.getAttach()  ) {
-                status.thumbnail_pic_urls.add(attacths.getAttach_small());
-                status.bmiddle_pic_urls.add(attacths.getAttach_middle());
+                status.thumbnail_pic_urls.add(attacths.getAttach_url());
+                status.bmiddle_pic_urls.add(attacths.getAttach_url());
                 status.origin_pic_urls.add(attacths.getAttach_url());
 
             }
