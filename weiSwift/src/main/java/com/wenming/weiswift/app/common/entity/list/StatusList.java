@@ -27,7 +27,12 @@ import com.wenming.weiswift.app.common.entity.Status;
 import com.wenming.weiswift.app.common.FillContentHelper;
 
 import java.io.Console;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+
+import pl.droidsonroids.gif.transforms.Transform;
 
 /**
  * 微博列表结构。
@@ -62,9 +67,12 @@ public class StatusList implements Parcelable {
 //            status.retweeted_status = null;
 //            status.created_at=questions[2].getPublish_time();
 //            status.id=questions[2].getUid();
-            status.source="";
 //            status.favorited=false;
-
+            status.source="";
+            status.user.avatar_hd=questions[i].getAvatar_big();
+            status.user.avatar_large=questions[i].getAvatar_middle();
+            status.user.name=questions[i].getUname();
+//            status.created_at= transform(questions[i].getPublish_time());
             FillContentHelper.setImgUrl(status,questions[i]);
             i++;
             if (i>=questions.length)
@@ -73,7 +81,8 @@ public class StatusList implements Parcelable {
         return statusList;
 
     }
-
+//    public static String  transform(String time){
+//    }
 
     public static StatusList parse(String jsonString) {
 

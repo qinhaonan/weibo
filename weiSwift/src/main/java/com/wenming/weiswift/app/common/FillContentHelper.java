@@ -126,6 +126,21 @@ public class FillContentHelper {
             }
         }
     }
+    public static void setAvatarImgUrl(Status status, Question questions) {
+        //如果微博存在图片
+        if (questions.getAttach()!= null && questions.getAttach().size() > 0) {
+            //如果本地私有字段已经被处理过了，就不需要再处理    后面需要优化
+//            if (status.bmiddle_pic_urls.size() > 0) {
+//                return;
+//            }
+            for (Question.AttachBean attacths: questions.getAttach()  ) {
+                status.thumbnail_pic_urls.add(attacths.getAttach_url());
+                status.bmiddle_pic_urls.add(attacths.getAttach_url());
+                status.origin_pic_urls.add(attacths.getAttach_url());
+
+            }
+        }
+    }
     /**
      * 如果这条微博只包含一张图，就给这张图片设置一个随机的尺寸，
      * 注意：
