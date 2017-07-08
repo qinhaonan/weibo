@@ -146,6 +146,7 @@ public class FillContent {
 
     public static void setWeiBoTime(Context context, TextView textView, Status status) {
         Date data = DateUtils.parseDate(status.created_at, DateUtils.WeiBo_ITEM_DATE_FORMAT);
+//        Date data = DateUtils.parseDate(status.created_at, DateUtils.yyyyMMddHHmmss);
         TimeUtils timeUtils = TimeUtils.instance(context);
         textView.setText(timeUtils.buildTimeString(data.getTime()) + "   ");
     }
@@ -260,6 +261,14 @@ public class FillContent {
         }
 
         fillButtonBar(context, status, bottombar_retweet, bottombar_comment, bottombar_attitude);
+    }
+    public static void  fillComment_num(final Status status,TextView comment){
+        if (status.comments_count != 0) {
+            comment.setText(status.comments_count + "");
+        } else {
+            comment.setText("0");
+        }
+
     }
 
     public static void fillButtonBar(final Context context, final Status status, LinearLayout bottombar_retweet, LinearLayout bottombar_comment, LinearLayout bottombar_attitude) {

@@ -29,7 +29,7 @@ public class BarManager {
     }
 
     /**
-     * 显示底部导航栏
+     * 显示顶部导航栏
      */
     public void showBottomBar(final View bottomBar) {
         bottomBar.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
@@ -39,8 +39,8 @@ public class BarManager {
      * 隐藏底部导航栏
      */
     public void hideBottomBar(final View bottomBar) {
-        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) bottomBar.getLayoutParams();
-        int fabBottomMargin = lp.bottomMargin;
-        bottomBar.animate().translationY(bottomBar.getHeight() + fabBottomMargin).setInterpolator(new AccelerateInterpolator(2)).start();
+//        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) bottomBar.getLayoutParams();
+//        int fabBottomMargin = lp.bottomMargin;
+//        bottomBar.animate().translationY(bottomBar.getHeight() + fabBottomMargin).setInterpolator(new AccelerateInterpolator(2)).start();
     }
 }

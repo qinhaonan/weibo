@@ -368,13 +368,13 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
         RecyclerViewStateUtils.setFooterViewState(mRecyclerView, LoadingFooter.State.NetWorkError);
     }
 
-
+//屏蔽首页tittle
     @Override
     public void setGroupName(String userName) {
-        mUserNameTextView.setText(userName);
-        if (mGroup.getVisibility() != View.VISIBLE) {
-            mGroup.setVisibility(View.VISIBLE);
-        }
+//        mUserNameTextView.setText(userName);
+//        if (mGroup.getVisibility() != View.VISIBLE) {
+//            mGroup.setVisibility(View.VISIBLE);
+//        }
     }
 
     /**
@@ -442,7 +442,7 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
      */
     public void hideTopBar() {
         BarManager barManager = new BarManager();
-        barManager.hideTopBar(mTopBar,mContext);
+//        barManager.hideTopBar(mTopBar,mContext);
     }
 
 

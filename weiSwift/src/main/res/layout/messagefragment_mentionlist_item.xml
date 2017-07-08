@@ -9,7 +9,7 @@
     android:clickable="true"
     android:orientation="vertical">
 
-    <include layout="@layout/home_weiboitem_titlebar" />
+
 
     <com.wenming.weiswift.widget.emojitextview.EmojiTextView
         android:id="@+id/mention_content"
@@ -33,7 +33,7 @@
         android:paddingBottom="10dp" />
 
     <include layout="@layout/message_mention_item_basecenter" />
-
+    <include layout="@layout/home_weiboitem_titlebar" />
     <include layout="@layout/mainfragment_weiboitem_bottombar" />
 
 

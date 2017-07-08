@@ -81,8 +81,28 @@ public class StatusList implements Parcelable {
         return statusList;
 
     }
-//    public static String  transform(String time){
-//    }
+    public static String  transform(String time){
+
+        String date = timeStamp2Date(time+"000", "yyyy-MM-dd HH:mm:ss");
+//        String date = timeStamp2Date(time+"000", "EEE MMM d HH:mm:ss Z yyyy");
+        return date;
+    }
+/**
+ 6      * 时间戳转换成日期格式字符串
+ 7      * @param seconds 精确到秒的字符串
+ 8      * @param formatStr
+ 9      * @return
+ 10      */
+     public static String timeStamp2Date(String seconds,String format) {
+                 if(seconds == null || seconds.isEmpty() || seconds.equals("null")){
+                         return "";
+                     }
+                 if(format == null || format.isEmpty()){
+                         format = "yyyy-MM-dd HH:mm:ss";
+                     }
+                 SimpleDateFormat sdf = new SimpleDateFormat(format);
+                 return sdf.format(new Date(Long.valueOf(seconds)));
+             }
 
     public static StatusList parse(String jsonString) {
 
