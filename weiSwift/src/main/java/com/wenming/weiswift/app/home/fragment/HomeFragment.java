@@ -4,10 +4,13 @@ package com.wenming.weiswift.app.home.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -35,6 +38,8 @@ import com.wenming.weiswift.app.common.entity.Question;
 import com.wenming.weiswift.app.common.entity.Status;
 import com.wenming.weiswift.app.common.entity.User;
 import com.wenming.weiswift.app.common.entity.list.QuestionList;
+import com.wenming.weiswift.app.home.adapter.ExamplePagerAdapter;
+import com.wenming.weiswift.app.home.adapter.ScaleCircleNavigator;
 import com.wenming.weiswift.app.mvp.presenter.HomeFragmentPresent;
 import com.wenming.weiswift.app.mvp.presenter.imp.HomeFragmentPresentImp;
 import com.wenming.weiswift.app.mvp.view.HomeFragmentView;
@@ -53,7 +58,12 @@ import com.wenming.weiswift.widget.endlessrecyclerview.RecyclerViewUtils;
 import com.wenming.weiswift.widget.endlessrecyclerview.utils.RecyclerViewStateUtils;
 import com.wenming.weiswift.widget.endlessrecyclerview.weight.LoadingFooter;
 
+import net.lucode.hackware.magicindicator.MagicIndicator;
+import net.lucode.hackware.magicindicator.ViewPagerHelper;
+
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by wenmingvs on 16/4/27.
@@ -99,11 +109,15 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
      * 记录bar是否显示或者隐藏
      */
     private boolean mControlsVisible = true;
-
     private TextView mToastTv;
     private RelativeLayout mToastBg;
-
     private onButtonBarListener mOnBottonBarListener;
+
+    ViewPager viewPager;
+    private static final String[] CHANNELS = new String[]{"CUPCAKE", "DONUT", "ECLAIR", "GINGERBREAD", "HONEYCOMB", "ICE_CREAM_SANDWICH", "JELLY_BEAN", "KITKAT", "LOLLIPOP", "M", "NOUGAT"};
+    private List<String> mDataList = Arrays.asList(CHANNELS);
+    private ExamplePagerAdapter mExamplePagerAdapter = new ExamplePagerAdapter(mDataList);
+    private List<View> viewList;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         questionList=new QuestionList();
@@ -122,6 +136,9 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
         mSwipeRefreshLayout = (SwipeRefreshLayout) mView.findViewById(R.id.swipe_refresh_widget);
         mToastTv = (TextView) mView.findViewById(R.id.toast_msg);
         mToastBg = (RelativeLayout) mView.findViewById(R.id.toast_bg);
+        viewPager = (ViewPager) mView.findViewById(R.id.vp_channel);
+        viewPager.setAdapter(mExamplePagerAdapter);
+        initMagicIndicator1();
         initRecyclerView();
         initRefreshLayout();
         //屏蔽tittle的点击事件。by qhn
@@ -476,5 +493,21 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
     public User getCurrentUser() {
         return mCurrentUser;
     }
+    private void initMagicIndicator1() {
+        MagicIndicator magicIndicator = (MagicIndicator) mView.findViewById(R.id.magic_indicator1);
+        ScaleCircleNavigator scaleCircleNavigator = new ScaleCircleNavigator(mContext);
+        scaleCircleNavigator.setCircleCount(CHANNELS.length);
+        scaleCircleNavigator.setNormalCircleColor(Color.LTGRAY);
+        scaleCircleNavigator.setSelectedCircleColor(Color.DKGRAY);
+        scaleCircleNavigator.setCircleClickListener(new ScaleCircleNavigator.OnCircleClickListener() {
+            @Override
+            public void onClick(int index) {
+                viewPager.setCurrentItem(index);
+            }
+        });
+        magicIndicator.setNavigator(scaleCircleNavigator);
+        ViewPagerHelper.bind(magicIndicator, viewPager);
+    }
+
 
 }

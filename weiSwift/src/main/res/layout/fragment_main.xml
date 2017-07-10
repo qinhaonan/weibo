@@ -1,10 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
-
+    <include layout="@layout/toolbar_home_login_toast" />
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_channel"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"/>
+    <net.lucode.hackware.magicindicator.MagicIndicator
+        android:id="@+id/magic_indicator1"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:layout_marginTop="120dp"
+        android:layout_centerHorizontal="true" />
+</RelativeLayout>
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_widget"
         android:layout_width="match_parent"
@@ -15,16 +29,14 @@
             android:id="@+id/weiboRecyclerView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:clipChildren="false"
             android:clipToPadding="false"
-            android:paddingTop="@dimen/topbar_height"
             android:scrollbars="vertical" />
-
+            <!--android:paddingTop="@dimen/topbar_height"-->
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <include layout="@layout/toolbar_home_login_toast" />
-
     <include layout="@layout/empty_default" />
-</FrameLayout>
+</LinearLayout>
 
 
 
