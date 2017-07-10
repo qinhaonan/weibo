@@ -75,7 +75,7 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
     public Context mContext;
     public Activity mActivity;
     public View mView;
-
+    public View vp_View;
     private LinearLayout mGroup;
     public RecyclerView mRecyclerView;
     public TextView mUserNameTextView;
@@ -118,6 +118,7 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
     private List<String> mDataList = Arrays.asList(CHANNELS);
     private ExamplePagerAdapter mExamplePagerAdapter = new ExamplePagerAdapter(mDataList);
     private List<View> viewList;
+    private HomeHeadView homeHeadView;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         questionList=new QuestionList();
@@ -136,7 +137,10 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
         mSwipeRefreshLayout = (SwipeRefreshLayout) mView.findViewById(R.id.swipe_refresh_widget);
         mToastTv = (TextView) mView.findViewById(R.id.toast_msg);
         mToastBg = (RelativeLayout) mView.findViewById(R.id.toast_bg);
-        viewPager = (ViewPager) mView.findViewById(R.id.vp_channel);
+        homeHeadView = new HomeHeadView(mContext);
+//        LinearLayout linearLayout= (LinearLayout) homeHeadView.findViewById(R.id.ll_header);
+        vp_View=inflater.inflate(R.layout.headview_homefragment,container,false);
+        viewPager = (ViewPager) homeHeadView.findViewById(R.id.vp_channel);
         viewPager.setAdapter(mExamplePagerAdapter);
         initMagicIndicator1();
         initRecyclerView();
@@ -197,8 +201,11 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mHeaderAndFooterRecyclerViewAdapter);
-        RecyclerViewUtils.setHeaderView(mRecyclerView, new HomeHeadView(mContext));
+        RecyclerViewUtils.setHeaderView(mRecyclerView, homeHeadView);
+
     }
+
+
 
 
     private void initRefreshLayout() {
@@ -494,7 +501,7 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
         return mCurrentUser;
     }
     private void initMagicIndicator1() {
-        MagicIndicator magicIndicator = (MagicIndicator) mView.findViewById(R.id.magic_indicator1);
+        MagicIndicator magicIndicator = (MagicIndicator) homeHeadView.findViewById(R.id.magic_indicator1);
         ScaleCircleNavigator scaleCircleNavigator = new ScaleCircleNavigator(mContext);
         scaleCircleNavigator.setCircleCount(CHANNELS.length);
         scaleCircleNavigator.setNormalCircleColor(Color.LTGRAY);

@@ -185,8 +185,6 @@ public abstract class WeiboAdapter extends RecyclerView.Adapter<ViewHolder> {
                 }
             });
 
-
-
         }
 
     }
