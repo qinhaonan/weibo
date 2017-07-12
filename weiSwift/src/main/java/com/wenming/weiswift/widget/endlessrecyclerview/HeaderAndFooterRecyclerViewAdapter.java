@@ -2,10 +2,14 @@ package com.wenming.weiswift.widget.endlessrecyclerview;
 
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+
+import uk.co.senab.photoview.log.LoggerDefault;
 
 /**
  * Created by cundong on 2015/10/9.
@@ -156,12 +160,16 @@ public class HeaderAndFooterRecyclerViewAdapter extends RecyclerView.Adapter<Rec
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
         int headerViewsCountCount = getHeaderViewsCount();
         if (viewType < TYPE_HEADER_VIEW + headerViewsCountCount) {
+
             return new ViewHolder(mHeaderViews.get(viewType - TYPE_HEADER_VIEW));
         } else if (viewType >= TYPE_FOOTER_VIEW && viewType < Integer.MAX_VALUE / 2) {
+
             return new ViewHolder(mFooterViews.get(viewType - TYPE_FOOTER_VIEW));
         } else {
+
             return mInnerAdapter.onCreateViewHolder(parent, viewType - Integer.MAX_VALUE / 2);
         }
     }
@@ -171,9 +179,12 @@ public class HeaderAndFooterRecyclerViewAdapter extends RecyclerView.Adapter<Rec
         int headerViewsCountCount = getHeaderViewsCount();
         if (position >= headerViewsCountCount && position < headerViewsCountCount + mInnerAdapter.getItemCount()) {
             mInnerAdapter.onBindViewHolder(holder, position - headerViewsCountCount);
+            Log.d("ADFADF", "onBindViewHolder: 中间");
         } else {
+            Log.d("ADFADF", "onBindViewHolder: 头");
             ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
             if(layoutParams instanceof StaggeredGridLayoutManager.LayoutParams) {
+                Log.d("ADFADF", "onBindViewHolder: 尾");
                 ((StaggeredGridLayoutManager.LayoutParams) layoutParams).setFullSpan(true);
             }
         }

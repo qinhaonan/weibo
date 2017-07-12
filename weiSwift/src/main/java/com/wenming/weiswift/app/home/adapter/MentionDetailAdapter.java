@@ -50,7 +50,7 @@ public class MentionDetailAdapter extends RecyclerView.Adapter<ViewHolder> {
         FillContent.fillProfileImg(mContext, user, ((RetweetViewHolder) holder).profile_img, ((RetweetViewHolder) holder).profile_verified);
         FillContent.fillWeiBoContent(content, mContext, ((RetweetViewHolder) holder).content);
         FillContent.setWeiBoName(((RetweetViewHolder) holder).profile_name, user);
-        FillContent.setWeiBoTime(mContext, ((RetweetViewHolder) holder).profile_time, mDatas.get(position));
+//        FillContent.setWeiBoTime(mContext, ((RetweetViewHolder) holder).profile_time, mDatas.get(position));
     }
 
 

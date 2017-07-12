@@ -7,14 +7,11 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,23 +19,18 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-
-import com.lidroid.xutils.http.client.HttpRequest;
 import com.wenming.weiswift.R;
 import com.wenming.weiswift.app.common.entity.Question;
 import com.wenming.weiswift.app.common.entity.Status;
 import com.wenming.weiswift.app.common.entity.User;
 import com.wenming.weiswift.app.common.entity.list.QuestionList;
 import com.wenming.weiswift.app.home.adapter.ExamplePagerAdapter;
+import com.wenming.weiswift.app.home.adapter.GridViewAdatpter;
 import com.wenming.weiswift.app.home.adapter.ScaleCircleNavigator;
 import com.wenming.weiswift.app.mvp.presenter.HomeFragmentPresent;
 import com.wenming.weiswift.app.mvp.presenter.imp.HomeFragmentPresentImp;
@@ -116,8 +108,9 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
     ViewPager viewPager;
     private static final String[] CHANNELS = new String[]{"CUPCAKE", "DONUT", "ECLAIR", "GINGERBREAD", "HONEYCOMB", "ICE_CREAM_SANDWICH", "JELLY_BEAN", "KITKAT", "LOLLIPOP", "M", "NOUGAT"};
     private List<String> mDataList = Arrays.asList(CHANNELS);
-    private ExamplePagerAdapter mExamplePagerAdapter = new ExamplePagerAdapter(mDataList);
-    private List<View> viewList;
+//    private ExamplePagerAdapter mExamplePagerAdapter = new ExamplePagerAdapter(mDataList);
+    private ExamplePagerAdapter mExamplePagerAdapter ;
+    private List<View> viewPagerList;
     private HomeHeadView homeHeadView;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -141,6 +134,7 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
 //        LinearLayout linearLayout= (LinearLayout) homeHeadView.findViewById(R.id.ll_header);
         vp_View=inflater.inflate(R.layout.headview_homefragment,container,false);
         viewPager = (ViewPager) homeHeadView.findViewById(R.id.vp_channel);
+        initGridView();
         viewPager.setAdapter(mExamplePagerAdapter);
         initMagicIndicator1();
         initRecyclerView();
@@ -159,6 +153,17 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
             }
         });
         return mView;
+    }
+
+    private void initGridView() {
+        viewPagerList=new ArrayList<View>();
+        LayoutInflater layoutInflater=LayoutInflater.from(mContext);
+        for (int i = 0; i < 5; i++) {
+            GridView gridView= (GridView) layoutInflater.inflate(R.layout.gridview,null);
+            gridView.setAdapter(new GridViewAdatpter(mContext));
+            viewPagerList.add(gridView);
+        }
+        mExamplePagerAdapter=new ExamplePagerAdapter(viewPagerList);
     }
 
     @Override
@@ -500,10 +505,11 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
     public User getCurrentUser() {
         return mCurrentUser;
     }
+
     private void initMagicIndicator1() {
         MagicIndicator magicIndicator = (MagicIndicator) homeHeadView.findViewById(R.id.magic_indicator1);
         ScaleCircleNavigator scaleCircleNavigator = new ScaleCircleNavigator(mContext);
-        scaleCircleNavigator.setCircleCount(CHANNELS.length);
+        scaleCircleNavigator.setCircleCount(5);
         scaleCircleNavigator.setNormalCircleColor(Color.LTGRAY);
         scaleCircleNavigator.setSelectedCircleColor(Color.DKGRAY);
         scaleCircleNavigator.setCircleClickListener(new ScaleCircleNavigator.OnCircleClickListener() {

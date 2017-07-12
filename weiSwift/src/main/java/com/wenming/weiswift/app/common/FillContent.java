@@ -131,7 +131,7 @@ public class FillContent {
     public static void fillTitleBar(Context context, Status status, ImageView profile_img, ImageView profile_verified, TextView profile_name, TextView profile_time, TextView weibo_comefrom) {
         fillProfileImg(context, status.user, profile_img, profile_verified);
         setWeiBoName(profile_name, status.user);
-        setWeiBoTime(context, profile_time, status);
+//        setWeiBoTime(context, profile_time, status);
         setWeiBoComeFrom(weibo_comefrom, status);
     }
 

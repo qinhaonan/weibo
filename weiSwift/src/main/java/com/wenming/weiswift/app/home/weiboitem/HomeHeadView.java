@@ -27,6 +27,7 @@ public class HomeHeadView extends RelativeLayout {
     }
 
     public void init(Context context) {
+
         inflate(context, R.layout.headview_homefragment, this);
     }
 }
