@@ -3,13 +3,14 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="55dp">
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/ll_expert"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="wrap_content">
     <LinearLayout
-        android:id="@+id/ll_expert"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <TextView
@@ -21,19 +22,20 @@
             android:layout_height="wrap_content"
             android:text="指定专家作答"/>
     </LinearLayout>
-    </RelativeLayout>
+
         <ImageView
             android:src="@mipmap/ic_launcher"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-
-    <RelativeLayout
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll_question"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="wrap_content">
     <LinearLayout
-        android:id="@+id/ll_question"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <TextView
@@ -45,10 +47,10 @@
             android:layout_height="wrap_content"
             android:text="传图提问"/>
     </LinearLayout>
-    </RelativeLayout>
+
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@mipmap/ic_launcher"/>
-
+    </LinearLayout>
 </LinearLayout>

@@ -45,7 +45,8 @@
                 <!--<category android:name="android.intent.category.LAUNCHER" />-->
             </intent-filter>
         </activity>
-
+        <activity android:name=".app.home.activity.QuestionActivity"/>
+        <activity android:name=".app.home.activity.ExpertActivity"/>
         <activity android:name=".app.settings.activity.SettingSwipeActivity" />
 
         <activity android:name=".app.imgpreview.ImageDetailsActivity" />
