@@ -9,12 +9,13 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <ImageView
+        <Button
+            android:id="@+id/btn_back_question"
             android:layout_width="50dp"
-            android:paddingRight="5dp"
-            android:paddingLeft="5dp"
             android:layout_height="match_parent"
-            android:src="@mipmap/ic_launcher"/>
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:src="@mipmap/ic_launcher" />
 
         <TextView
             android:layout_width="0dp"
@@ -26,42 +27,68 @@
         <Button
             android:id="@+id/btn_commit"
             android:layout_width="60dp"
+            android:background="@drawable/normal_send_button_bg"
             android:layout_height="40dp"
             android:text="提交"
             android:layout_gravity="center"/>
     </LinearLayout>
-
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="200dp">
     <ImageView
+        android:id="@+id/ig_question"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="80dp"
+        android:layout_marginRight="80dp"
         android:src="@mipmap/ic_launcher" />
-
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/ImgList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:padding="15dp" />
+</RelativeLayout>
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:gravity="center"
         android:text="传图提问" />
-
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="45dp"
+    android:layout_marginBottom="15dp"
+    android:layout_marginRight="15dp"
+    android:layout_marginLeft="15dp">
     <EditText
-        android:layout_marginTop="20dp"
+        android:id="@+id/edt_name"
         android:hint="请输入作物名称（5字以内）"
         android:textSize="12sp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginLeft="15dp"
         android:layout_width="match_parent"
         android:background="@drawable/question_edt_seletcor"
         android:layout_height="45dp" />
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text="0/5"/>
+</RelativeLayout>
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="120dp"
+    android:layout_marginLeft="15dp"
+    android:layout_marginRight="15dp"
+    android:layout_marginTop="10dp">
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/edt_question"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="10dp"
+        android:layout_height="120dp"
         android:background="@drawable/question_edt_seletcor"
         android:gravity="left|top"
         android:hint="请详细描述你的问题，最少5个字"
@@ -70,4 +97,12 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:textSize="12sp" />
+    <TextView
+        android:id="@+id/tv_question"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text="0/200"/>
+</RelativeLayout>
 </LinearLayout>

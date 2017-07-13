@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +22,12 @@ import java.util.ArrayList;
  * Created by wenmingvs on 16/5/7.
  */
 public class ImgListAdapter extends RecyclerView.Adapter<ViewHolder> {
+    private static final String TAG = "ImgListAdapter";
+    private  RecyclerView mRecycleView;
     private ArrayList<ImageInfo> mDatas = new ArrayList<ImageInfo>();
     private Context mContext;
     private View mView;
+    private ImageView mImageView;
     private OnFooterViewClickListener onFooterViewClickListener;
 
     private DisplayImageOptions mImageItemOptions = new DisplayImageOptions.Builder()
@@ -44,6 +48,12 @@ public class ImgListAdapter extends RecyclerView.Adapter<ViewHolder> {
     public ImgListAdapter(ArrayList<ImageInfo> datas, Context context) {
         this.mDatas = datas;
         this.mContext = context;
+    }
+    public ImgListAdapter(ArrayList<ImageInfo> datas, Context context,View view,View recycle) {
+        this.mDatas = datas;
+        this.mContext = context;
+        mImageView=(ImageView)view;
+        mRecycleView=(RecyclerView)recycle;
     }
 
     @Override
@@ -90,6 +100,8 @@ public class ImgListAdapter extends RecyclerView.Adapter<ViewHolder> {
         if (mDatas != null && mDatas.size() > 0) {
             return mDatas.size() + 1;
         } else {
+            mRecycleView.setVisibility(View.INVISIBLE);
+            mImageView.setVisibility(View.VISIBLE);
             return 0;
         }
     }

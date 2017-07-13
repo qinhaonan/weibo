@@ -1,17 +1,23 @@
 package com.wenming.weiswift.app.home.activity;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.wenming.weiswift.R;
 import com.wenming.weiswift.app.api.StatusesAPI;
 import com.wenming.weiswift.app.common.entity.User;
+import com.wenming.weiswift.app.home.widget.SpinnerPopWindow;
 import com.wenming.weiswift.app.mvp.presenter.FollowerActivityPresent;
 import com.wenming.weiswift.app.mvp.presenter.imp.FollowerActivityPresentImp;
 import com.wenming.weiswift.app.mvp.view.FollowActivityView;
@@ -25,12 +31,13 @@ import com.wenming.weiswift.widget.endlessrecyclerview.utils.RecyclerViewStateUt
 import com.wenming.weiswift.widget.endlessrecyclerview.weight.LoadingFooter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by qhn on 2017/7/12.
  */
 
-public class ExpertActivity extends BaseSwipeActivity implements FollowActivityView{
+public class ExpertActivity extends BaseSwipeActivity implements FollowActivityView {
 
     public FansAdapter mAdapter;
     private ArrayList<User> mDatas;
@@ -41,6 +48,12 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
     public boolean mRefrshAllData;
     private HeaderAndFooterRecyclerViewAdapter mHeaderAndFooterRecyclerViewAdapter;
     private FollowerActivityPresent mFollowerActivityPresent;
+    private SpinnerPopWindow<String> mSpinnerPopWindow;
+    private SpinnerPopWindow<String> mSpinnerPopWindow2;
+    private List<String> list;
+    private List<String> sortList;
+    private TextView tvValue;
+    private TextView tv_sort;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +61,8 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
         setContentView(R.layout.expert_layout);
         mContext = this;
         mFollowerActivityPresent = new FollowerActivityPresentImp(this);
+
+        initPopUpWindow();
         initRefreshLayout();
         initRecyclerView();
         mSwipeRefreshLayout.post(new Runnable() {
@@ -56,7 +71,9 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
                 mFollowerActivityPresent.pullToRefreshData(Long.valueOf(AccessTokenKeeper.readAccessToken(mContext).getUid()), mContext);
             }
         });
+
     }
+
 
     protected void initRefreshLayout() {
         mRefrshAllData = true;
@@ -148,7 +165,77 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
     }
 
     @Override
-    public void updateRealtionShip(Context context,User user, ImageView icon, TextView text) {
-        FillContent.updateRealtionShip(context,user, icon, text);
+    public void updateRealtionShip(Context context, User user, ImageView icon, TextView text) {
+        FillContent.updateRealtionShip(context, user, icon, text);
+    }
+
+    //    专家类型 和智能排序
+    private void initPopUpWindow() {
+        initData();
+        initData2();
+        tvValue = (TextView) findViewById(R.id.tv_expert_type);
+        tv_sort = (TextView) findViewById(R.id.tv_sort);
+        tv_sort.setOnClickListener(clickListener);
+        tvValue.setOnClickListener(clickListener);
+        mSpinnerPopWindow = new SpinnerPopWindow<String>(this, list, itemClickListener);
+        mSpinnerPopWindow2 = new SpinnerPopWindow<String>(this, sortList, itemClickListener2);
+        mSpinnerPopWindow.setOnDismissListener(dismissListener);
+        mSpinnerPopWindow2.setOnDismissListener(dismissListener);
+
+    }
+
+    private View.OnClickListener clickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.tv_expert_type:
+                    mSpinnerPopWindow.setWidth(tvValue.getWidth());
+                    mSpinnerPopWindow.showAsDropDown(tvValue);
+//                    setTextImage(R.mipmap.ic_launcher);
+                    break;
+                case R.id.tv_sort:
+                    mSpinnerPopWindow2.setWidth(tv_sort.getWidth());
+                    mSpinnerPopWindow2.showAsDropDown(tv_sort);
+                    break;
+            }
+        }
+    };
+    private AdapterView.OnItemClickListener itemClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            mSpinnerPopWindow.dismiss();
+            Toast.makeText(ExpertActivity.this, "点击了 专家:" + list.get(position), Toast.LENGTH_LONG).show();
+        }
+    };
+    private AdapterView.OnItemClickListener itemClickListener2 = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            mSpinnerPopWindow2.dismiss();
+            Toast.makeText(ExpertActivity.this, "点击了 排序:" + list.get(position), Toast.LENGTH_LONG).show();
+        }
+    };
+    private PopupWindow.OnDismissListener dismissListener = new PopupWindow.OnDismissListener() {
+        @Override
+        public void onDismiss() {
+//            setTextImage(R.mipmap.ic_launcher);
+        }
+    };
+
+    //    private void setTextImage(int resId) {
+//        Drawable drawable = getResources().getDrawable(resId);
+//        drawable.setBounds(0, 0, drawable.getMinimumWidth(),drawable.getMinimumHeight());// 必须设置图片大小，否则不显示
+//        tvValue.setCompoundDrawables(null, null, drawable, null);
+//    }
+    private void initData() {
+        list = new ArrayList<String>();
+        for (int i = 0; i < 25; i++) {
+            list.add("test:" + i);
+        }
+    }
+    private void initData2(){
+        sortList=new ArrayList<String>();
+        sortList.add("距离");
+        sortList.add("采纳数");
+        sortList.add("智能排序");
     }
 }
