@@ -32,6 +32,7 @@ public interface Constants {
     public static final String AppSecret = "1e6e33db08f9192306c4afa0a61ad56c";
     public static final String PackageName = "com.eico.weico";
 
+    public static final String  NUMBER_OF_WORDS="140";
 
     public static final String authurl = "https://open.weibo.cn/oauth2/authorize" + "?" + "client_id=" + Constants.APP_KEY
             + "&response_type=token&redirect_uri=" + Constants.REDIRECT_URL

@@ -1,5 +1,6 @@
 package com.wenming.weiswift.app.home.activity;
 
+import android.provider.ContactsContract;
 import android.support.v7.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +9,7 @@ import android.support.annotation.Nullable;
 
 import android.support.v7.widget.GridLayoutManager;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -15,10 +17,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.wenming.weiswift.R;
 import com.wenming.weiswift.app.common.base.BaseAppCompatActivity;
 import com.wenming.weiswift.app.common.base.BaseSwipeActivity;
+import com.wenming.weiswift.app.login.Constants;
 import com.wenming.weiswift.app.login.fragment.post.PostService;
 import com.wenming.weiswift.app.login.fragment.post.idea.IdeaSwipeActivity;
 import com.wenming.weiswift.app.login.fragment.post.idea.imagelist.ImgListAdapter;
@@ -42,6 +47,9 @@ public class QuestionActivity extends BaseSwipeActivity implements ImgListAdapte
     private Button btn_commit;
     private EditText edt_question;
     private EditText edt_name;
+    private TextView tv_name_num;
+    private TextView tv_question_num;
+
 
     @Override
     protected void onCreate( Bundle savedInstanceState) {
@@ -54,6 +62,8 @@ public class QuestionActivity extends BaseSwipeActivity implements ImgListAdapte
         btn_commit = (Button) findViewById(R.id.btn_commit);
         imageView = (ImageView) findViewById(R.id.ig_question);
         mRecyclerView= (RecyclerView) findViewById(R.id.ImgList);
+        tv_name_num= (TextView) findViewById(R.id.tv_name_num);
+        tv_question_num= (TextView) findViewById(R.id.tv_question_num);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,6 +84,7 @@ public class QuestionActivity extends BaseSwipeActivity implements ImgListAdapte
 
             }
         });
+        edt_question.setFilters(new InputFilter.LengthFilter[]{new InputFilter.LengthFilter(140)});
         edt_question.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -87,9 +98,11 @@ public class QuestionActivity extends BaseSwipeActivity implements ImgListAdapte
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                tv_question_num.setText(String.valueOf(s.length())+"/"+ Constants.NUMBER_OF_WORDS);
+                Toast.makeText(QuestionActivity.this,"字数不能大于5个字",Toast.LENGTH_SHORT).show();
             }
         });
+        edt_name.setFilters(new InputFilter.LengthFilter[]{new InputFilter.LengthFilter(5)});
         edt_name.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -103,7 +116,10 @@ public class QuestionActivity extends BaseSwipeActivity implements ImgListAdapte
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                tv_name_num.setText(String.valueOf(s.length())+"/"+"5");
+                if (s.length()>Integer.valueOf( Constants.NUMBER_OF_WORDS)) {
+                    Toast.makeText(QuestionActivity.this,"字数不能大于5个字",Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -154,24 +170,5 @@ public class QuestionActivity extends BaseSwipeActivity implements ImgListAdapte
         intent.putParcelableArrayListExtra("selectedImglist", mSelectImgList);
         startActivityForResult(intent, 0);
     }
-    private TextWatcher watcher = new TextWatcher() {
-        private CharSequence inputString;
 
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            inputString = s;
-        }
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            changeSendButtonBg();
-//            setLimitTextColor(mLimitTextView, inputString.toString());
-
-        }
-    };
 }

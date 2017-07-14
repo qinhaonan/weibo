@@ -4,34 +4,34 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/btn_back_question"
             android:layout_width="50dp"
-            android:layout_height="match_parent"
+            android:layout_height="50dp"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:src="@mipmap/ic_launcher" />
 
         <TextView
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_weight="1"
             android:gravity="center"
             android:background="@color/white"
             android:text="首页" />
         <Button
             android:id="@+id/btn_commit"
-            android:layout_width="60dp"
+            android:layout_width="50dp"
             android:background="@drawable/normal_send_button_bg"
-            android:layout_height="40dp"
+            android:layout_height="50dp"
             android:text="提交"
-            android:layout_gravity="center"/>
-    </LinearLayout>
+            android:layout_alignParentRight="true"
+             android:paddingTop="5dp"/>
+    </RelativeLayout>
 <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="200dp">
@@ -71,7 +71,7 @@
         android:background="@drawable/question_edt_seletcor"
         android:layout_height="45dp" />
     <TextView
-        android:id="@+id/tv_name"
+        android:id="@+id/tv_name_num"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -98,11 +98,11 @@
         android:paddingRight="10dp"
         android:textSize="12sp" />
     <TextView
-        android:id="@+id/tv_question"
+        android:id="@+id/tv_question_num"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:text="0/200"/>
+        android:text="0/140"/>
 </RelativeLayout>
 </LinearLayout>
