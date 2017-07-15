@@ -12,7 +12,7 @@ import java.util.List;
  * Created by hackware on 2016/9/10.
  */
 
-public class ExamplePagerAdapter extends PagerAdapter {
+public class GridPagerAdapter extends PagerAdapter {
     private List<String> mDataList;
     private List<View> mViewList;
     private int i=0;
@@ -26,7 +26,7 @@ public class ExamplePagerAdapter extends PagerAdapter {
 //    public ExamplePagerAdapter(List<String> dataList) {
 //        mDataList = dataList;
 //    }
-    public ExamplePagerAdapter(List<View> viewList) {
+    public GridPagerAdapter(List<View> viewList) {
         mViewList = viewList;
     }
     @Override

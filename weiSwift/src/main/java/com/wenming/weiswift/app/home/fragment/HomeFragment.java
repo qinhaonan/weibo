@@ -12,6 +12,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -29,7 +31,7 @@ import com.wenming.weiswift.app.common.entity.Question;
 import com.wenming.weiswift.app.common.entity.Status;
 import com.wenming.weiswift.app.common.entity.User;
 import com.wenming.weiswift.app.common.entity.list.QuestionList;
-import com.wenming.weiswift.app.home.adapter.ExamplePagerAdapter;
+import com.wenming.weiswift.app.home.adapter.GridPagerAdapter;
 import com.wenming.weiswift.app.home.adapter.GridViewAdatpter;
 import com.wenming.weiswift.app.home.adapter.ScaleCircleNavigator;
 import com.wenming.weiswift.app.mvp.presenter.HomeFragmentPresent;
@@ -43,6 +45,7 @@ import com.wenming.weiswift.app.home.weiboitem.HomeHeadView;
 import com.wenming.weiswift.app.home.weiboitem.TimelineArrowWindow;
 import com.wenming.weiswift.app.home.adapter.WeiboAdapter;
 import com.wenming.weiswift.utils.DensityUtil;
+import com.wenming.weiswift.utils.DesBase64Tool;
 import com.wenming.weiswift.utils.ScreenUtil;
 import com.wenming.weiswift.widget.endlessrecyclerview.EndlessRecyclerOnScrollListener;
 import com.wenming.weiswift.widget.endlessrecyclerview.HeaderAndFooterRecyclerViewAdapter;
@@ -109,11 +112,12 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
     private static final String[] CHANNELS = new String[]{"CUPCAKE", "DONUT", "ECLAIR", "GINGERBREAD", "HONEYCOMB", "ICE_CREAM_SANDWICH", "JELLY_BEAN", "KITKAT", "LOLLIPOP", "M", "NOUGAT"};
     private List<String> mDataList = Arrays.asList(CHANNELS);
 //    private ExamplePagerAdapter mExamplePagerAdapter = new ExamplePagerAdapter(mDataList);
-    private ExamplePagerAdapter mExamplePagerAdapter ;
+    private GridPagerAdapter mGridPagerAdapter ;
     private List<View> viewPagerList;
     private HomeHeadView homeHeadView;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        token();
         questionList=new QuestionList();
         mActivity = getActivity();
         mContext = getContext();
@@ -135,7 +139,7 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
         vp_View=inflater.inflate(R.layout.headview_homefragment,container,false);
         viewPager = (ViewPager) homeHeadView.findViewById(R.id.vp_channel);
         initGridView();
-        viewPager.setAdapter(mExamplePagerAdapter);
+        viewPager.setAdapter(mGridPagerAdapter);
         initMagicIndicator1();
         initRecyclerView();
         initRefreshLayout();
@@ -154,6 +158,12 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
         });
         return mView;
     }
+    private void token() {
+        DesBase64Tool desBase64Tool=new DesBase64Tool();
+
+        Log.d(TAG, "token: 名字"+desBase64Tool.desEncrypt("admin@admin.com",desBase64Tool.paddingkey("THINKSNS")));
+        Log.d(TAG, "token: 密码"+desBase64Tool.desEncrypt(desBase64Tool.md5("123123"),desBase64Tool.paddingkey("THINKSNS")));
+    }
 
     private void initGridView() {
         viewPagerList=new ArrayList<View>();
@@ -161,9 +171,15 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
         for (int i = 0; i < 5; i++) {
             GridView gridView= (GridView) layoutInflater.inflate(R.layout.gridview,null);
             gridView.setAdapter(new GridViewAdatpter(mContext));
+            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Log.d(TAG, "onItemClick: gridview点击");
+                }
+            });
             viewPagerList.add(gridView);
         }
-        mExamplePagerAdapter=new ExamplePagerAdapter(viewPagerList);
+        mGridPagerAdapter=new GridPagerAdapter(viewPagerList);
     }
 
     @Override

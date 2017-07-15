@@ -191,9 +191,11 @@ public class PostService extends Service {
         params.addBodyParameter("app","api");
         params.addBodyParameter("mod","WeiboStatuses");
         params.addBodyParameter("act","upload");
-        params.addBodyParameter("oauth_token","553cb8005c5dff47cca58aabefd74de7");
+//        params.addBodyParameter("oauth_token","553cb8005c5dff47cca58aabefd74de7");
+        params.addBodyParameter("oauth_token","7e47c8122a19e38426ec7469765118e7");
         params.addBodyParameter("content",weiBoCreateBean.content);
-        params.addBodyParameter("oauth_token_secret","4dfa52f77ffe6d55fb1039fe70c70436");
+//        params.addBodyParameter("oauth_token_secret","4dfa52f77ffe6d55fb1039fe70c70436");
+        params.addBodyParameter("oauth_token_secret","cf4008b464c28794e881b7e8cab165b0");
         params.addBodyParameter("form","2");
         params.addBodyParameter("file",new File( weiBoCreateBean.selectImgList.get(0).getImageFile().getAbsolutePath()));
         httpUtils.send(HttpRequest.HttpMethod.POST,"http://192.168.1.176/thinksns_v3.0/index.php?" ,params, new RequestCallBack<Object>() {
