@@ -1,6 +1,7 @@
 package com.wenming.weiswift.app.mvp.model.imp;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.sina.weibo.sdk.exception.WeiboException;
 import com.sina.weibo.sdk.net.RequestListener;
@@ -28,6 +29,7 @@ public class GroupListModelImp implements GroupListModel {
             groups(context, onGroupListFinishedListener);
         } else {
             cacheLoad(context, onGroupListFinishedListener);
+
         }
     }
 

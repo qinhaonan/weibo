@@ -267,7 +267,7 @@ public class IdeaSwipeActivity extends BaseSwipeActivity implements ImgListAdapt
                 }
                 if (mSelectImgList.size() > 1) {
                     ToastUtil.showShort(mContext, "由于新浪的限制，第三方微博客户端只允许上传一张图，请做调整");
-                    return;
+//                    return;
                 }
                 Intent intent = new Intent(mContext, PostService.class);
                 Bundle bundle = new Bundle();

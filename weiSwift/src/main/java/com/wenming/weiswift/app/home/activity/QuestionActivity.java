@@ -25,6 +25,7 @@ import com.wenming.weiswift.app.common.base.BaseAppCompatActivity;
 import com.wenming.weiswift.app.common.base.BaseSwipeActivity;
 import com.wenming.weiswift.app.login.Constants;
 import com.wenming.weiswift.app.login.fragment.post.PostService;
+import com.wenming.weiswift.app.login.fragment.post.bean.WeiBoCreateBean;
 import com.wenming.weiswift.app.login.fragment.post.idea.IdeaSwipeActivity;
 import com.wenming.weiswift.app.login.fragment.post.idea.imagelist.ImgListAdapter;
 import com.wenming.weiswift.app.login.fragment.post.picselect.activity.AlbumSwipeActivity;
@@ -49,7 +50,8 @@ public class QuestionActivity extends BaseSwipeActivity implements ImgListAdapte
     private EditText edt_name;
     private TextView tv_name_num;
     private TextView tv_question_num;
-
+    private boolean isEmptyName=true;
+    private boolean isEmptyQuestion=true;
 
     @Override
     protected void onCreate( Bundle savedInstanceState) {
@@ -81,7 +83,18 @@ public class QuestionActivity extends BaseSwipeActivity implements ImgListAdapte
         btn_commit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Log.d(TAG, "onClick: 提交");
+                if (isEmptyName||isEmptyQuestion) {
+                    Toast.makeText(mContext,"文字不能为空",Toast.LENGTH_LONG).show();
+                }else if(mSelectImgList!=null){
+                    Intent intent = new Intent(mContext, PostService.class);
+                    Bundle bundle = new Bundle();
+                    WeiBoCreateBean weiboBean = new WeiBoCreateBean(edt_question.getText().toString(), mSelectImgList);
+                    intent.putExtra("postType", PostService.POST_SERVICE_CREATE_WEIBO);
+                    bundle.putParcelable("weiBoCreateBean", weiboBean);
+                    intent.putExtras(bundle);
+                    startService(intent);
+                }
             }
         });
         edt_question.setFilters(new InputFilter.LengthFilter[]{new InputFilter.LengthFilter(140)});
@@ -98,8 +111,13 @@ public class QuestionActivity extends BaseSwipeActivity implements ImgListAdapte
 
             @Override
             public void afterTextChanged(Editable s) {
+                if (s.length()==0) {
+                    isEmptyQuestion=true;
+                }else {
+                    isEmptyQuestion=false;
+                }
                 tv_question_num.setText(String.valueOf(s.length())+"/"+ Constants.NUMBER_OF_WORDS);
-                Toast.makeText(QuestionActivity.this,"字数不能大于5个字",Toast.LENGTH_SHORT).show();
+
             }
         });
         edt_name.setFilters(new InputFilter.LengthFilter[]{new InputFilter.LengthFilter(5)});
@@ -116,6 +134,11 @@ public class QuestionActivity extends BaseSwipeActivity implements ImgListAdapte
 
             @Override
             public void afterTextChanged(Editable s) {
+                if (s.length()==0) {
+                    isEmptyName=true;
+                }else {
+                    isEmptyName=false;
+                }
                 tv_name_num.setText(String.valueOf(s.length())+"/"+"5");
                 if (s.length()>Integer.valueOf( Constants.NUMBER_OF_WORDS)) {
                     Toast.makeText(QuestionActivity.this,"字数不能大于5个字",Toast.LENGTH_SHORT).show();
@@ -157,12 +180,12 @@ public class QuestionActivity extends BaseSwipeActivity implements ImgListAdapte
     private void highlightSendButton() {
         btn_commit.setBackgroundResource(R.drawable.highlight_send_button_bg);
         btn_commit.setTextColor(getResources().getColor(R.color.highlight_send_button_text));
-        btn_commit.setEnabled(true);
+//        btn_commit.setEnabled(true);
     }
     private void normalSendButton() {
         btn_commit.setBackgroundResource(R.drawable.normal_send_button_bg);
         btn_commit.setTextColor(getResources().getColor(R.color.normal_send_button_text));
-        btn_commit.setEnabled(false);
+//        btn_commit.setEnabled(false);
     }
     @Override
     public void OnFooterViewClick() {

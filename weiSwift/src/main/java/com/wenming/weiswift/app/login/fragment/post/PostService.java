@@ -13,13 +13,22 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.support.v7.app.NotificationCompat;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
+import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.RequestParams;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+import com.sina.weibo.sdk.component.view.AttentionComponentView;
 import com.sina.weibo.sdk.exception.WeiboException;
 import com.sina.weibo.sdk.net.RequestListener;
 import com.wenming.weiswift.R;
@@ -31,9 +40,16 @@ import com.wenming.weiswift.app.home.activity.MainActivity;
 import com.wenming.weiswift.app.login.fragment.post.bean.CommentReplyBean;
 import com.wenming.weiswift.app.login.fragment.post.bean.WeiBoCommentBean;
 import com.wenming.weiswift.app.login.fragment.post.bean.WeiBoCreateBean;
+import com.wenming.weiswift.utils.HttpUtil;
 import com.wenming.weiswift.utils.ToastUtil;
 
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.DefaultHttpClient;
+
 import java.io.File;
+import java.net.HttpURLConnection;
+
+import static com.sina.weibo.sdk.openapi.legacy.AccountAPI.CAPITAL.H;
 
 
 /**
@@ -140,30 +156,57 @@ public class PostService extends Service {
                     .build();
         }
 
-        ImageLoader.getInstance().loadImage("file:///" + weiBoCreateBean.selectImgList.get(0).getImageFile().getAbsolutePath(), imageItemOptions, new SimpleImageLoadingListener() {
-            @Override
-            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                mStatusesAPI.upload(weiBoCreateBean.content, loadedImage, "0", "0", new RequestListener() {
-                    @Override
-                    public void onComplete(String s) {
-                        onRequestComplete();
-                    }
+//        ImageLoader.getInstance().loadImage("file:///" + weiBoCreateBean.selectImgList.get(0).getImageFile().getAbsolutePath(), imageItemOptions, new SimpleImageLoadingListener() {
+//            @Override
+//            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+//                mStatusesAPI.upload(weiBoCreateBean.content, loadedImage, "0", "0", new RequestListener() {
+//                    @Override
+//                    public void onComplete(String s) {
+//                        onRequestComplete();
+//                    }
+//
+//                    @Override
+//                    public void onWeiboException(WeiboException e) {
+//                        onRequestError(e, "发送失败");
+//                    }
+//                });
+//            }
+//
+//            @Override
+//            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+//                ToastUtil.showShort(mContext, "本地找不到此图片");
+//                ToastUtil.showShort(mContext, failReason.getCause().getMessage());
+//            }
+//        });
+        upLoadd(weiBoCreateBean );
 
-                    @Override
-                    public void onWeiboException(WeiboException e) {
-                        onRequestError(e, "发送失败");
-                    }
-                });
+
+    }
+
+
+
+    private void upLoadd(WeiBoCreateBean weiBoCreateBean) {
+        RequestParams params = new RequestParams();
+        HttpUtils httpUtils = new HttpUtils();
+        params.addBodyParameter("app","api");
+        params.addBodyParameter("mod","WeiboStatuses");
+        params.addBodyParameter("act","upload");
+        params.addBodyParameter("oauth_token","553cb8005c5dff47cca58aabefd74de7");
+        params.addBodyParameter("content",weiBoCreateBean.content);
+        params.addBodyParameter("oauth_token_secret","4dfa52f77ffe6d55fb1039fe70c70436");
+        params.addBodyParameter("form","2");
+        params.addBodyParameter("file",new File( weiBoCreateBean.selectImgList.get(0).getImageFile().getAbsolutePath()));
+        httpUtils.send(HttpRequest.HttpMethod.POST,"http://192.168.1.176/thinksns_v3.0/index.php?" ,params, new RequestCallBack<Object>() {
+            @Override
+            public void onSuccess(ResponseInfo<Object> responseInfo) {
+                Log.d("PPPP", "onSuccess: "+"成功了"+responseInfo.result);
             }
 
             @Override
-            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-                ToastUtil.showShort(mContext, "本地找不到此图片");
-                ToastUtil.showShort(mContext, failReason.getCause().getMessage());
+            public void onFailure(HttpException e, String s) {
+                Log.d("PPPP", "onFailure: "+s);
             }
         });
-
-
     }
 
 
@@ -171,18 +214,32 @@ public class PostService extends Service {
      * 发送纯文字的微博
      */
     private void sendTextContent(WeiBoCreateBean weiBoCreateBean) {
-        mStatusesAPI.update(weiBoCreateBean.content.toString(), "0.0", "0.0", new RequestListener() {
-            @Override
-            public void onComplete(String s) {
-                onRequestComplete();
-            }
+//        mStatusesAPI.update(weiBoCreateBean.content.toString(), "0.0", "0.0", new RequestListener() {
+//            @Override
+//            public void onComplete(String s) {
+//                onRequestComplete();
+//            }
+//
+//            @Override
+//            public void onWeiboException(WeiboException e) {
+//                onRequestError(e, "发送失败");
+//            }
+//        });
+        HttpUtils httpUtils = new HttpUtils();
+        httpUtils.send(HttpRequest.HttpMethod.POST, "http://192.168.1.176/thinksns_v3.0/index.php?app=api&mod=WeiboStatuses&act=update&oauth_token=553cb8005c5dff47cca58aabefd74de7&content="
+                        +weiBoCreateBean.content.toString()+"&oauth_token_secret=4dfa52f77ffe6d55fb1039fe70c70436&form=2&appname=public&app_id=0",
+                null, new RequestCallBack<Object>() {
+                    @Override
+                    public void onSuccess(ResponseInfo<Object> responseInfo) {
+                        Log.d("PostService", "onSuccess:  成功");
+                    }
 
-            @Override
-            public void onWeiboException(WeiboException e) {
-                onRequestError(e, "发送失败");
-            }
-        });
+                    @Override
+                    public void onFailure(HttpException e, String s) {
 
+                        Log.d("PPP", "onFailure:   失败  "+s );
+                    }
+                });
     }
 
     /**
