@@ -3,6 +3,7 @@ package com.wenming.weiswift.app.home.fragment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -31,6 +32,7 @@ import com.wenming.weiswift.app.common.entity.Question;
 import com.wenming.weiswift.app.common.entity.Status;
 import com.wenming.weiswift.app.common.entity.User;
 import com.wenming.weiswift.app.common.entity.list.QuestionList;
+import com.wenming.weiswift.app.home.activity.CropActivity;
 import com.wenming.weiswift.app.home.adapter.GridPagerAdapter;
 import com.wenming.weiswift.app.home.adapter.GridViewAdatpter;
 import com.wenming.weiswift.app.home.adapter.ScaleCircleNavigator;
@@ -174,7 +176,7 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
             gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Log.d(TAG, "onItemClick: gridview点击");
+                    mContext.startActivity(new Intent(mContext, CropActivity.class));
                 }
             });
             viewPagerList.add(gridView);
