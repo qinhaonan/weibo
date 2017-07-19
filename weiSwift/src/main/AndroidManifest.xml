@@ -32,8 +32,8 @@
             android:theme="@android:style/Theme.Holo.Light.NoActionBar.Fullscreen">
 
             <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
@@ -45,11 +45,11 @@
                 <!--<category android:name="android.intent.category.LAUNCHER" />-->
             </intent-filter>
         </activity>
-        <activity android:name=".app.home.activity.QuestionActivity"/>
-        <activity android:name=".app.home.activity.ExpertActivity"/>
+        <activity android:name=".app.home.activity.QuestionActivity" />
+        <activity android:name=".app.home.activity.ExpertActivity" />
         <activity android:name=".app.settings.activity.SettingSwipeActivity" />
         <activity android:name=".app.home.activity.CropActivity" />
-
+        <activity android:name=".app.home.activity.CommentDetailSwipeActivity" />
         <activity android:name=".app.imgpreview.ImageDetailsActivity" />
 
         <activity android:name=".app.weibodetail.activity.OriginPicTextCommentDetailSwipeActivity" />

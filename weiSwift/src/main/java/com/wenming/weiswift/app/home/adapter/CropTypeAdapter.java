@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.wenming.weiswift.R;
+import com.wenming.weiswift.app.common.entity.CropChannel;
 import com.wenming.weiswift.app.home.activity.CropActivity;
 
 import java.util.ArrayList;
@@ -19,15 +20,15 @@ import java.util.List;
  */
 
 public class CropTypeAdapter extends RecyclerView.Adapter<CropTypeAdapter.LeftFragmentViewHolder> {
-    List<String> mDataList = new ArrayList<>();
+    List<CropChannel.CropType> mDataList ;
     Context mContext;
     int mBeforePosition = 0;
     boolean isFirst = true;
     TextView tvTemp;
-    int i=0;
+    int i = 0;
     private final Activity mActivity;
 
-    public CropTypeAdapter(Context context, List<String> dataList, Activity activity) {
+    public CropTypeAdapter(Context context, List<CropChannel.CropType> dataList, Activity activity) {
         mDataList = dataList;
         mContext = context;
         mActivity = activity;
@@ -43,21 +44,22 @@ public class CropTypeAdapter extends RecyclerView.Adapter<CropTypeAdapter.LeftFr
 
     @Override
     public void onBindViewHolder(final LeftFragmentViewHolder holder, final int position) {
-        if (position==0) {
-            tvTemp=holder.tv_item_mark;
+        if (position == 0) {
+            tvTemp = holder.tv_item_mark;
             holder.tv_item_mark.setVisibility(View.VISIBLE);
         }
-        holder.tv_item_type.setText(mDataList.get(position)+"("+i+")");
+        holder.tv_item_type.setText(mDataList.get(position).getTitle() + "(" + i + ")");
         holder.tv_item_type.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 holder.tv_item_mark.setVisibility(View.VISIBLE);
                 if (!tvTemp.equals(holder.tv_item_mark)) {
                     tvTemp.setVisibility(View.INVISIBLE);
                 }
-                tvTemp=holder.tv_item_mark;
-                ((CropActivity)mActivity).changeFragment(position);
-
+                tvTemp = holder.tv_item_mark;
+                ((CropActivity) mActivity).changeFragment(position, mBeforePosition);
+                mBeforePosition=position;
             }
         });
 

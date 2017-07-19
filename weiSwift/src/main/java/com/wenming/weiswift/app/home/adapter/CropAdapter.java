@@ -8,7 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.lidroid.xutils.BitmapUtils;
 import com.wenming.weiswift.R;
+import com.wenming.weiswift.app.common.entity.Question;
 
 import java.util.List;
 
@@ -18,10 +20,14 @@ import java.util.List;
 
 public class CropAdapter extends RecyclerView.Adapter<CropAdapter.ContentFragmentViewHolder>{
     Context mContext;
-    List<String> mDataList;
-    public CropAdapter(Context context, List<String> dataList) {
-        mDataList = dataList;
+    Question[] mDataList;
+    BitmapUtils bitmapUtils;
+    public CropAdapter(Context context, Question[] questions) {
+        mDataList = questions;
         mContext = context;
+        bitmapUtils = new BitmapUtils(mContext);
+        bitmapUtils.configDefaultLoadFailedImage(R.mipmap.ic_launcher);
+        bitmapUtils.configDefaultLoadingImage(R.mipmap.ic_launcher);
     }
     @Override
     public ContentFragmentViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -33,13 +39,14 @@ public class CropAdapter extends RecyclerView.Adapter<CropAdapter.ContentFragmen
 
     @Override
     public void onBindViewHolder(ContentFragmentViewHolder holder, int position) {
-        holder.tv_crop.setText(mDataList.get(position));
+        holder.tv_crop.setText(mDataList[position].getFeed_content());
         holder.img_crop.setImageResource(R.mipmap.ic_launcher);
+//        bitmapUtils.display(holder.img_crop, mDataList[position].getAttach().get(0).getAttach_middle());
     }
 
     @Override
     public int getItemCount() {
-        return mDataList.size();
+        return mDataList.length;
     }
     class ContentFragmentViewHolder extends RecyclerView.ViewHolder {
         TextView tv_crop;

@@ -18,7 +18,10 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.wenming.weiswift.R;
 import com.wenming.weiswift.app.common.FillContent;
 import com.wenming.weiswift.app.common.entity.Status;
+import com.wenming.weiswift.app.home.activity.CommentDetailSwipeActivity;
 import com.wenming.weiswift.app.home.weiboitem.NewPauseOnScrollListener;
+import com.wenming.weiswift.app.login.fragment.post.idea.IdeaSwipeActivity;
+import com.wenming.weiswift.app.message.comment.activity.CommentSwipeActivity;
 import com.wenming.weiswift.app.mvp.presenter.WeiBoArrowPresent;
 import com.wenming.weiswift.app.mvp.presenter.imp.WeiBoArrowPresenterImp;
 import com.wenming.weiswift.app.weibodetail.activity.OriginPicTextCommentDetailSwipeActivity;
@@ -76,7 +79,7 @@ public abstract class WeiboAdapter extends RecyclerView.Adapter<ViewHolder> {
         if (holder instanceof OriginViewHolder) {
             //如果这条原创微博没有被删除
             if (mDatas.get(position).user != null) {
-                status=mDatas.get(position);
+                status = mDatas.get(position);
                 ((OriginViewHolder) holder).titlebar_layout.setVisibility(View.VISIBLE);
                 ((OriginViewHolder) holder).bottombar_layout.setVisibility(View.VISIBLE);
                 ((OriginViewHolder) holder).splitLine.setVisibility(View.GONE);
@@ -84,7 +87,7 @@ public abstract class WeiboAdapter extends RecyclerView.Adapter<ViewHolder> {
                 FillContent.fillTitleBar(mContext, mDatas.get(position), ((OriginViewHolder) holder).profile_img, ((OriginViewHolder) holder).profile_verified, ((OriginViewHolder) holder).profile_name, ((OriginViewHolder) holder).profile_time, ((OriginViewHolder) holder).weibo_comefrom);
                 FillContent.fillWeiBoContent(mDatas.get(position).text, mContext, ((OriginViewHolder) holder).weibo_content);
                 FillContent.fillButtonBar(mContext, mDatas.get(position), ((OriginViewHolder) holder).bottombar_retweet, ((OriginViewHolder) holder).bottombar_comment, ((OriginViewHolder) holder).bottombar_attitude, ((OriginViewHolder) holder).comment, ((OriginViewHolder) holder).redirect, ((OriginViewHolder) holder).feedlike);
-                FillContent.fillComment_num(mDatas.get(position),((OriginViewHolder) holder).tv_comment);
+                FillContent.fillComment_num(mDatas.get(position), ((OriginViewHolder) holder).tv_comment);
                 FillContent.fillWeiBoImgList(mDatas.get(position), mContext, ((OriginViewHolder) holder).imageList);
 
                 ((OriginViewHolder) holder).bottombar_layout.setOnClickListener(new View.OnClickListener() {
@@ -112,21 +115,31 @@ public abstract class WeiboAdapter extends RecyclerView.Adapter<ViewHolder> {
                         mContext.startActivity(intent);
                     }
                 });
-                //解答的点击事件
+//                解答的点击事件
+//                ((OriginViewHolder) holder).ll_solution.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        if (status.retweeted_status == null) {
+//                            Intent intent = new Intent(mContext, OriginPicTextCommentDetailSwipeActivity.class);
+//                            intent.putExtra("weiboitem", status);
+//                            ((Activity) mContext).startActivityForResult(intent, 101);
+//                        } else {
+//                            Intent intent = new Intent(mContext, RetweetPicTextCommentDetailSwipeActivity.class);
+//                            intent.putExtra("weiboitem", status);
+//                            ((Activity) mContext).startActivityForResult(intent, 101);
+//                        }
+//                    }
+//                });
                 ((OriginViewHolder) holder).ll_solution.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (status.retweeted_status == null) {
-                            Intent intent = new Intent(mContext, OriginPicTextCommentDetailSwipeActivity.class);
-                            intent.putExtra("weiboitem", status);
-                            ((Activity) mContext).startActivityForResult(intent, 101);
-                        } else {
-                            Intent intent = new Intent(mContext, RetweetPicTextCommentDetailSwipeActivity.class);
-                            intent.putExtra("weiboitem", status);
-                            ((Activity) mContext).startActivityForResult(intent, 101);
-                        }
+                        Intent intent = new Intent(mContext, CommentDetailSwipeActivity.class);
+                        intent.putExtra("weiboitem", status);
+                        ((Activity) mContext).startActivityForResult(intent, 101);
+
                     }
                 });
+
             }
             //如果这条原创微博被删除
             else {
@@ -244,8 +257,8 @@ public abstract class WeiboAdapter extends RecyclerView.Adapter<ViewHolder> {
         public OriginViewHolder(View v) {
             super(v);
             origin_weibo_layout = (LinearLayout) v.findViewById(R.id.origin_weibo_layout);
-            ll_solution= (LinearLayout) v.findViewById(R.id.ll_solution);
-            tv_comment= (TextView) v.findViewById(R.id.tv_comment);
+            ll_solution = (LinearLayout) v.findViewById(R.id.ll_solution);
+            tv_comment = (TextView) v.findViewById(R.id.tv_comment);
             titlebar_layout = (LinearLayout) v.findViewById(R.id.titlebar_layout);
             profile_img = (ImageView) v.findViewById(R.id.profile_img);
             profile_verified = (ImageView) v.findViewById(R.id.profile_verified);
@@ -286,7 +299,6 @@ public abstract class WeiboAdapter extends RecyclerView.Adapter<ViewHolder> {
         public LinearLayout bottombar_comment;
         public LinearLayout bottombar_attitude;
         public LinearLayout retweetStatus_layout;
-
 
 
         public RetweetViewHolder(View v) {

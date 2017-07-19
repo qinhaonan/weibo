@@ -26,15 +26,15 @@ public class DiscoverFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.discoverfragment_layout, container, false);
-        mPublicWeibo = (RelativeLayout) mView.findViewById(R.id.publicweibo_layout);
-        mPublicWeibo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), HotWeiBoSwipeActivity.class);
-                getContext().startActivity(intent);
-            }
-        });
+        mView = inflater.inflate(R.layout.layout_find, container, false);
+//        mPublicWeibo = (RelativeLayout) mView.findViewById(R.id.publicweibo_layout);
+//        mPublicWeibo.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(getActivity(), HotWeiBoSwipeActivity.class);
+//                getContext().startActivity(intent);
+//            }
+//        });
         return mView;
     }
 

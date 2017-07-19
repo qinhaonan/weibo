@@ -22,8 +22,7 @@
             android:layout_height="50dp"
             android:gravity="center"
             android:background="@color/white"
-            android:layout_marginRight="50dp"
-            android:text="首页" />
+            android:text="快速提问" />
         <Button
             android:id="@+id/btn_commit"
             android:layout_width="50dp"

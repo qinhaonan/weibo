@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grey"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/white"
+        android:gravity="center"
+        android:text="发现"
+        android:textSize="18sp" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/bannel" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0.2dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/greyDark" />
+
+    <TextView
+        android:id="@+id/tv_open_shop"
+        style="@style/TextViewFind"
+        android:drawableLeft="@drawable/discover_wykd"
+        android:text="我要开店" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0.2dp"
+        android:layout_marginLeft="8dp"
+        android:background="@color/greyDark" />
+    <TextView
+        android:id="@+id/tv_apply_expert"
+        style="@style/TextViewFind"
+        android:drawableLeft="@drawable/discover_sqzj"
+        android:text="申请专家" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0.2dp"
+        android:layout_marginLeft="8dp"
+        android:background="@color/greyDark" />
+    <TextView
+        android:id="@+id/tv_shop"
+        style="@style/TextViewFind"
+        android:drawableLeft="@drawable/discover_mall"
+        android:text="农人币商城" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0.2dp"
+        android:layout_marginLeft="8dp"
+        android:background="@color/greyDark" />
+
+    <TextView
+        android:id="@+id/tv_agriculture_info"
+        style="@style/TextViewFind"
+        android:drawableLeft="@drawable/agricultural_information"
+        android:text="农业资讯" />
+    <TextView
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="0.2dp"
+        android:background="@color/greyDark" />
+
+    <TextView
+        android:id="@+id/tv_invite_friend"
+        style="@style/TextViewFind"
+        android:drawableLeft="@drawable/discover_friend"
+        android:text="邀请好友" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0.2dp"
+        android:layout_marginLeft="8dp"
+        android:background="@color/greyDark" />
+    <TextView
+        android:id="@+id/tv_nearby_shop"
+        style="@style/TextViewFind"
+        android:drawableLeft="@drawable/around_shop"
+        android:text="附近农资店" />
+
+    <TextView
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="0.2dp"
+        android:layout_marginLeft="8dp"
+        android:background="@color/greyDark" />
+    <TextView
+        android:id="@+id/tv_suggestion"
+        style="@style/TextViewFind"
+        android:drawableLeft="@drawable/feedback"
+        android:text="意见反馈" />
+
+</LinearLayout>

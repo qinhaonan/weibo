@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.wenming.weiswift.R;
+import com.wenming.weiswift.app.common.entity.CropChannel;
 import com.wenming.weiswift.app.home.adapter.CropTypeAdapter;
 
 import java.util.ArrayList;
@@ -22,9 +23,9 @@ import java.util.List;
 
 public class LeftFragment extends Fragment {
     Context mContext;
-    private List<String> mDataList;
+    private List<CropChannel.CropType> mDataList;
 
-    public  LeftFragment(Context context,List<String> dataList){
+    public  LeftFragment(Context context,List<CropChannel.CropType> dataList){
         mContext=context;
         mDataList=dataList;
     }
@@ -38,7 +39,6 @@ public class LeftFragment extends Fragment {
         rcView.setLayoutManager(new LinearLayoutManager(mContext));
         CropTypeAdapter cropAdapter = new CropTypeAdapter(mContext, mDataList,getActivity());
         rcView.setAdapter(cropAdapter);
-//        rcView.addOnItemTouchListener(new );
         return view;
     }
 
