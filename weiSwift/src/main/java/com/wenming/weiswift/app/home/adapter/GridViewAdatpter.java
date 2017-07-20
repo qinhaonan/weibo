@@ -2,6 +2,7 @@ package com.wenming.weiswift.app.home.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,9 +40,19 @@ public class GridViewAdatpter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder holder;
         if(convertView == null){
             convertView = LayoutInflater.from(mContext).inflate(R.layout.textlayout, parent, false);
+            holder=new GridViewAdatpter.ViewHolder();
+            holder.img_gridView = (ImageView) convertView.findViewById(R.id.img_gridItem);
+            holder.tv_gridView = (TextView) convertView.findViewById(R.id.tv_gridItem);
         }
+//        holder.img_gridView.setImageResource(R.drawable.);
+
         return convertView;
+    }
+    class ViewHolder {
+        TextView tv_gridView;
+        ImageView img_gridView;
     }
 }

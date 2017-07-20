@@ -113,14 +113,14 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
     ViewPager viewPager;
     private static final String[] CHANNELS = new String[]{"CUPCAKE", "DONUT", "ECLAIR", "GINGERBREAD", "HONEYCOMB", "ICE_CREAM_SANDWICH", "JELLY_BEAN", "KITKAT", "LOLLIPOP", "M", "NOUGAT"};
     private List<String> mDataList = Arrays.asList(CHANNELS);
-//    private ExamplePagerAdapter mExamplePagerAdapter = new ExamplePagerAdapter(mDataList);
-    private GridPagerAdapter mGridPagerAdapter ;
+    //    private ExamplePagerAdapter mExamplePagerAdapter = new ExamplePagerAdapter(mDataList);
+    private GridPagerAdapter mGridPagerAdapter;
     private List<View> viewPagerList;
     private HomeHeadView homeHeadView;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         token();
-        questionList=new QuestionList();
+        questionList = new QuestionList();
         mActivity = getActivity();
         mContext = getContext();
         mHomePresent = new HomeFragmentPresentImp(this);
@@ -138,15 +138,16 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
         mToastBg = (RelativeLayout) mView.findViewById(R.id.toast_bg);
         homeHeadView = new HomeHeadView(mContext);
 //        LinearLayout linearLayout= (LinearLayout) homeHeadView.findViewById(R.id.ll_header);
-        vp_View=inflater.inflate(R.layout.headview_homefragment,container,false);
+        vp_View = inflater.inflate(R.layout.headview_homefragment, container, false);
         viewPager = (ViewPager) homeHeadView.findViewById(R.id.vp_channel);
+        initData();
         initGridView();
         viewPager.setAdapter(mGridPagerAdapter);
         initMagicIndicator1();
         initRecyclerView();
         initRefreshLayout();
         //屏蔽tittle的点击事件。by qhn
-      //  initGroupWindows();
+        //  initGroupWindows();
         mSwipeRefreshLayout.post(new Runnable() {
             @Override
             public void run() {
@@ -160,18 +161,23 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
         });
         return mView;
     }
-    private void token() {
-        DesBase64Tool desBase64Tool=new DesBase64Tool();
 
-        Log.d(TAG, "token: 名字"+desBase64Tool.desEncrypt("admin@admin.com",desBase64Tool.paddingkey("THINKSNS")));
-        Log.d(TAG, "token: 密码"+desBase64Tool.desEncrypt(desBase64Tool.md5("123123"),desBase64Tool.paddingkey("THINKSNS")));
+    private void initData() {
+
+    }
+
+    private void token() {
+        DesBase64Tool desBase64Tool = new DesBase64Tool();
+
+        Log.d(TAG, "token: 名字" + desBase64Tool.desEncrypt("admin@admin.com", desBase64Tool.paddingkey("THINKSNS")));
+        Log.d(TAG, "token: 密码" + desBase64Tool.desEncrypt(desBase64Tool.md5("123123"), desBase64Tool.paddingkey("THINKSNS")));
     }
 
     private void initGridView() {
-        viewPagerList=new ArrayList<View>();
-        LayoutInflater layoutInflater=LayoutInflater.from(mContext);
+        viewPagerList = new ArrayList<View>();
+        LayoutInflater layoutInflater = LayoutInflater.from(mContext);
         for (int i = 0; i < 5; i++) {
-            GridView gridView= (GridView) layoutInflater.inflate(R.layout.gridview,null);
+            GridView gridView = (GridView) layoutInflater.inflate(R.layout.gridview, null);
             gridView.setAdapter(new GridViewAdatpter(mContext));
             gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -181,7 +187,11 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
             });
             viewPagerList.add(gridView);
         }
-        mGridPagerAdapter=new GridPagerAdapter(viewPagerList);
+        mGridPagerAdapter = new GridPagerAdapter(viewPagerList);
+    }
+
+    public void init() {
+
     }
 
     @Override
@@ -227,8 +237,6 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
         RecyclerViewUtils.setHeaderView(mRecyclerView, homeHeadView);
 
     }
-
-
 
 
     private void initRefreshLayout() {
@@ -364,7 +372,6 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
     }
 
 
-
     @Override
     public void updateListView(ArrayList<Status> statuselist) {
         mRecyclerView.addOnScrollListener(mOnScrollListener);
@@ -415,7 +422,7 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
         RecyclerViewStateUtils.setFooterViewState(mRecyclerView, LoadingFooter.State.NetWorkError);
     }
 
-//屏蔽首页tittle
+    //屏蔽首页tittle
     @Override
     public void setGroupName(String userName) {
 //        mUserNameTextView.setText(userName);
@@ -524,6 +531,7 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
         return mCurrentUser;
     }
 
+    //指示圆点
     private void initMagicIndicator1() {
         MagicIndicator magicIndicator = (MagicIndicator) homeHeadView.findViewById(R.id.magic_indicator1);
         ScaleCircleNavigator scaleCircleNavigator = new ScaleCircleNavigator(mContext);

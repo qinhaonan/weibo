@@ -3,7 +3,7 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 <ImageView
-    android:id="@+id/iv_gridItem"
+    android:id="@+id/img_gridItem"
     android:layout_width="55dp"
     android:layout_gravity="center"
     android:src="@mipmap/ic_launcher"
