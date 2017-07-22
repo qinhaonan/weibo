@@ -24,7 +24,9 @@ import java.util.List;
 public class LeftFragment extends Fragment {
     Context mContext;
     private List<CropChannel.CropType> mDataList;
+    public LeftFragment(){
 
+    }
     public  LeftFragment(Context context,List<CropChannel.CropType> dataList){
         mContext=context;
         mDataList=dataList;

@@ -71,7 +71,7 @@
         <activity android:name=".app.profile.activity.ProfileSwipeActivity" />
 
         <activity android:name=".app.login.fragment.post.PostSwipeActivity" />
-
+        <activity android:name=".app.home.activity.CropCategoryActivity"/>
         <activity
             android:name=".app.login.fragment.post.idea.IdeaSwipeActivity"
             android:windowSoftInputMode="adjustResize" />

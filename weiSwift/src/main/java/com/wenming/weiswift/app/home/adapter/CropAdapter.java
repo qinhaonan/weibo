@@ -45,8 +45,8 @@ public class CropAdapter extends RecyclerView.Adapter<CropAdapter.ContentFragmen
         if ( mDataList[position].getAttach() != null&&mDataList[position].getAttach().get(0) != null) {
             Glide.with(mContext)
                     .load(mDataList[position].getAttach().get(0).getAttach_middle())
-                    .placeholder(R.mipmap.ic_launcher)
-                    .error(R.mipmap.ic_launcher)
+                    .placeholder(R.drawable.loading)
+                    .error(R.drawable.loading)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(holder.img_crop);
         } else {

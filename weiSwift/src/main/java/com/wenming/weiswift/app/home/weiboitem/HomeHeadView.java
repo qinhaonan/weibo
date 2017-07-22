@@ -15,6 +15,14 @@ public class HomeHeadView extends RelativeLayout {
         super(context);
         init(context);
     }
+    public HomeHeadView(Context context,int i) {
+        super(context);
+        initHead(context);
+    }
+
+    private void initHead(Context context) {
+        inflate(context, R.layout.headview_cropfragment, this);
+    }
 
     public HomeHeadView(Context context, AttributeSet attrs) {
         super(context, attrs);

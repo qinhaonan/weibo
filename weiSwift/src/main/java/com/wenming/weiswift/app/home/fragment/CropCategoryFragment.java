@@ -1,14 +1,12 @@
 package com.wenming.weiswift.app.home.fragment;
 
-
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,7 +19,6 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -36,26 +33,24 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.wenming.weiswift.R;
+import com.wenming.weiswift.app.common.BarManager;
 import com.wenming.weiswift.app.common.entity.Crop;
 import com.wenming.weiswift.app.common.entity.Question;
 import com.wenming.weiswift.app.common.entity.Status;
 import com.wenming.weiswift.app.common.entity.User;
 import com.wenming.weiswift.app.common.entity.list.QuestionList;
-import com.wenming.weiswift.app.home.activity.CropActivity;
-import com.wenming.weiswift.app.home.adapter.CropAdapter;
 import com.wenming.weiswift.app.home.adapter.GridPagerAdapter;
 import com.wenming.weiswift.app.home.adapter.GridViewAdatpter;
 import com.wenming.weiswift.app.home.adapter.ScaleCircleNavigator;
+import com.wenming.weiswift.app.home.adapter.WeiboAdapter;
+import com.wenming.weiswift.app.home.weiboitem.HomeHeadView;
+import com.wenming.weiswift.app.home.weiboitem.TimelineArrowWindow;
+import com.wenming.weiswift.app.home.widget.GroupPopWindow;
+import com.wenming.weiswift.app.home.widget.IGroupItemClick;
+import com.wenming.weiswift.app.login.Constants;
 import com.wenming.weiswift.app.mvp.presenter.HomeFragmentPresent;
 import com.wenming.weiswift.app.mvp.presenter.imp.HomeFragmentPresentImp;
 import com.wenming.weiswift.app.mvp.view.HomeFragmentView;
-import com.wenming.weiswift.app.common.BarManager;
-import com.wenming.weiswift.app.login.Constants;
-import com.wenming.weiswift.app.home.widget.GroupPopWindow;
-import com.wenming.weiswift.app.home.widget.IGroupItemClick;
-import com.wenming.weiswift.app.home.weiboitem.HomeHeadView;
-import com.wenming.weiswift.app.home.weiboitem.TimelineArrowWindow;
-import com.wenming.weiswift.app.home.adapter.WeiboAdapter;
 import com.wenming.weiswift.utils.DensityUtil;
 import com.wenming.weiswift.utils.DesBase64Tool;
 import com.wenming.weiswift.utils.ScreenUtil;
@@ -74,10 +69,10 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by wenmingvs on 16/4/27.
+ * Created by qhn on 2017/7/22.
  */
-public class HomeFragment extends Fragment implements HomeFragmentView {
 
+public class CropCategoryFragment extends Fragment implements HomeFragmentView {
     private static final String TAG = "HomeFragment";
     private ArrayList<Status> mDatas;
     public Context mContext;
@@ -119,7 +114,7 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
     private boolean mControlsVisible = true;
     private TextView mToastTv;
     private RelativeLayout mToastBg;
-    private onButtonBarListener mOnBottonBarListener;
+    private HomeFragment.onButtonBarListener mOnBottonBarListener;
 
     ViewPager viewPager;
     private static final String[] CHANNELS = new String[]{"CUPCAKE", "DONUT", "ECLAIR", "GINGERBREAD", "HONEYCOMB", "ICE_CREAM_SANDWICH", "JELLY_BEAN", "KITKAT", "LOLLIPOP", "M", "NOUGAT"};
@@ -149,13 +144,13 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
         mSwipeRefreshLayout = (SwipeRefreshLayout) mView.findViewById(R.id.swipe_refresh_widget);
         mToastTv = (TextView) mView.findViewById(R.id.toast_msg);
         mToastBg = (RelativeLayout) mView.findViewById(R.id.toast_bg);
-        homeHeadView = new HomeHeadView(mContext);
+        homeHeadView = new HomeHeadView(mContext,1);
 //        LinearLayout linearLayout= (LinearLayout) homeHeadView.findViewById(R.id.ll_header);
         vp_View = inflater.inflate(R.layout.headview_homefragment, container, false);
         rl_gridview = (RelativeLayout) vp_View.findViewById(R.id.rl_gridview);
-        viewPager = (ViewPager) homeHeadView.findViewById(R.id.vp_channel);
+//        viewPager = (ViewPager) homeHeadView.findViewById(R.id.vp_channel);
 
-        initData();
+
         initRecyclerView();
         initRefreshLayout();
         //屏蔽tittle的点击事件。
@@ -243,12 +238,6 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
             }
             GridView gridView = (GridView) layoutInflater.inflate(R.layout.gridview, null);
             gridView.setAdapter(new GridViewAdatpter(mContext,k, cropList,isLastPager));
-            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    mContext.startActivity(new Intent(mContext, CropActivity.class));
-                }
-            });
             viewPagerList.add(gridView);
             k++;
         }
@@ -266,15 +255,15 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
         super.onDestroyView();
     }
 
-    public HomeFragment() {
+    public CropCategoryFragment() {
     }
 
     /**
      * 静态工厂方法需要一个int型的值来初始化fragment的参数，
      * 然后返回新的fragment到调用者
      */
-    public static HomeFragment newInstance(boolean comeFromAccoutActivity) {
-        HomeFragment homeFragment = new HomeFragment();
+    public static CropCategoryFragment newInstance(boolean comeFromAccoutActivity) {
+        CropCategoryFragment homeFragment = new CropCategoryFragment();
         Bundle args = new Bundle();
         args.putBoolean("comeFromAccoutActivity", comeFromAccoutActivity);
         homeFragment.setArguments(args);
@@ -576,7 +565,7 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
      *
      * @param onBarListener
      */
-    public void setOnBarListener(onButtonBarListener onBarListener) {
+    public void setOnBarListener(HomeFragment.onButtonBarListener onBarListener) {
         this.mOnBottonBarListener = onBarListener;
     }
 
@@ -610,6 +599,7 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
         magicIndicator.setNavigator(scaleCircleNavigator);
         ViewPagerHelper.bind(magicIndicator, viewPager);
     }
+
 
 
 }

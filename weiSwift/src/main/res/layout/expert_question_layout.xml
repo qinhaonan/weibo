@@ -2,55 +2,25 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="55dp">
+    android:layout_marginTop="10dp"
+    android:layout_marginBottom="10dp"
+    android:background="@color/white"
+    android:layout_height="70dp">
     <LinearLayout
         android:id="@+id/ll_expert"
         android:layout_width="0dp"
         android:layout_weight="1"
+        android:orientation="horizontal"
+        android:background="@drawable/go_expert"
         android:layout_height="wrap_content">
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="问专家"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="指定专家作答"/>
-    </LinearLayout>
-
-        <ImageView
-            android:src="@mipmap/ic_launcher"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
     </LinearLayout>
     <LinearLayout
         android:id="@+id/ll_question"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_height="wrap_content">
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="快速提问"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="传图提问"/>
-    </LinearLayout>
+        android:orientation="horizontal"
+        android:background="@drawable/go_answer">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/ic_launcher"/>
     </LinearLayout>
 </LinearLayout>
