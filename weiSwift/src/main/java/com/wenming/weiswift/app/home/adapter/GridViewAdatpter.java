@@ -57,7 +57,7 @@ public class GridViewAdatpter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.item_gridview_layout, parent, false);
@@ -79,7 +79,9 @@ public class GridViewAdatpter extends BaseAdapter {
                 holder.img_gridView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mContext.startActivity(new Intent(mContext, CropCategoryActivity.class));
+                        Intent intent=new Intent(mContext, CropCategoryActivity.class);
+                        intent.putExtra("CropName",mCropList.get(position + mPosition * 9).getWeiba_name());
+                        mContext.startActivity(intent);
                     }
                 });
             } else {
@@ -103,7 +105,9 @@ public class GridViewAdatpter extends BaseAdapter {
             holder.img_gridView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mContext.startActivity(new Intent(mContext, CropCategoryActivity.class));
+                    Intent intent=new Intent(mContext, CropCategoryActivity.class);
+                    intent.putExtra("CropName",mCropList.get(position + mPosition * 9).getWeiba_name());
+                    mContext.startActivity(intent);
                 }
             });
         } else {
@@ -118,7 +122,6 @@ public class GridViewAdatpter extends BaseAdapter {
         }
 
 
-//        holder.img_gridView.setImageResource(R.drawable.);
 
         return convertView;
     }

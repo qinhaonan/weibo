@@ -37,6 +37,8 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.wenming.weiswift.R;
 import com.wenming.weiswift.app.common.entity.Crop;
+import com.wenming.weiswift.app.common.entity.CropChannel;
+import com.wenming.weiswift.app.common.entity.PublicWeiBoEntity;
 import com.wenming.weiswift.app.common.entity.Question;
 import com.wenming.weiswift.app.common.entity.Status;
 import com.wenming.weiswift.app.common.entity.User;
@@ -71,6 +73,7 @@ import net.lucode.hackware.magicindicator.ViewPagerHelper;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -130,7 +133,7 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
     private HomeHeadView homeHeadView;
     private List<Crop> cropList;
     private RelativeLayout rl_gridview;
-
+    private List<PublicWeiBoEntity.WeiBo> weiBoList;
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         token();
         questionList = new QuestionList();
@@ -243,12 +246,6 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
             }
             GridView gridView = (GridView) layoutInflater.inflate(R.layout.gridview, null);
             gridView.setAdapter(new GridViewAdatpter(mContext,k, cropList,isLastPager));
-            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    mContext.startActivity(new Intent(mContext, CropActivity.class));
-                }
-            });
             viewPagerList.add(gridView);
             k++;
         }
@@ -609,6 +606,42 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
         });
         magicIndicator.setNavigator(scaleCircleNavigator);
         ViewPagerHelper.bind(magicIndicator, viewPager);
+    }
+    public void initWeiBoData() {
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("app", "api");
+        params.addBodyParameter("mod", "WeiboStatuses");
+        params.addBodyParameter("act", "public_timeline");
+        params.addBodyParameter("oauth_token", "553cb8005c5dff47cca58aabefd74de7");
+        params.addBodyParameter("oauth_token_secret", "4dfa52f77ffe6d55fb1039fe70c70436");
+        HttpUtils httpUtils=new HttpUtils();
+        httpUtils.send(HttpRequest.HttpMethod.GET, "http://192.168.1.176/thinksns_v3.0/index.php?",
+                null, new RequestCallBack<Object>() {
+                    @Override
+                    public void onSuccess(ResponseInfo<Object> responseInfo) {
+                        Log.d("PostService", "onSuccess:  成功" + responseInfo.result);
+
+                        PublicWeiBoEntity publicWeiBoEntity = new PublicWeiBoEntity();
+                        Gson gson=new Gson();
+                        Type weiBoType = new TypeToken<HashMap<String, PublicWeiBoEntity.WeiBo>>() {}.getType();
+                        publicWeiBoEntity.weiBoMap = gson.fromJson((String) responseInfo.result, weiBoType);
+                        weiBoList = new ArrayList<PublicWeiBoEntity.WeiBo>();
+                        for (PublicWeiBoEntity.WeiBo v : publicWeiBoEntity.weiBoMap.values()){
+                            weiBoList.add(v);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(HttpException e, String s) {
+                        Log.d("PPP", "onFailure:   失败  " + s);
+                    }
+                });
+//        RequestUtil.request(httpUtils,"http://192.168.1.176/thinksns_v3.0/index.php?app=api&mod=Channel&act=get_all_channel&oauth_token=553cb8005c5dff47cca58aabefd74de7&oauth_token_secret=4dfa52f77ffe6d55fb1039fe70c70436"
+
+//        dataList = new ArrayList<>();
+//        for (int i = 0; i < 10; i++) {
+//            dataList.add("苹果" + String.valueOf(i));
+//        }
     }
 
 

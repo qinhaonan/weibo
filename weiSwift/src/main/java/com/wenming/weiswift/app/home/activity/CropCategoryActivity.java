@@ -17,9 +17,14 @@ public class CropCategoryActivity extends BaseAppCompatActivity {
     protected void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_crop_category);
+        String cropName=getIntent().getStringExtra("CropName");
+        Bundle bundle = new Bundle();
+        bundle.putString("CropName",cropName);
         FragmentTransaction ft=getFragmentManager().beginTransaction();
         CropCategoryFragment cropCategoryFragment=CropCategoryFragment.newInstance(false);
+        cropCategoryFragment.setArguments(bundle);
         ft.add(R.id.fr_crop_category, cropCategoryFragment,"home");
         ft.commit();
     }
+
 }

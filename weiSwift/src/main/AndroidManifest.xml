@@ -51,9 +51,7 @@
         <activity android:name=".app.home.activity.CropActivity" />
         <activity android:name=".app.home.activity.CommentDetailSwipeActivity" />
         <activity android:name=".app.imgpreview.ImageDetailsActivity" />
-
         <activity android:name=".app.weibodetail.activity.OriginPicTextCommentDetailSwipeActivity" />
-
         <activity android:name=".app.weibodetail.activity.RetweetPicTextCommentDetailSwipeActivity" />
 
         <activity android:name=".app.message.mention.activity.MentionSwipeActivity" />
@@ -71,7 +69,7 @@
         <activity android:name=".app.profile.activity.ProfileSwipeActivity" />
 
         <activity android:name=".app.login.fragment.post.PostSwipeActivity" />
-        <activity android:name=".app.home.activity.CropCategoryActivity"/>
+        <activity android:name=".app.home.activity.CropCategoryActivity" />
         <activity
             android:name=".app.login.fragment.post.idea.IdeaSwipeActivity"
             android:windowSoftInputMode="adjustResize" />

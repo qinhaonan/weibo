@@ -117,9 +117,6 @@ public class CropCategoryFragment extends Fragment implements HomeFragmentView {
     private HomeFragment.onButtonBarListener mOnBottonBarListener;
 
     ViewPager viewPager;
-    private static final String[] CHANNELS = new String[]{"CUPCAKE", "DONUT", "ECLAIR", "GINGERBREAD", "HONEYCOMB", "ICE_CREAM_SANDWICH", "JELLY_BEAN", "KITKAT", "LOLLIPOP", "M", "NOUGAT"};
-    private List<String> mDataList = Arrays.asList(CHANNELS);
-    //    private ExamplePagerAdapter mExamplePagerAdapter = new ExamplePagerAdapter(mDataList);
     private GridPagerAdapter mGridPagerAdapter;
     private List<View> viewPagerList;
     private HomeHeadView homeHeadView;
@@ -127,14 +124,13 @@ public class CropCategoryFragment extends Fragment implements HomeFragmentView {
     private RelativeLayout rl_gridview;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        token();
         questionList = new QuestionList();
         mActivity = getActivity();
         mContext = getContext();
         mHomePresent = new HomeFragmentPresentImp(this);
         mComeFromAccoutActivity = getArguments().getBoolean("comeFromAccoutActivity");
         sHideThreshold = DensityUtil.dp2px(mContext, 20);
-        mView = inflater.inflate(R.layout.fragment_main, container, false);
+        mView = inflater.inflate(R.layout.fragment_crop_category, container, false);
         mRecyclerView = (RecyclerView) mView.findViewById(R.id.weiboRecyclerView);
         mTopBar = (LinearLayout) mView.findViewById(R.id.toolbar_home);
         mGroup = (LinearLayout) mView.findViewById(R.id.group);
@@ -144,13 +140,14 @@ public class CropCategoryFragment extends Fragment implements HomeFragmentView {
         mSwipeRefreshLayout = (SwipeRefreshLayout) mView.findViewById(R.id.swipe_refresh_widget);
         mToastTv = (TextView) mView.findViewById(R.id.toast_msg);
         mToastBg = (RelativeLayout) mView.findViewById(R.id.toast_bg);
-        homeHeadView = new HomeHeadView(mContext,1);
+        homeHeadView = new HomeHeadView(mContext, 1);
 //        LinearLayout linearLayout= (LinearLayout) homeHeadView.findViewById(R.id.ll_header);
         vp_View = inflater.inflate(R.layout.headview_homefragment, container, false);
         rl_gridview = (RelativeLayout) vp_View.findViewById(R.id.rl_gridview);
 //        viewPager = (ViewPager) homeHeadView.findViewById(R.id.vp_channel);
-
-
+//      设置toolbarname
+        TextView tv_cropName= (TextView) mView.findViewById(R.id.name_crop);
+        tv_cropName.setText(getArguments().getString("CropName"));
         initRecyclerView();
         initRefreshLayout();
         //屏蔽tittle的点击事件。
@@ -170,81 +167,6 @@ public class CropCategoryFragment extends Fragment implements HomeFragmentView {
 
         return mView;
     }
-
-    private void initData() {
-        {
-            RequestParams params = new RequestParams();
-            params.addBodyParameter("app", "api");
-            params.addBodyParameter("mod", "Weiba");
-            params.addBodyParameter("act", "get_weibas");
-            params.addBodyParameter("oauth_token", "553cb8005c5dff47cca58aabefd74de7");
-            params.addBodyParameter("oauth_token_secret", "4dfa52f77ffe6d55fb1039fe70c70436");
-            HttpUtils httpUtils = new HttpUtils();
-            httpUtils.send(HttpRequest.HttpMethod.POST, "http://192.168.1.176/thinksns_v3.0/index.php?", params, new RequestCallBack<Object>() {
-                @Override
-                public void onSuccess(ResponseInfo<Object> responseInfo) {
-                    Log.d("PPPP", "onSuccess: " + "成" + responseInfo.result);
-                    Type type = new TypeToken<List<Crop>>() {
-                    }.getType();
-                    Gson gson = new Gson();
-                    cropList = gson.fromJson((String) responseInfo.result, type);
-                    int count = 0;
-                    if (cropList.size()<5){
-                        RelativeLayout.LayoutParams params= (RelativeLayout.LayoutParams) viewPager.getLayoutParams();
-                        params.height=DensityUtil.dp2px(mContext,100);
-                        viewPager.setLayoutParams(params);
-                    }else {
-                        RelativeLayout.LayoutParams params= (RelativeLayout.LayoutParams) viewPager.getLayoutParams();
-                        params.height=DensityUtil.dp2px(mContext,170);
-                        viewPager.setLayoutParams(params);
-                    }
-                    if (cropList.size() % 9 == 0) {
-                        count = cropList.size() / 9;
-                    } else {
-                        count = cropList.size() / 9 +1;
-                    }
-                    initGridView(count);
-                    viewPager.setAdapter(mGridPagerAdapter);
-                    initMagicIndicator1(count);
-                }
-
-                @Override
-                public void onFailure(HttpException e, String s) {
-                    Log.d("PPPP", "onFailure: " + s);
-                }
-            });
-//        dataList = new ArrayList<>();
-//        for (int i = 0; i < 40; i++) {
-//            dataList.add("苹果"+String.valueOf(i));
-//        }
-        }
-    }
-
-    private void token() {
-        DesBase64Tool desBase64Tool = new DesBase64Tool();
-
-        Log.d(TAG, "token: 名字" + desBase64Tool.desEncrypt("admin@admin.com", desBase64Tool.paddingkey("THINKSNS")));
-        Log.d(TAG, "token: 密码" + desBase64Tool.desEncrypt(desBase64Tool.md5("123123"), desBase64Tool.paddingkey("THINKSNS")));
-    }
-
-    private void initGridView(int j) {
-        viewPagerList = new ArrayList<View>();
-        LayoutInflater layoutInflater = LayoutInflater.from(mContext);
-        int k=0;
-        boolean isLastPager=false;
-        for (int i = j ; 0 < i; i--) {
-            if(i==1){
-                isLastPager=true;
-            }
-            GridView gridView = (GridView) layoutInflater.inflate(R.layout.gridview, null);
-            gridView.setAdapter(new GridViewAdatpter(mContext,k, cropList,isLastPager));
-            viewPagerList.add(gridView);
-            k++;
-        }
-        mGridPagerAdapter = new GridPagerAdapter(viewPagerList);
-
-    }
-
 
     @Override
     public void onDestroyView() {
@@ -599,7 +521,6 @@ public class CropCategoryFragment extends Fragment implements HomeFragmentView {
         magicIndicator.setNavigator(scaleCircleNavigator);
         ViewPagerHelper.bind(magicIndicator, viewPager);
     }
-
 
 
 }
