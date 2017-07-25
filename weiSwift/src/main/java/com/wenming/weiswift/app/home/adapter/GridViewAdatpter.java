@@ -15,6 +15,7 @@ import com.wenming.weiswift.R;
 import com.wenming.weiswift.app.common.entity.Crop;
 import com.wenming.weiswift.app.home.activity.CropActivity;
 import com.wenming.weiswift.app.home.activity.CropCategoryActivity;
+import com.wenming.weiswift.app.home.activity.ExpertDetailsActivity;
 
 import java.util.List;
 
@@ -116,7 +117,9 @@ public class GridViewAdatpter extends BaseAdapter {
             holder.img_gridView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mContext.startActivity(new Intent(mContext, CropActivity.class));
+//                    mContext.startActivity(new Intent(mContext, CropActivity.class));
+                    mContext.startActivity(new Intent(mContext, ExpertDetailsActivity.class));
+
                 }
             });
         }

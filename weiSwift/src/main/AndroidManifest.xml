@@ -53,7 +53,7 @@
         <activity android:name=".app.imgpreview.ImageDetailsActivity" />
         <activity android:name=".app.weibodetail.activity.OriginPicTextCommentDetailSwipeActivity" />
         <activity android:name=".app.weibodetail.activity.RetweetPicTextCommentDetailSwipeActivity" />
-
+        <activity android:name=".app.home.activity.ExpertDetailsActivity"/>
         <activity android:name=".app.message.mention.activity.MentionSwipeActivity" />
 
         <activity android:name=".app.message.comment.activity.CommentSwipeActivity" />
