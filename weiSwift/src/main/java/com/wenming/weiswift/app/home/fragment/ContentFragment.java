@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.lidroid.xutils.HttpUtils;
@@ -20,6 +21,7 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.wenming.weiswift.R;
+import com.wenming.weiswift.app.common.entity.CropCategoryEntity;
 import com.wenming.weiswift.app.common.entity.Question;
 import com.wenming.weiswift.app.home.adapter.CropAdapter;
 
@@ -30,6 +32,8 @@ import java.util.List;
 
 import uk.co.senab.photoview.log.LoggerDefault;
 
+import static android.content.ContentValues.TAG;
+
 /**
  * Created by qhn on 2017/7/15.
  */
@@ -37,18 +41,18 @@ import uk.co.senab.photoview.log.LoggerDefault;
 public class ContentFragment extends Fragment{
     Context mContext;
 //    private List<String> dataList;
-    private String mPostion;
+    private String mcid;
     private RecyclerView rcView;
-
-    public  ContentFragment(Context context,String postion){
+    public  ContentFragment(Context context, String cid){
         mContext=context;
-        mPostion=postion;
+        mcid=cid;
+
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        init();
+        init2();
         LayoutInflater layoutInflater = LayoutInflater.from(mContext);
         View view = layoutInflater.inflate(R.layout.fl_content_layout, null);
         rcView = (RecyclerView) view.findViewById(R.id.rc_content);
@@ -64,15 +68,15 @@ public class ContentFragment extends Fragment{
         params.addBodyParameter("act","get_channel_feed");
         params.addBodyParameter("oauth_token","553cb8005c5dff47cca58aabefd74de7");
         params.addBodyParameter("oauth_token_secret","4dfa52f77ffe6d55fb1039fe70c70436");
-        params.addBodyParameter("category_id",mPostion);
+        params.addBodyParameter("category_id",mcid);
         HttpUtils httpUtils = new HttpUtils();
         httpUtils.send(HttpRequest.HttpMethod.POST,"http://192.168.1.176/thinksns_v3.0/index.php?" ,params, new RequestCallBack<Object>() {
             @Override
             public void onSuccess(ResponseInfo<Object> responseInfo) {
-                Log.d("PPPP", "onSuccess: "+"成"+mPostion+responseInfo.result);
+                Log.d("PPPP", "onSuccess: "+"成"+mcid+responseInfo.result);
                 Gson gson=new Gson();
                 Question question[]=gson.fromJson((String)responseInfo.result, Question[].class);
-                rcView.setAdapter(new CropAdapter(mContext,question));
+//                rcView.setAdapter(new CropAdapter(mContext,question));
             }
 
             @Override
@@ -85,4 +89,34 @@ public class ContentFragment extends Fragment{
 //            dataList.add("苹果"+String.valueOf(i));
 //        }
     }
+    private void init2(){
+//        RequestParams params=new RequestParams();
+//        params.addBodyParameter("app","api");
+//        params.addBodyParameter("mod","Weiba");
+//        params.addBodyParameter("act","get_weiba_by_cate");
+//        params.addBodyParameter("oauth_token","553cb8005c5dff47cca58aabefd74de7");
+//        params.addBodyParameter("oauth_token_secret","4dfa52f77ffe6d55fb1039fe70c70436");
+//        params.addBodyParameter("cid",mcid);
+        HttpUtils httpUtils = new HttpUtils();
+        httpUtils.send(HttpRequest.HttpMethod.POST,"http://192.168.1.176/thinksns_v3.0/index.php?app=api&mod=Weiba&act=get_weiba_by_cate&oauth_token=553cb8005c5dff47cca58aabefd74de7&oauth_token_secret=4dfa52f77ffe6d55fb1039fe70c70436&cid="+mcid ,null, new RequestCallBack<Object>() {
+            @Override
+            public void onSuccess(ResponseInfo<Object> responseInfo) {
+                Log.d("PPPP", "onSuccess: "+"成"+mcid+responseInfo.result);
+                Gson gson=new Gson();
+                CropCategoryEntity cropCategoryEntity=gson.fromJson((String)responseInfo.result, CropCategoryEntity.class);
+//                Log.d(TAG, "onSuccess: "+cropCategoryEntity.getData().get(0).getWeiba_name());
+                rcView.setAdapter(new CropAdapter(mContext,cropCategoryEntity.getData()));
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                Log.d("PPPP", "onFailure: "+s);
+            }
+        });
+//        dataList = new ArrayList<>();
+//        for (int i = 0; i < 40; i++) {
+//            dataList.add("苹果"+String.valueOf(i));
+//        }
+    }
+
 }

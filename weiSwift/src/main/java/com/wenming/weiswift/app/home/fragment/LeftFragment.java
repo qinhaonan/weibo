@@ -9,9 +9,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.wenming.weiswift.R;
 import com.wenming.weiswift.app.common.entity.CropChannel;
+import com.wenming.weiswift.app.common.entity.CropEntity;
+import com.wenming.weiswift.app.common.entity.CropTypeEntity;
 import com.wenming.weiswift.app.home.adapter.CropTypeAdapter;
 
 import java.util.ArrayList;
@@ -23,11 +26,13 @@ import java.util.List;
 
 public class LeftFragment extends Fragment {
     Context mContext;
-    private List<CropChannel.CropType> mDataList;
+    private List<CropTypeEntity.CropTypeBean> mDataList;
+    private List<TextView> textViewsList;
+
     public LeftFragment(){
 
     }
-    public  LeftFragment(Context context,List<CropChannel.CropType> dataList){
+    public  LeftFragment(Context context,List<CropTypeEntity.CropTypeBean> dataList){
         mContext=context;
         mDataList=dataList;
     }
@@ -40,8 +45,11 @@ public class LeftFragment extends Fragment {
         RecyclerView rcView= (RecyclerView) view.findViewById(R.id.rc_type_leftfragment);
         rcView.setLayoutManager(new LinearLayoutManager(mContext));
         CropTypeAdapter cropAdapter = new CropTypeAdapter(mContext, mDataList,getActivity());
+        textViewsList = cropAdapter.getCropTotalView();
         rcView.setAdapter(cropAdapter);
         return view;
     }
-
+    public List<TextView> getCropTotalView(){
+        return textViewsList;
+    }
 }

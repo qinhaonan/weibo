@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.wenming.weiswift"
-        minSdkVersion 14
+        minSdkVersion 16
         targetSdkVersion 21
     }
 
@@ -70,6 +70,7 @@ dependencies {
     compile 'com.github.hackware1993:MagicIndicator:1.5.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.android.support:design:24.2.1'
+    compile files('libs/json-lib-1.1-jdk13.jar')
 }
 repositories {
     mavenCentral()

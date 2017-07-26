@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.wenming.weiswift.R;
 import com.wenming.weiswift.app.common.entity.CropChannel;
+import com.wenming.weiswift.app.common.entity.CropTypeEntity;
 import com.wenming.weiswift.app.home.activity.CropActivity;
 
 import java.util.ArrayList;
@@ -20,15 +21,15 @@ import java.util.List;
  */
 
 public class CropTypeAdapter extends RecyclerView.Adapter<CropTypeAdapter.LeftFragmentViewHolder> {
-    List<CropChannel.CropType> mDataList ;
+    List<CropTypeEntity.CropTypeBean> mDataList;
     Context mContext;
     int mBeforePosition = 0;
     boolean isFirst = true;
     TextView tvTemp;
     int i = 0;
     private final Activity mActivity;
-
-    public CropTypeAdapter(Context context, List<CropChannel.CropType> dataList, Activity activity) {
+    private List<TextView> tv_item_typeList=new ArrayList<TextView>();
+    public CropTypeAdapter(Context context, List<CropTypeEntity.CropTypeBean> dataList, Activity activity) {
         mDataList = dataList;
         mContext = context;
         mActivity = activity;
@@ -48,7 +49,7 @@ public class CropTypeAdapter extends RecyclerView.Adapter<CropTypeAdapter.LeftFr
             tvTemp = holder.tv_item_mark;
             holder.tv_item_mark.setVisibility(View.VISIBLE);
         }
-        holder.tv_item_type.setText(mDataList.get(position).getTitle() + "(" + i + ")");
+        holder.tv_item_type.setText(mDataList.get(position).getName() + "(" + i + ")");
         holder.tv_item_type.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,8 +59,9 @@ public class CropTypeAdapter extends RecyclerView.Adapter<CropTypeAdapter.LeftFr
                     tvTemp.setVisibility(View.INVISIBLE);
                 }
                 tvTemp = holder.tv_item_mark;
+                tv_item_typeList.add(holder.tv_item_type);
                 ((CropActivity) mActivity).changeFragment(position, mBeforePosition);
-                mBeforePosition=position;
+                mBeforePosition = position;
             }
         });
 
@@ -70,6 +72,9 @@ public class CropTypeAdapter extends RecyclerView.Adapter<CropTypeAdapter.LeftFr
         return mDataList.size();
     }
 
+    public  List<TextView> getCropTotalView() {
+        return tv_item_typeList;
+    }
 
     class LeftFragmentViewHolder extends RecyclerView.ViewHolder {
         TextView tv_item_type;
