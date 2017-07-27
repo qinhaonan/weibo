@@ -1,16 +1,16 @@
 package com.wenming.weiswift.app.home.activity;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,16 +24,16 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.wenming.weiswift.R;
 import com.wenming.weiswift.app.api.StatusesAPI;
+import com.wenming.weiswift.app.common.FillContent;
+import com.wenming.weiswift.app.common.base.BaseSwipeActivity;
 import com.wenming.weiswift.app.common.entity.ExpertCategoryEnity;
+import com.wenming.weiswift.app.common.entity.ExpertEntity;
 import com.wenming.weiswift.app.common.entity.User;
 import com.wenming.weiswift.app.home.widget.SpinnerPopWindow;
-import com.wenming.weiswift.app.login.Constants;
+import com.wenming.weiswift.app.login.AccessTokenKeeper;
 import com.wenming.weiswift.app.mvp.presenter.FollowerActivityPresent;
 import com.wenming.weiswift.app.mvp.presenter.imp.FollowerActivityPresentImp;
 import com.wenming.weiswift.app.mvp.view.FollowActivityView;
-import com.wenming.weiswift.app.common.base.BaseSwipeActivity;
-import com.wenming.weiswift.app.common.FillContent;
-import com.wenming.weiswift.app.login.AccessTokenKeeper;
 import com.wenming.weiswift.app.myself.fans.adapter.FansAdapter;
 import com.wenming.weiswift.widget.endlessrecyclerview.EndlessRecyclerOnScrollListener;
 import com.wenming.weiswift.widget.endlessrecyclerview.HeaderAndFooterRecyclerViewAdapter;
@@ -63,6 +63,7 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
     private List<String> list;
     private List<String> sortList;
     private TextView tvValue;
+    private LinearLayout ll_expert;
     private TextView tv_sort;
 
     @Override
@@ -70,6 +71,7 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.expert_layout);
         initData();
+        initExpertData();
         mContext = this;
         mFollowerActivityPresent = new FollowerActivityPresentImp(this);
         initRefreshLayout();
@@ -183,6 +185,7 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
 
         initData2();
         tvValue = (TextView) findViewById(R.id.tv_expert_type);
+        ll_expert = (LinearLayout) findViewById(R.id.ll_expert);
         tv_sort = (TextView) findViewById(R.id.tv_sort);
         tv_sort.setOnClickListener(clickListener);
         tvValue.setOnClickListener(clickListener);
@@ -197,8 +200,8 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.tv_expert_type:
-                    mSpinnerPopWindow.setWidth(tvValue.getWidth());
-                    mSpinnerPopWindow.showAsDropDown(tvValue);
+                    mSpinnerPopWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+                    mSpinnerPopWindow.showAsDropDown(ll_expert);
 //                    setTextImage(R.mipmap.ic_launcher);
                     break;
                 case R.id.tv_sort:
@@ -242,7 +245,7 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
 //            params.addBodyParameter("oauth_token_secret", "4dfa52f77ffe6d55fb1039fe70c70436");
         params.addBodyParameter("oauth_token_secret", "2a3d67f5f7bb03035e619518b364912e");
         HttpUtils httpUtils = new HttpUtils();
-        httpUtils.send(HttpRequest.HttpMethod.POST, Constants.ZHONGZHIWULIANG_REQUEST_URL, params, new RequestCallBack<Object>() {
+        httpUtils.send(HttpRequest.HttpMethod.POST, "http://192.168.2.108/ThinkSNS_V3.0/index.php?", params, new RequestCallBack<Object>() {
             @Override
             public void onSuccess(ResponseInfo<Object> responseInfo) {
                 Log.d("Expert", "onSuccess: ");
@@ -272,5 +275,30 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
         sortList.add("距离");
         sortList.add("采纳数");
         sortList.add("智能排序");
+    }
+    private void initExpertData(){
+        RequestParams params=new RequestParams();
+        params.addBodyParameter("app","api");
+        params.addBodyParameter("mod","Weiba");
+        params.addBodyParameter("act","get_all_user");
+        params.addBodyParameter("oauth_token","988b491a22040ef7634eb5b8f52e0986");
+        params.addBodyParameter("oauth_token_secret","2a3d67f5f7bb03035e619518b364912e");
+//        params.addBodyParameter("oauth_token","553cb8005c5dff47cca58aabefd74de7");
+//        params.addBodyParameter("oauth_token_secret","4dfa52f77ffe6d55fb1039fe70c70436");
+        params.addBodyParameter("cid","1");
+        HttpUtils httpUtils = new HttpUtils();
+        httpUtils.send(HttpRequest.HttpMethod.POST, "http://192.168.2.108/thinksns_v3.0/index.php?", params, new RequestCallBack<Object>() {
+            @Override
+            public void onSuccess(ResponseInfo<Object> responseInfo) {
+                Gson gson= new Gson();
+                ExpertEntity expertEntity=gson.fromJson((String)responseInfo.result,ExpertEntity.class);
+                Log.d("tag", "onSuccess: "+expertEntity.getCount());
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+
+            }
+        });
     }
 }

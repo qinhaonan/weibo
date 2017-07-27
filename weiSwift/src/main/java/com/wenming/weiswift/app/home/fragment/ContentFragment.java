@@ -4,21 +4,17 @@ import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import com.google.gson.reflect.TypeToken;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
@@ -30,15 +26,8 @@ import com.wenming.weiswift.app.common.entity.CropCategoryEntity;
 import com.wenming.weiswift.app.common.entity.Question;
 import com.wenming.weiswift.app.home.adapter.CropAdapter;
 
-import org.apache.http.params.HttpParams;
-
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
-
-import uk.co.senab.photoview.log.LoggerDefault;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * Created by qhn on 2017/7/15.
@@ -116,6 +105,7 @@ public class ContentFragment extends Fragment{
             @Override
             public void onSuccess(ResponseInfo<Object> responseInfo) {
                 Log.d("PPPP", "onSuccess: " + "成" + mcid + responseInfo.result);
+                Gson gson=new Gson();
                 CropCategoryEntity cropCategoryEntity=gson.fromJson((String)responseInfo.result, CropCategoryEntity.class);
 //                Log.d(TAG, "onSuccess: "+cropCategoryEntity.getData().get(0).getWeiba_name());
                 rcView.setAdapter(new CropAdapter(mContext,cropCategoryEntity.getData()));
