@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -14,10 +15,19 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.RequestParams;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
 import com.wenming.weiswift.R;
 import com.wenming.weiswift.app.api.StatusesAPI;
+import com.wenming.weiswift.app.common.entity.ExpertCategoryEnity;
 import com.wenming.weiswift.app.common.entity.User;
 import com.wenming.weiswift.app.home.widget.SpinnerPopWindow;
+import com.wenming.weiswift.app.login.Constants;
 import com.wenming.weiswift.app.mvp.presenter.FollowerActivityPresent;
 import com.wenming.weiswift.app.mvp.presenter.imp.FollowerActivityPresentImp;
 import com.wenming.weiswift.app.mvp.view.FollowActivityView;
@@ -59,10 +69,9 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.expert_layout);
+        initData();
         mContext = this;
         mFollowerActivityPresent = new FollowerActivityPresentImp(this);
-
-        initPopUpWindow();
         initRefreshLayout();
         initRecyclerView();
         mSwipeRefreshLayout.post(new Runnable() {
@@ -171,16 +180,15 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
 
     //    专家类型 和智能排序
     private void initPopUpWindow() {
-        initData();
+
         initData2();
         tvValue = (TextView) findViewById(R.id.tv_expert_type);
         tv_sort = (TextView) findViewById(R.id.tv_sort);
         tv_sort.setOnClickListener(clickListener);
         tvValue.setOnClickListener(clickListener);
-        mSpinnerPopWindow = new SpinnerPopWindow<String>(this, list, itemClickListener);
-        mSpinnerPopWindow2 = new SpinnerPopWindow<String>(this, sortList, itemClickListener2);
-        mSpinnerPopWindow.setOnDismissListener(dismissListener);
-        mSpinnerPopWindow2.setOnDismissListener(dismissListener);
+//        mSpinnerPopWindow2 = new SpinnerPopWindow<String>(this, sortList, itemClickListener2);
+
+//        mSpinnerPopWindow2.setOnDismissListener(dismissListener);
 
     }
 
@@ -194,19 +202,13 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
 //                    setTextImage(R.mipmap.ic_launcher);
                     break;
                 case R.id.tv_sort:
-                    mSpinnerPopWindow2.setWidth(tv_sort.getWidth());
-                    mSpinnerPopWindow2.showAsDropDown(tv_sort);
+//                    mSpinnerPopWindow2.setWidth(tv_sort.getWidth());
+//                    mSpinnerPopWindow2.showAsDropDown(tv_sort);
                     break;
             }
         }
     };
-    private AdapterView.OnItemClickListener itemClickListener = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            mSpinnerPopWindow.dismiss();
-            Toast.makeText(ExpertActivity.this, "点击了 专家:" + list.get(position), Toast.LENGTH_LONG).show();
-        }
-    };
+
     private AdapterView.OnItemClickListener itemClickListener2 = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -227,13 +229,46 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
 //        tvValue.setCompoundDrawables(null, null, drawable, null);
 //    }
     private void initData() {
-        list = new ArrayList<String>();
-        for (int i = 0; i < 25; i++) {
-            list.add("test:" + i);
-        }
+//        list = new ArrayList<String>();
+//        for (int i = 0; i < 25; i++) {
+//            list.add("test:" + i);
+//        }
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("app", "api");
+        params.addBodyParameter("mod", "Weiba");
+        params.addBodyParameter("act", "get_all_user_cate");
+//            params.addBodyParameter("oauth_token", "553cb8005c5dff47cca58aabefd74de7");
+        params.addBodyParameter("oauth_token", "988b491a22040ef7634eb5b8f52e0986");
+//            params.addBodyParameter("oauth_token_secret", "4dfa52f77ffe6d55fb1039fe70c70436");
+        params.addBodyParameter("oauth_token_secret", "2a3d67f5f7bb03035e619518b364912e");
+        HttpUtils httpUtils = new HttpUtils();
+        httpUtils.send(HttpRequest.HttpMethod.POST, Constants.ZHONGZHIWULIANG_REQUEST_URL, params, new RequestCallBack<Object>() {
+            @Override
+            public void onSuccess(ResponseInfo<Object> responseInfo) {
+                Log.d("Expert", "onSuccess: ");
+                initPopUpWindow();
+                Gson gson = new Gson();
+                ExpertCategoryEnity expertCategory = gson.fromJson((String) responseInfo.result, ExpertCategoryEnity.class);
+                AdapterView.OnItemClickListener itemClickListener = new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        mSpinnerPopWindow.dismiss();
+                       Toast.makeText(ExpertActivity.this, "点击了 专家:" , Toast.LENGTH_LONG).show();
+                    }
+                };
+                mSpinnerPopWindow = new SpinnerPopWindow<String>(ExpertActivity.this, expertCategory, itemClickListener);
+                mSpinnerPopWindow.setOnDismissListener(dismissListener);
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                Log.d("Expert", "onFailure: ");
+            }
+        });
     }
-    private void initData2(){
-        sortList=new ArrayList<String>();
+
+    private void initData2() {
+        sortList = new ArrayList<String>();
         sortList.add("距离");
         sortList.add("采纳数");
         sortList.add("智能排序");

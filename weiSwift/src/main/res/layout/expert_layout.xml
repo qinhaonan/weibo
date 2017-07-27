@@ -14,7 +14,7 @@
             android:layout_weight="1"
             android:text="专家类型"
             android:gravity="center"
-            android:drawableLeft="@mipmap/ic_launcher"/>
+            android:drawableLeft="@drawable/fenlei"/>
         <TextView
             android:id="@+id/tv_sort"
             android:layout_width="0dp"
@@ -23,7 +23,7 @@
             android:text="智能排序"
             android:gravity="center"
             android:layout_weight="1"
-            android:drawableLeft="@mipmap/ic_launcher"/>
+            android:drawableLeft="@drawable/paixun"/>
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView

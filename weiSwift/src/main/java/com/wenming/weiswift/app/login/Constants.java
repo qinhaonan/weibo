@@ -75,4 +75,6 @@ public interface Constants {
     public static final String DELETE_WEIBO_TYPE5 = "好友圈";
     public static final String DELETE_WEIBO_TYPE6 = "我的收藏";
 
+    public static final String ZHONGZHIWULIANG_REQUEST_URL="http://192.168.1.176/thinksns_v3.0/index.php?";
+
 }

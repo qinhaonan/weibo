@@ -19,20 +19,21 @@ package com.wenming.weiswift.app.common.entity.list;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.wenming.weiswift.app.common.entity.Question;
+import com.wenming.weiswift.app.common.entity.QuestionEntity;
 import com.wenming.weiswift.app.common.entity.Status;
 import com.wenming.weiswift.app.common.FillContentHelper;
+import com.wenming.weiswift.utils.CutOutUtil;
 
-import java.io.Console;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-
-import pl.droidsonroids.gif.transforms.Transform;
+import java.util.List;
 
 /**
  * 微博列表结构。
@@ -53,30 +54,45 @@ public class StatusList implements Parcelable {
     public long max_id;
     public long has_unread;
     public static Question[] questions;
+    public static QuestionEntity questionEntity;
     public static int i;
 
     public static StatusList myParse(String origin, String self) {
         i = 0;
-        questions = new Gson().fromJson(self, Question[].class);
+//        questions = new Gson().fromJson(self, Question[].class);
+        JsonParser jsonParser=new JsonParser();
+        JsonArray jsonArray=jsonParser.parse(self).getAsJsonArray();
+        Gson gson=new Gson();
+        ArrayList<QuestionEntity> questionList=new ArrayList<>();
+        for (JsonElement question:jsonArray){
+            QuestionEntity questionEntity=gson.fromJson(question,QuestionEntity.class);
+            questionList.add(questionEntity);
+        }
+//        questionEntity=new Gson().fromJson(self,QuestionEntity.class);
         StatusList statusList = StatusList.parse(origin);
 
 
         for (Status status : statusList.statuses) {
-            status.text = questions[i].getFeed_content();
+            if(questionList!=null&&questionList.size()>0) {
+                    List<String> imgUrl = CutOutUtil.getImgSrc(questionList.get(i).getApi_source().getContent());
+
+                status.text = CutOutUtil.getContent(questionList.get(i).getFeed_content());
 //            //转发字段
 //            status.retweeted_status = null;
 //            status.created_at=questions[2].getPublish_time();
 //            status.id=questions[2].getUid();
 //            status.favorited=false;
-            status.source="";
-            status.user.avatar_hd=questions[i].getAvatar_big();
-            status.user.avatar_large=questions[i].getAvatar_middle();
-            status.user.name=questions[i].getUname();
+                status.source = "";
+                status.user.avatar_hd = questionList.get(0).getAvatar_big();
+                status.user.avatar_large = questionList.get(0).getAvatar_middle();
+                status.user.name = questionList.get(i).getUname();
 //            status.created_at= transform(questions[i].getPublish_time());
-            FillContentHelper.setImgUrl(status,questions[i]);
-            i++;
-            if (i>=questions.length)
-               break;
+//                FillContentHelper.setImgUrl(status, questionList);
+                FillContentHelper.setImgUrl(status, imgUrl);
+                i++;
+                if (i >= questionList.size())
+                    break;
+            }
         }
         return statusList;
 

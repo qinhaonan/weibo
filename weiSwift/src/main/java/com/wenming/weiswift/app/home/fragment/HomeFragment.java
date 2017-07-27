@@ -156,7 +156,7 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
         rl_gridview = (RelativeLayout) vp_View.findViewById(R.id.rl_gridview);
         viewPager = (ViewPager) homeHeadView.findViewById(R.id.vp_channel);
 
-        initData();
+        initData2();
         initRecyclerView();
         initRefreshLayout();
         //屏蔽tittle的点击事件。
@@ -178,13 +178,14 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
     }
 
     private void initData() {
-        {
-            RequestParams params = new RequestParams();
+        RequestParams params = new RequestParams();
             params.addBodyParameter("app", "api");
             params.addBodyParameter("mod", "Weiba");
             params.addBodyParameter("act", "get_weibas");
-            params.addBodyParameter("oauth_token", "553cb8005c5dff47cca58aabefd74de7");
-            params.addBodyParameter("oauth_token_secret", "4dfa52f77ffe6d55fb1039fe70c70436");
+//            params.addBodyParameter("oauth_token", "553cb8005c5dff47cca58aabefd74de7");
+            params.addBodyParameter("oauth_token", "988b491a22040ef7634eb5b8f52e0986");
+//            params.addBodyParameter("oauth_token_secret", "4dfa52f77ffe6d55fb1039fe70c70436");
+            params.addBodyParameter("oauth_token_secret", "2a3d67f5f7bb03035e619518b364912e");
             HttpUtils httpUtils = new HttpUtils();
             httpUtils.send(HttpRequest.HttpMethod.POST, "http://192.168.1.176/thinksns_v3.0/index.php?", params, new RequestCallBack<Object>() {
                 @Override
@@ -219,18 +220,60 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
                     Log.d("PPPP", "onFailure: " + s);
                 }
             });
-//        dataList = new ArrayList<>();
-//        for (int i = 0; i < 40; i++) {
-//            dataList.add("苹果"+String.valueOf(i));
-//        }
-        }
-    }
 
+
+    }
+    //如果登录,获取关注的微吧
+    private void initData2(){
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("app", "api");
+        params.addBodyParameter("mod", "Tom");
+        params.addBodyParameter("act", "get_follow_weiba");
+//            params.addBodyParameter("oauth_token", "553cb8005c5dff47cca58aabefd74de7");
+        params.addBodyParameter("oauth_token", "988b491a22040ef7634eb5b8f52e0986");
+//            params.addBodyParameter("oauth_token_secret", "4dfa52f77ffe6d55fb1039fe70c70436");
+        params.addBodyParameter("oauth_token_secret", "2a3d67f5f7bb03035e619518b364912e");
+        HttpUtils httpUtils = new HttpUtils();
+        httpUtils.send(HttpRequest.HttpMethod.POST, "http://192.168.1.176/thinksns_v3.0/index.php?", params, new RequestCallBack<Object>() {
+            @Override
+            public void onSuccess(ResponseInfo<Object> responseInfo) {
+                Log.d("PPPP", "onSuccess: " + "成" + responseInfo.result);
+                Type type = new TypeToken<List<Crop>>() {
+                }.getType();
+                Gson gson = new Gson();
+                cropList = gson.fromJson((String) responseInfo.result, type);
+                int count = 0;
+                if (cropList.size()<5){
+                    RelativeLayout.LayoutParams params= (RelativeLayout.LayoutParams) viewPager.getLayoutParams();
+                    params.height=DensityUtil.dp2px(mContext,100);
+                    viewPager.setLayoutParams(params);
+                }else {
+                    RelativeLayout.LayoutParams params= (RelativeLayout.LayoutParams) viewPager.getLayoutParams();
+                    params.height=DensityUtil.dp2px(mContext,170);
+                    viewPager.setLayoutParams(params);
+                }
+                if (cropList.size() % 9 == 0) {
+                    count = cropList.size() / 9;
+                } else {
+                    count = cropList.size() / 9 +1;
+                }
+                initGridView(count);
+                viewPager.setAdapter(mGridPagerAdapter);
+                initMagicIndicator1(count);
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                Log.d("PPPP", "onFailure: " + s);
+            }
+        });
+    }
     private void token() {
         DesBase64Tool desBase64Tool = new DesBase64Tool();
 
         Log.d(TAG, "token: 名字" + desBase64Tool.desEncrypt("admin@admin.com", desBase64Tool.paddingkey("THINKSNS")));
-        Log.d(TAG, "token: 密码" + desBase64Tool.desEncrypt(desBase64Tool.md5("123123"), desBase64Tool.paddingkey("THINKSNS")));
+//        Log.d(TAG, "token: 密码" + desBase64Tool.desEncrypt(desBase64Tool.md5("123123"), desBase64Tool.paddingkey("THINKSNS")));
+        Log.d(TAG, "token: 密码" + desBase64Tool.desEncrypt(desBase64Tool.md5("123456"), desBase64Tool.paddingkey("THINKSNS")));
     }
 
     private void initGridView(int j) {
@@ -610,8 +653,10 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
         params.addBodyParameter("app", "api");
         params.addBodyParameter("mod", "WeiboStatuses");
         params.addBodyParameter("act", "public_timeline");
-        params.addBodyParameter("oauth_token", "553cb8005c5dff47cca58aabefd74de7");
-        params.addBodyParameter("oauth_token_secret", "4dfa52f77ffe6d55fb1039fe70c70436");
+        params.addBodyParameter("oauth_token", "988b491a22040ef7634eb5b8f52e0986");
+//        params.addBodyParameter("oauth_token", "553cb8005c5dff47cca58aabefd74de7");
+        params.addBodyParameter("oauth_token_secret", "2a3d67f5f7bb03035e619518b364912e");
+//        params.addBodyParameter("oauth_token_secret", "4dfa52f77ffe6d55fb1039fe70c70436");
         HttpUtils httpUtils=new HttpUtils();
         httpUtils.send(HttpRequest.HttpMethod.GET, "http://192.168.1.176/thinksns_v3.0/index.php?",
                 null, new RequestCallBack<Object>() {

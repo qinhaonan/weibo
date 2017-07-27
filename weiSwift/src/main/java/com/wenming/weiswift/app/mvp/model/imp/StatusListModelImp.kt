@@ -60,7 +60,21 @@ class StatusListModelImp : StatusListModel {
 
         val httpUtils = HttpUtils()
         httpUtils.send(HttpRequest.HttpMethod.GET,
-                "http://192.168.1.176/thinksns_v3.0/index.php?app=api&mod=Channel&act=get_channel_feed&oauth_token=553cb8005c5dff47cca58aabefd74de7&oauth_token_secret=4dfa52f77ffe6d55fb1039fe70c70436&category_id=1",
+//                "http://192.168.1.176/thinksns_v3.0/index.php?" +
+//                        "app=api" +
+//                        "&mod=Channel" +
+//                        "&act=get_channel_feed" +
+//                        "&oauth_token=988b491a22040ef7634eb5b8f52e0986" +
+////                        "&oauth_token=553cb8005c5dff47cca58aabefd74de7" +
+//                        "&oauth_token_secret=2a3d67f5f7bb03035e619518b364912e" +
+////                        "&oauth_token_secret=4dfa52f77ffe6d55fb1039fe70c70436" +
+//                        "&category_id=1",
+                                "http://192.168.1.176/thinksns_v3.0/index.php?" +
+                        "app=api" +
+                        "&mod=WeiboStatuses" +
+                        "&act=public_timeline" +
+                        "&oauth_token=988b491a22040ef7634eb5b8f52e0986" +
+                        "&oauth_token_secret=2a3d67f5f7bb03035e619518b364912e",
                 object : RequestCallBack<String>() {
                     override fun onSuccess(responseInfo: ResponseInfo<String>) {
                         val callback = object : RequestListener{

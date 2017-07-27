@@ -14,6 +14,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
+import com.google.gson.reflect.TypeToken;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
@@ -27,6 +32,7 @@ import com.wenming.weiswift.app.home.adapter.CropAdapter;
 
 import org.apache.http.params.HttpParams;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,8 +72,10 @@ public class ContentFragment extends Fragment{
         params.addBodyParameter("app","api");
         params.addBodyParameter("mod","Channel");
         params.addBodyParameter("act","get_channel_feed");
-        params.addBodyParameter("oauth_token","553cb8005c5dff47cca58aabefd74de7");
-        params.addBodyParameter("oauth_token_secret","4dfa52f77ffe6d55fb1039fe70c70436");
+        params.addBodyParameter("oauth_token","988b491a22040ef7634eb5b8f52e0986");
+        params.addBodyParameter("oauth_token_secret","2a3d67f5f7bb03035e619518b364912e");
+//        params.addBodyParameter("oauth_token","553cb8005c5dff47cca58aabefd74de7");
+//        params.addBodyParameter("oauth_token_secret","4dfa52f77ffe6d55fb1039fe70c70436");
         params.addBodyParameter("category_id",mcid);
         HttpUtils httpUtils = new HttpUtils();
         httpUtils.send(HttpRequest.HttpMethod.POST,"http://192.168.1.176/thinksns_v3.0/index.php?" ,params, new RequestCallBack<Object>() {
@@ -98,11 +106,16 @@ public class ContentFragment extends Fragment{
 //        params.addBodyParameter("oauth_token_secret","4dfa52f77ffe6d55fb1039fe70c70436");
 //        params.addBodyParameter("cid",mcid);
         HttpUtils httpUtils = new HttpUtils();
-        httpUtils.send(HttpRequest.HttpMethod.POST,"http://192.168.1.176/thinksns_v3.0/index.php?app=api&mod=Weiba&act=get_weiba_by_cate&oauth_token=553cb8005c5dff47cca58aabefd74de7&oauth_token_secret=4dfa52f77ffe6d55fb1039fe70c70436&cid="+mcid ,null, new RequestCallBack<Object>() {
+//        httpUtils.send(HttpRequest.HttpMethod.POST,"http://192.168.1.176/thinksns_v3.0/index.php?app=api&mod=Weiba&act=get_weiba_by_cate&oauth_token=553cb8005c5dff47cca58aabefd74de7&oauth_token_secret=4dfa52f77ffe6d55fb1039fe70c70436&cid="+mcid ,null, new RequestCallBack<Object>() {
+        httpUtils.send(HttpRequest.HttpMethod.POST,"http://192.168.1.176/thinksns_v3.0/index.php?" +
+                "app=api&mod=Weiba" +
+                "&act=get_weiba_by_cate" +
+                "&oauth_token=988b491a22040ef7634eb5b8f52e0986" +
+                "&oauth_token_secret=2a3d67f5f7bb03035e619518b364912e" +
+                "&cid="+mcid ,null, new RequestCallBack<Object>() {
             @Override
             public void onSuccess(ResponseInfo<Object> responseInfo) {
-                Log.d("PPPP", "onSuccess: "+"成"+mcid+responseInfo.result);
-                Gson gson=new Gson();
+                Log.d("PPPP", "onSuccess: " + "成" + mcid + responseInfo.result);
                 CropCategoryEntity cropCategoryEntity=gson.fromJson((String)responseInfo.result, CropCategoryEntity.class);
 //                Log.d(TAG, "onSuccess: "+cropCategoryEntity.getData().get(0).getWeiba_name());
                 rcView.setAdapter(new CropAdapter(mContext,cropCategoryEntity.getData()));
@@ -117,6 +130,21 @@ public class ContentFragment extends Fragment{
 //        for (int i = 0; i < 40; i++) {
 //            dataList.add("苹果"+String.valueOf(i));
 //        }
+    }
+
+
+    public static class CropDataAdapter implements JsonSerializer<List<CropCategoryEntity.DataBean> >{
+
+        @Override
+        public JsonElement serialize(List<CropCategoryEntity.DataBean> src, Type typeOfSrc, JsonSerializationContext context) {
+            try {
+                Log.d("GGG", "test");
+            }
+            catch (Exception  ec){
+
+            }
+            return null;
+        }
     }
 
 }

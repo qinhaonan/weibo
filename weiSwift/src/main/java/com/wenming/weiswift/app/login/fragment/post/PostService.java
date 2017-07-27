@@ -191,11 +191,11 @@ public class PostService extends Service {
         params.addBodyParameter("app","api");
         params.addBodyParameter("mod","WeiboStatuses");
         params.addBodyParameter("act","upload");
-        params.addBodyParameter("oauth_token","553cb8005c5dff47cca58aabefd74de7");
-//        params.addBodyParameter("oauth_token","7e47c8122a19e38426ec7469765118e7");
+        params.addBodyParameter("oauth_token","988b491a22040ef7634eb5b8f52e0986");
+//        params.addBodyParameter("oauth_token","553cb8005c5dff47cca58aabefd74de7");
         params.addBodyParameter("content",weiBoCreateBean.content);
-        params.addBodyParameter("oauth_token_secret","4dfa52f77ffe6d55fb1039fe70c70436");
-//        params.addBodyParameter("oauth_token_secret","cf4008b464c28794e881b7e8cab165b0");
+        params.addBodyParameter("oauth_token_secret","2a3d67f5f7bb03035e619518b364912e");
+//        params.addBodyParameter("oauth_token_secret","4dfa52f77ffe6d55fb1039fe70c70436");
         params.addBodyParameter("form","2");
         params.addBodyParameter("file",new File( weiBoCreateBean.selectImgList.get(0).getImageFile().getAbsolutePath()));
         httpUtils.send(HttpRequest.HttpMethod.POST,"http://192.168.1.176/thinksns_v3.0/index.php?" ,params, new RequestCallBack<Object>() {
@@ -228,8 +228,16 @@ public class PostService extends Service {
 //            }
 //        });
         HttpUtils httpUtils = new HttpUtils();
-        httpUtils.send(HttpRequest.HttpMethod.POST, "http://192.168.1.176/thinksns_v3.0/index.php?app=api&mod=WeiboStatuses&act=update&oauth_token=553cb8005c5dff47cca58aabefd74de7&content="
-                        +weiBoCreateBean.content.toString()+"&oauth_token_secret=4dfa52f77ffe6d55fb1039fe70c70436&form=2&appname=public&app_id=0",
+//        httpUtils.send(HttpRequest.HttpMethod.POST, "http://192.168.1.176/thinksns_v3.0/index.php?app=api&mod=WeiboStatuses&act=update&oauth_token=553cb8005c5dff47cca58aabefd74de7&content="
+        httpUtils.send(HttpRequest.HttpMethod.POST, "http://192.168.1.176/thinksns_v3.0/index.php?" +
+                        "app=api&" +
+                        "mod=WeiboStatuses&" +
+                        "act=update&" +
+                        "oauth_token=988b491a22040ef7634eb5b8f52e0986&" +
+                        "content=" +weiBoCreateBean.content.toString()+
+                        "&oauth_token_secret=2a3d67f5f7bb03035e619518b364912e&" +
+                        "form=2&appname=public&" +
+                        "app_id=0",
                 null, new RequestCallBack<Object>() {
                     @Override
                     public void onSuccess(ResponseInfo<Object> responseInfo) {

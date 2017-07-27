@@ -6,6 +6,7 @@ import com.wenming.weiswift.app.common.entity.Comment;
 import com.wenming.weiswift.app.common.entity.Question;
 import com.wenming.weiswift.app.common.entity.Status;
 
+import java.util.List;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -111,18 +112,22 @@ public class FillContentHelper {
             }
         }
     }
-    public static void setImgUrl(Status status, Question questions) {
+    public static void setImgUrl(Status status, List<String> imgUrl) {
         //如果微博存在图片
-        if (questions.getAttach()!= null && questions.getAttach().size() > 0) {
+        if (imgUrl!= null && imgUrl.size() > 0) {
             //如果本地私有字段已经被处理过了，就不需要再处理    后面需要优化
 //            if (status.bmiddle_pic_urls.size() > 0) {
 //                return;
 //            }
-            for (Question.AttachBean attacths: questions.getAttach()  ) {
-                status.thumbnail_pic_urls.add(attacths.getAttach_url());
-                status.bmiddle_pic_urls.add(attacths.getAttach_url());
-                status.origin_pic_urls.add(attacths.getAttach_url());
-
+//            for (Question.AttachBean attacths: questions.getAttach()  ) {
+//                status.thumbnail_pic_urls.add(attacths.getAttach_url());
+//                status.bmiddle_pic_urls.add(attacths.getAttach_url());
+//                status.origin_pic_urls.add(attacths.getAttach_url());
+//            }
+            for (int i = 0; i < imgUrl.size(); i++) {
+                status.thumbnail_pic_urls.add(imgUrl.get(i));
+                status.bmiddle_pic_urls.add(imgUrl.get(i));
+                status.origin_pic_urls.add(imgUrl.get(i));
             }
         }
     }

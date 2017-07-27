@@ -15,6 +15,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import com.wenming.weiswift.R;
+import com.wenming.weiswift.app.common.entity.ExpertCategoryEnity;
 
 
 /**
@@ -29,11 +30,12 @@ public class SpinnerPopWindow<T> extends PopupWindow {
     private ListView mListView;
     private List<T> list;
     private MyAdapter  mAdapter;
-
-    public SpinnerPopWindow(Context context, List<T> list, AdapterView.OnItemClickListener clickListener) {
+    private ExpertCategoryEnity mExperCategoryEntiy;
+    public SpinnerPopWindow(Context context, ExpertCategoryEnity expertCategoryEnity, AdapterView.OnItemClickListener clickListener) {
         super(context);
         inflater=LayoutInflater.from(context);
         this.list=list;
+        mExperCategoryEntiy=expertCategoryEnity;
         init(clickListener);
     }
 
@@ -53,12 +55,12 @@ public class SpinnerPopWindow<T> extends PopupWindow {
     private class MyAdapter extends BaseAdapter {
         @Override
         public int getCount() {
-            return list.size();
+            return mExperCategoryEntiy.getCategory().size();
         }
 
         @Override
         public Object getItem(int position) {
-            return list.get(position);
+            return mExperCategoryEntiy.getCategory().get(position).getTitle();
         }
 
         @Override

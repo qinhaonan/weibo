@@ -26,13 +26,13 @@ import java.util.List;
 
 public class LeftFragment extends Fragment {
     Context mContext;
-    private List<CropTypeEntity.CropTypeBean> mDataList;
+    private List<CropTypeEntity.CategoryBean> mDataList;
     private List<TextView> textViewsList;
 
     public LeftFragment(){
 
     }
-    public  LeftFragment(Context context,List<CropTypeEntity.CropTypeBean> dataList){
+    public  LeftFragment(Context context,List<CropTypeEntity.CategoryBean> dataList){
         mContext=context;
         mDataList=dataList;
     }

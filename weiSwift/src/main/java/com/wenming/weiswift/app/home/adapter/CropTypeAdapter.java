@@ -21,7 +21,7 @@ import java.util.List;
  */
 
 public class CropTypeAdapter extends RecyclerView.Adapter<CropTypeAdapter.LeftFragmentViewHolder> {
-    List<CropTypeEntity.CropTypeBean> mDataList;
+    List<CropTypeEntity.CategoryBean> mDataList;
     Context mContext;
     int mBeforePosition = 0;
     boolean isFirst = true;
@@ -29,7 +29,7 @@ public class CropTypeAdapter extends RecyclerView.Adapter<CropTypeAdapter.LeftFr
     int i = 0;
     private final Activity mActivity;
     private List<TextView> tv_item_typeList=new ArrayList<TextView>();
-    public CropTypeAdapter(Context context, List<CropTypeEntity.CropTypeBean> dataList, Activity activity) {
+    public CropTypeAdapter(Context context, List<CropTypeEntity.CategoryBean> dataList, Activity activity) {
         mDataList = dataList;
         mContext = context;
         mActivity = activity;

@@ -84,8 +84,10 @@ public class CropAdapter extends RecyclerView.Adapter<CropAdapter.ContentFragmen
                                     "app=api&" +
                                     "mod=Weiba&" +
                                     "act=create&" +
-                                    "oauth_token=553cb8005c5dff47cca58aabefd74de7" +
-                                    "&oauth_token_secret=4dfa52f77ffe6d55fb1039fe70c70436&" +
+                                    "oauth_token=988b491a22040ef7634eb5b8f52e0986" +
+//                                    "oauth_token=553cb8005c5dff47cca58aabefd74de7" +
+                                    "&oauth_token_secret=2a3d67f5f7bb03035e619518b364912e&" +
+//                                    "&oauth_token_secret=4dfa52f77ffe6d55fb1039fe70c70436&" +
                                     "id=" + mCropCategoryBean.get(position).getWeiba_id()
                             , null, new RequestCallBack<Object>() {
                                 @Override
@@ -111,8 +113,10 @@ public class CropAdapter extends RecyclerView.Adapter<CropAdapter.ContentFragmen
                                     "app=api&" +
                                     "mod=Weiba&" +
                                     "act=destroy&" +
-                                    "oauth_token=553cb8005c5dff47cca58aabefd74de7" +
-                                    "&oauth_token_secret=4dfa52f77ffe6d55fb1039fe70c70436&" +
+                                    "oauth_token=988b491a22040ef7634eb5b8f52e0986" +
+//                                    "oauth_token=553cb8005c5dff47cca58aabefd74de7" +
+                                    "&oauth_token_secret=2a3d67f5f7bb03035e619518b364912e&" +
+//                                    "&oauth_token_secret=4dfa52f77ffe6d55fb1039fe70c70436&" +
                                     "id=" + mCropCategoryBean.get(position).getWeiba_id()
                             , null, new RequestCallBack<Object>() {
                                 @Override

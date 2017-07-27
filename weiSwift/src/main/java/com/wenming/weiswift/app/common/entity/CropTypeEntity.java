@@ -7,20 +7,21 @@ import java.util.List;
  */
 
 public class CropTypeEntity {
-    private List<CropTypeBean> CropType;
 
-    public List<CropTypeBean> getCropType() {
-        return CropType;
+    private List<CategoryBean> category;
+
+    public List<CategoryBean> getCategory() {
+        return category;
     }
 
-    public void setCropType(List<CropTypeBean> CropType) {
-        this.CropType = CropType;
+    public void setCategory(List<CategoryBean> category) {
+        this.category = category;
     }
 
-    public static class CropTypeBean {
+    public static class CategoryBean {
         /**
          * id : 1
-         * name : 粮食
+         * name : 分类1
          */
 
         private String id;
@@ -42,40 +43,4 @@ public class CropTypeEntity {
             this.name = name;
         }
     }
-
-
-//    List<CropType> cropTypeList;
-//
-//    public void setCropTypeList(List<CropType> cropTypeList) {
-//        this.cropTypeList = cropTypeList;
-//    }
-//
-//    public List<CropType> getCropTypeList() {
-//        return cropTypeList;
-//    }
-//
-//    /**
-//     * id : 1
-//     * name : 粮食
-//     */
-//    public class CropType {
-//        private String id;
-//        private String name;
-//
-//        public String getId() {
-//            return id;
-//        }
-//
-//        public void setId(String id) {
-//            this.id = id;
-//        }
-//
-//        public String getName() {
-//            return name;
-//        }
-//
-//        public void setName(String name) {
-//            this.name = name;
-//        }
-//    }
 }

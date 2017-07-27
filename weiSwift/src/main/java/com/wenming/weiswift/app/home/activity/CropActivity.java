@@ -89,12 +89,12 @@ public class CropActivity extends BaseAppCompatActivity {
     private void initFragment2() {
         FragmentManager fragmentManager = getFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
-        for (int i = 0; i < cropTypeEntity1.getCropType().size(); i++) {
-            contentFragment = new ContentFragment(mContext,cropTypeEntity1.getCropType().get(i).getId());
+        for (int i = 0; i < cropTypeEntity1.getCategory().size(); i++) {
+            contentFragment = new ContentFragment(mContext,cropTypeEntity1.getCategory().get(i).getId());
 //            Log.d(TAG, "initFragment2: 种类id"+cropTypeEntity1.getCropType().get(i).getId());
             contentFragmentList.add(contentFragment);
         }
-        leftFragment = new LeftFragment(mContext, cropTypeEntity1.getCropType());
+        leftFragment = new LeftFragment(mContext, cropTypeEntity1.getCategory());
         List<TextView> cropTotalView=leftFragment.getCropTotalView();
         fragmentTransaction.add(R.id.fl_left, leftFragment);
         fragmentTransaction.add(R.id.fl_content, contentFragmentList.get(0));
@@ -114,7 +114,11 @@ public class CropActivity extends BaseAppCompatActivity {
 
     public void initData() {
         HttpUtils httpUtils=new HttpUtils();
-        httpUtils.send(HttpRequest.HttpMethod.POST, "http://192.168.1.176/thinksns_v3.0/index.php?app=api&mod=Channel&act=get_all_channel&oauth_token=553cb8005c5dff47cca58aabefd74de7&oauth_token_secret=4dfa52f77ffe6d55fb1039fe70c70436",
+        httpUtils.send(HttpRequest.HttpMethod.POST, "http://192.168.1.176/thinksns_v3.0/index.php?" +
+                        "app=api&mod=Channel" +
+                        "&act=get_all_channel" +
+                        "&oauth_token=988b491a22040ef7634eb5b8f52e0986" +
+                        "&oauth_token_secret=2a3d67f5f7bb03035e619518b364912e",
                 null, new RequestCallBack<Object>() {
                     @Override
                     public void onSuccess(ResponseInfo<Object> responseInfo) {
@@ -145,14 +149,22 @@ public class CropActivity extends BaseAppCompatActivity {
     public void initData2(){
         HttpUtils httpUtils=new HttpUtils();
         httpUtils.send(HttpRequest.HttpMethod.GET,
-                "http://192.168.1.176/thinksns_v3.0/index.php?app=api&mod=Weiba&act=get_all_weiba_cate&oauth_token=553cb8005c5dff47cca58aabefd74de7&oauth_token_secret=4dfa52f77ffe6d55fb1039fe70c70436"
+                "http://192.168.1.176/thinksns_v3.0/index.php?" +
+                        "app=api" +
+                        "&mod=Weiba" +
+                        "&act=get_all_weiba_cate" +
+                        "&oauth_token=988b491a22040ef7634eb5b8f52e0986" +
+//                        "&oauth_token=553cb8005c5dff47cca58aabefd74de7" +
+//                        "&oauth_token_secret=4dfa52f77ffe6d55fb1039fe70c70436"
+                        "&oauth_token_secret=2a3d67f5f7bb03035e619518b364912e"
                 ,null
                 , new RequestCallBack<Object>() {
             @Override
             public void onSuccess(ResponseInfo responseInfo) {
                 Log.d("PostService", "onSuccess:  成功" + "{ CropType:"+(String) responseInfo.result+"}");
                 Gson gson=new Gson();
-                cropTypeEntity1 = gson.fromJson("{ CropType:"+(String)responseInfo.result+"}",CropTypeEntity.class);
+//                cropTypeEntity1 = gson.fromJson("{ CropType:"+(String)responseInfo.result+"}",CropTypeEntity.class);
+                cropTypeEntity1 = gson.fromJson((String)responseInfo.result,CropTypeEntity.class);
                 initFragment2();
             }
 
