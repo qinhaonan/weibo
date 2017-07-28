@@ -133,6 +133,14 @@ public class UserModelImp implements UserModel {
         mFriendshipsAPI.followers(uid, NewFeature.GET_FOLLOWER_NUM, 0, false, userlist_PullToRefresh);
     }
 
+    public void myFollowers(int uid, Context context, OnUserListRequestFinish onUserListRequestFinish) {
+        FriendshipsAPI mFriendshipsAPI = new FriendshipsAPI(context, Constants.APP_KEY, AccessTokenKeeper.readAccessToken(context));
+        mUserListType = FOLLOWERS_LISTS;
+        mContext = context;
+        mOnUserListRequestFinish = onUserListRequestFinish;
+        mFriendshipsAPI.followers(uid, NewFeature.GET_FOLLOWER_NUM, 0, false, userlist_PullToRefresh);
+    }
+
     /**
      * 获取用户的关注列表。
      *

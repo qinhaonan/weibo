@@ -2,6 +2,7 @@ package com.wenming.weiswift.app.home.widget;
 
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,15 +26,16 @@ public class SpinnerPopWindow<T> extends PopupWindow {
     private LayoutInflater inflater;
     private ListView mListView;
     private List<T> list;
+    private List<String>sortList;
     private MyAdapter  mAdapter;
     private Context mContext;
-    private ExpertCategoryEnity mExperCategoryEntiy;
-    public SpinnerPopWindow(Context context, ExpertCategoryEnity expertCategoryEnity, AdapterView.OnItemClickListener clickListener) {
+    private boolean mIsRight;
+    public SpinnerPopWindow(Context context, List<T>list, AdapterView.OnItemClickListener clickListener,Boolean isRight) {
         super(context);
         inflater=LayoutInflater.from(context);
         mContext=context;
         this.list=list;
-        mExperCategoryEntiy=expertCategoryEnity;
+        mIsRight=isRight;
         init(clickListener);
     }
 
@@ -53,12 +55,12 @@ public class SpinnerPopWindow<T> extends PopupWindow {
     private class MyAdapter extends BaseAdapter {
         @Override
         public int getCount() {
-            return mExperCategoryEntiy.getCategory().size();
+            return list.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return mExperCategoryEntiy.getCategory().get(position).getTitle();
+            return list.get(position);
         }
 
         @Override
@@ -73,6 +75,9 @@ public class SpinnerPopWindow<T> extends PopupWindow {
                 holder=new ViewHolder();
                 convertView=inflater.inflate(R.layout.spinner_item_layout, null);
                 holder.tvName=(TextView) convertView.findViewById(R.id.tv_name);
+                if(mIsRight){
+                    holder.tvName.setGravity(Gravity.CENTER|Gravity.RIGHT);
+                }
                 convertView.setTag(holder);
             }else{
                 holder=(ViewHolder) convertView.getTag();

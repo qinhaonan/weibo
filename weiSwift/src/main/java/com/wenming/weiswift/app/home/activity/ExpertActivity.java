@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
@@ -26,11 +27,14 @@ import com.wenming.weiswift.R;
 import com.wenming.weiswift.app.api.StatusesAPI;
 import com.wenming.weiswift.app.common.FillContent;
 import com.wenming.weiswift.app.common.base.BaseSwipeActivity;
+import com.wenming.weiswift.app.common.entity.CropChannel;
+import com.wenming.weiswift.app.common.entity.Expert;
 import com.wenming.weiswift.app.common.entity.ExpertCategoryEnity;
 import com.wenming.weiswift.app.common.entity.ExpertEntity;
 import com.wenming.weiswift.app.common.entity.User;
 import com.wenming.weiswift.app.home.widget.SpinnerPopWindow;
 import com.wenming.weiswift.app.login.AccessTokenKeeper;
+import com.wenming.weiswift.app.login.Constants;
 import com.wenming.weiswift.app.mvp.presenter.FollowerActivityPresent;
 import com.wenming.weiswift.app.mvp.presenter.imp.FollowerActivityPresentImp;
 import com.wenming.weiswift.app.mvp.view.FollowActivityView;
@@ -40,7 +44,9 @@ import com.wenming.weiswift.widget.endlessrecyclerview.HeaderAndFooterRecyclerVi
 import com.wenming.weiswift.widget.endlessrecyclerview.utils.RecyclerViewStateUtils;
 import com.wenming.weiswift.widget.endlessrecyclerview.weight.LoadingFooter;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -49,8 +55,9 @@ import java.util.List;
 
 public class ExpertActivity extends BaseSwipeActivity implements FollowActivityView {
 
+    private static final String TAG = "ExpertActivity";
     public FansAdapter mAdapter;
-    private ArrayList<User> mDatas;
+    private ArrayList<Expert.ExpertBean> mDatas;
     public Context mContext;
     public SwipeRefreshLayout mSwipeRefreshLayout;
     public RecyclerView mRecyclerView;
@@ -65,6 +72,7 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
     private TextView tvValue;
     private LinearLayout ll_expert;
     private TextView tv_sort;
+    private List<Expert.ExpertBean> expertBeanList=new ArrayList<Expert.ExpertBean>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,13 +114,13 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
         mAdapter = new FansAdapter(mDatas, mContext) {
             @Override
             public void followerLayoutClick(User user, int position, ImageView follwerIcon, TextView follwerText) {
-                follwerIcon.setImageResource(R.drawable.bga_refresh_loading02);
-                follwerText.setText("");
-                if (user.following) {
-                    mFollowerActivityPresent.user_destroy(user, mContext, follwerIcon, follwerText);
-                } else {
-                    mFollowerActivityPresent.user_create(user, mContext, follwerIcon, follwerText);
-                }
+//                follwerIcon.setImageResource(R.drawable.bga_refresh_loading02);
+//                follwerText.setText("");
+//                if (user.following) {
+//                    mFollowerActivityPresent.user_destroy(user, mContext, follwerIcon, follwerText);
+//                } else {
+//                    mFollowerActivityPresent.user_create(user, mContext, follwerIcon, follwerText);
+//                }
             }
         };
         mHeaderAndFooterRecyclerViewAdapter = new HeaderAndFooterRecyclerViewAdapter(mAdapter);
@@ -140,8 +148,13 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
     @Override
     public void updateListView(ArrayList<User> userlist) {
         mRecyclerView.addOnScrollListener(mOnScrollListener);
-        mDatas = userlist;
-        mAdapter.setData(userlist);
+//        mDatas = userlist;
+//        mAdapter.setData(userlist);
+//        mHeaderAndFooterRecyclerViewAdapter.notifyDataSetChanged();
+    }
+    public void update(List<Expert.ExpertBean> expertBeen){
+        expertBeanList=expertBeen;
+        mAdapter.setExpertData(expertBeen);
         mHeaderAndFooterRecyclerViewAdapter.notifyDataSetChanged();
     }
 
@@ -189,9 +202,9 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
         tv_sort = (TextView) findViewById(R.id.tv_sort);
         tv_sort.setOnClickListener(clickListener);
         tvValue.setOnClickListener(clickListener);
-//        mSpinnerPopWindow2 = new SpinnerPopWindow<String>(this, sortList, itemClickListener2);
+        mSpinnerPopWindow2 = new SpinnerPopWindow<String>(this, sortList, itemClickListener2,true);
 
-//        mSpinnerPopWindow2.setOnDismissListener(dismissListener);
+        mSpinnerPopWindow2.setOnDismissListener(dismissListener);
 
     }
 
@@ -205,8 +218,8 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
 //                    setTextImage(R.mipmap.ic_launcher);
                     break;
                 case R.id.tv_sort:
-//                    mSpinnerPopWindow2.setWidth(tv_sort.getWidth());
-//                    mSpinnerPopWindow2.showAsDropDown(tv_sort);
+                    mSpinnerPopWindow2.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+                    mSpinnerPopWindow2.showAsDropDown(ll_expert);
                     break;
             }
         }
@@ -216,7 +229,7 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             mSpinnerPopWindow2.dismiss();
-            Toast.makeText(ExpertActivity.this, "点击了 排序:" + list.get(position), Toast.LENGTH_LONG).show();
+            Toast.makeText(ExpertActivity.this, "点击了 排序:"+sortList.get(position) , Toast.LENGTH_LONG).show();
         }
     };
     private PopupWindow.OnDismissListener dismissListener = new PopupWindow.OnDismissListener() {
@@ -226,16 +239,9 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
         }
     };
 
-    //    private void setTextImage(int resId) {
-//        Drawable drawable = getResources().getDrawable(resId);
-//        drawable.setBounds(0, 0, drawable.getMinimumWidth(),drawable.getMinimumHeight());// 必须设置图片大小，否则不显示
-//        tvValue.setCompoundDrawables(null, null, drawable, null);
-//    }
+
     private void initData() {
-//        list = new ArrayList<String>();
-//        for (int i = 0; i < 25; i++) {
-//            list.add("test:" + i);
-//        }
+
         RequestParams params = new RequestParams();
         params.addBodyParameter("app", "api");
         params.addBodyParameter("mod", "Weiba");
@@ -245,7 +251,7 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
 //            params.addBodyParameter("oauth_token_secret", "4dfa52f77ffe6d55fb1039fe70c70436");
         params.addBodyParameter("oauth_token_secret", "2a3d67f5f7bb03035e619518b364912e");
         HttpUtils httpUtils = new HttpUtils();
-        httpUtils.send(HttpRequest.HttpMethod.POST, "http://192.168.2.108/ThinkSNS_V3.0/index.php?", params, new RequestCallBack<Object>() {
+        httpUtils.send(HttpRequest.HttpMethod.POST, Constants.ZHONGZHIWULIANG_REQUEST_URL, params, new RequestCallBack<Object>() {
             @Override
             public void onSuccess(ResponseInfo<Object> responseInfo) {
                 Log.d("Expert", "onSuccess: ");
@@ -259,7 +265,11 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
                        Toast.makeText(ExpertActivity.this, "点击了 专家:" , Toast.LENGTH_LONG).show();
                     }
                 };
-                mSpinnerPopWindow = new SpinnerPopWindow<String>(ExpertActivity.this, expertCategory, itemClickListener);
+                List<String> list=new ArrayList<String>();
+                for (int i = 0; i < expertCategory.getCategory().size(); i++) {
+                    list.add( expertCategory.getCategory().get(i).getTitle());
+                }
+                mSpinnerPopWindow = new SpinnerPopWindow<String>(ExpertActivity.this, list, itemClickListener,false);
                 mSpinnerPopWindow.setOnDismissListener(dismissListener);
             }
 
@@ -277,27 +287,34 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
         sortList.add("智能排序");
     }
     private void initExpertData(){
-        RequestParams params=new RequestParams();
-        params.addBodyParameter("app","api");
-        params.addBodyParameter("mod","Weiba");
-        params.addBodyParameter("act","get_all_user");
-        params.addBodyParameter("oauth_token","988b491a22040ef7634eb5b8f52e0986");
-        params.addBodyParameter("oauth_token_secret","2a3d67f5f7bb03035e619518b364912e");
-//        params.addBodyParameter("oauth_token","553cb8005c5dff47cca58aabefd74de7");
-//        params.addBodyParameter("oauth_token_secret","4dfa52f77ffe6d55fb1039fe70c70436");
-        params.addBodyParameter("cid","1");
+
         HttpUtils httpUtils = new HttpUtils();
-        httpUtils.send(HttpRequest.HttpMethod.POST, "http://192.168.2.108/thinksns_v3.0/index.php?", params, new RequestCallBack<Object>() {
+        httpUtils.send(HttpRequest.HttpMethod.POST, Constants.ZHONGZHIWULIANG_REQUEST_URL+
+                "app=api" +
+                "&mod=Weiba" +
+                "&act=get_all_user" +
+                "&oauth_token=988b491a22040ef7634eb5b8f52e0986" +
+                "&oauth_token_secret=2a3d67f5f7bb03035e619518b364912e" +
+                "&cid=1", null, new RequestCallBack<Object>() {
             @Override
             public void onSuccess(ResponseInfo<Object> responseInfo) {
+                Log.d(TAG, "onSuccess: 获取专家");
                 Gson gson= new Gson();
-                ExpertEntity expertEntity=gson.fromJson((String)responseInfo.result,ExpertEntity.class);
-                Log.d("tag", "onSuccess: "+expertEntity.getCount());
+//                ExpertEntity expertEntity=gson.fromJson((String)responseInfo.result,ExpertEntity.class);
+                Expert expert = new Expert();
+                Type expertType = new TypeToken<HashMap<String, Expert.ExpertBean>>() {}.getType();
+                expert.expertMap = gson.fromJson((String) responseInfo.result, expertType);
+//                expertBeanList = new ArrayList<Expert.ExpertBean>();
+                for (Expert.ExpertBean v : expert.expertMap.values()){
+                    expertBeanList.add(v);
+                }
+                Log.d(TAG, "onSuccess: "+expertBeanList.get(0));
+                update(expertBeanList);
             }
 
             @Override
             public void onFailure(HttpException e, String s) {
-
+                Log.d(TAG, "onFailure: 获取专家");
             }
         });
     }

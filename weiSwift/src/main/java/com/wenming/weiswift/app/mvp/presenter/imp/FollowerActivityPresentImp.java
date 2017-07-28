@@ -51,7 +51,11 @@ public class FollowerActivityPresentImp implements FollowerActivityPresent {
             }
         });
     }
+    public void mPullToRefreshData(int uid,Context context){
+        mFollowActivityView.showLoadingIcon();
 
+
+    }
     @Override
     public void requestMoreData(long uid, Context context) {
         mUserModel.followersNextPage(uid, context, new UserModel.OnUserListRequestFinish() {

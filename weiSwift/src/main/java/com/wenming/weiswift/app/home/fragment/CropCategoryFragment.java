@@ -482,45 +482,6 @@ public class CropCategoryFragment extends Fragment implements HomeFragmentView {
         barManager.showTopBar(mTopBar);
     }
 
-    /**
-     * 设置实现
-     *
-     * @param onBarListener
-     */
-    public void setOnBarListener(HomeFragment.onButtonBarListener onBarListener) {
-        this.mOnBottonBarListener = onBarListener;
-    }
-
-
-    /**
-     * 因为ButotnBar的布局并不在fragment中，而是在MainActivity中，所有隐藏和显示底部导航栏的工作要交给MainActivity去做
-     */
-    public interface onButtonBarListener {
-        void showButtonBar();
-
-        void hideButtonBar();
-    }
-
-    public User getCurrentUser() {
-        return mCurrentUser;
-    }
-
-    //指示圆点
-    private void initMagicIndicator1(int count) {
-        MagicIndicator magicIndicator = (MagicIndicator) homeHeadView.findViewById(R.id.magic_indicator1);
-        ScaleCircleNavigator scaleCircleNavigator = new ScaleCircleNavigator(mContext);
-        scaleCircleNavigator.setCircleCount(count);
-        scaleCircleNavigator.setNormalCircleColor(Color.LTGRAY);
-        scaleCircleNavigator.setSelectedCircleColor(Color.DKGRAY);
-        scaleCircleNavigator.setCircleClickListener(new ScaleCircleNavigator.OnCircleClickListener() {
-            @Override
-            public void onClick(int index) {
-                viewPager.setCurrentItem(index);
-            }
-        });
-        magicIndicator.setNavigator(scaleCircleNavigator);
-        ViewPagerHelper.bind(magicIndicator, viewPager);
-    }
 
 
 }

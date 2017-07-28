@@ -30,6 +30,7 @@ import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListene
 import com.nostra13.universalimageloader.utils.DiskCacheUtils;
 import com.wenming.weiswift.R;
 import com.wenming.weiswift.app.common.entity.Comment;
+import com.wenming.weiswift.app.common.entity.Expert;
 import com.wenming.weiswift.app.common.entity.Status;
 import com.wenming.weiswift.app.common.entity.User;
 import com.wenming.weiswift.app.mvp.model.imp.StatusDetailModelImp;
@@ -143,6 +144,7 @@ public class FillContent {
             textView.setText(user.name);
         }
     }
+
 
     public static void setWeiBoTime(Context context, TextView textView, Status status) {
         Date data = DateUtils.parseDate(status.created_at, DateUtils.WeiBo_ITEM_DATE_FORMAT);

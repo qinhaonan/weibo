@@ -18,8 +18,10 @@ public class CropCategoryActivity extends BaseAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_crop_category);
         String cropName=getIntent().getStringExtra("CropName");
+        String weiba_id=getIntent().getStringExtra("weiba_id");
         Bundle bundle = new Bundle();
         bundle.putString("CropName",cropName);
+        bundle.putString("id",weiba_id);
         FragmentTransaction ft=getFragmentManager().beginTransaction();
         CropCategoryFragment cropCategoryFragment=CropCategoryFragment.newInstance(false);
         cropCategoryFragment.setArguments(bundle);

@@ -160,7 +160,9 @@ public class FriendshipsAPI extends AbsOpenAPI {
         params.put("trim_status", trim_status ? 1 : 0);
         requestAsync(SERVER_URL_PRIX + "/followers.json", params, HTTPMETHOD_GET, listener);
     }
+    public  void myFollowers(int c){
 
+    }
     /**
      * 获取用户的粉丝列表(最多返回5000条数据)。
      *

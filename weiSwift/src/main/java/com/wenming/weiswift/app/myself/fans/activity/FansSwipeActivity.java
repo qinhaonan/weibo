@@ -48,7 +48,7 @@ public class FansSwipeActivity extends BaseSwipeActivity implements FollowActivi
         mContext = this;
         mFollowerActivityPresent = new FollowerActivityPresentImp(this);
         initRefreshLayout();
-        initRecyclerView();
+//        initRecyclerView();
         mSwipeRefreshLayout.post(new Runnable() {
             @Override
             public void run() {
@@ -72,25 +72,25 @@ public class FansSwipeActivity extends BaseSwipeActivity implements FollowActivi
     }
 
 
-    public void initRecyclerView() {
-        mRecyclerView = (RecyclerView) findViewById(R.id.base_RecyclerView);
-        mAdapter = new FansAdapter(mDatas, mContext) {
-            @Override
-            public void followerLayoutClick(User user, int position, ImageView follwerIcon, TextView follwerText) {
-                follwerIcon.setImageResource(R.drawable.bga_refresh_loading02);
-                follwerText.setText("");
-                if (user.following) {
-                    mFollowerActivityPresent.user_destroy(user, mContext, follwerIcon, follwerText);
-                } else {
-                    mFollowerActivityPresent.user_create(user, mContext, follwerIcon, follwerText);
-                }
-            }
-        };
-        mHeaderAndFooterRecyclerViewAdapter = new HeaderAndFooterRecyclerViewAdapter(mAdapter);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setAdapter(mHeaderAndFooterRecyclerViewAdapter);
-    }
+//    public void initRecyclerView() {
+//        mRecyclerView = (RecyclerView) findViewById(R.id.base_RecyclerView);
+//        mAdapter = new FansAdapter(mDatas, mContext) {
+//            @Override
+//            public void followerLayoutClick(User user, int position, ImageView follwerIcon, TextView follwerText) {
+//                follwerIcon.setImageResource(R.drawable.bga_refresh_loading02);
+//                follwerText.setText("");
+//                if (user.following) {
+//                    mFollowerActivityPresent.user_destroy(user, mContext, follwerIcon, follwerText);
+//                } else {
+//                    mFollowerActivityPresent.user_create(user, mContext, follwerIcon, follwerText);
+//                }
+//            }
+//        };
+//        mHeaderAndFooterRecyclerViewAdapter = new HeaderAndFooterRecyclerViewAdapter(mAdapter);
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
+//        mRecyclerView.setLayoutManager(layoutManager);
+//        mRecyclerView.setAdapter(mHeaderAndFooterRecyclerViewAdapter);
+//    }
 
 
     public EndlessRecyclerOnScrollListener mOnScrollListener = new EndlessRecyclerOnScrollListener() {
@@ -110,10 +110,10 @@ public class FansSwipeActivity extends BaseSwipeActivity implements FollowActivi
 
     @Override
     public void updateListView(ArrayList<User> userlist) {
-        mRecyclerView.addOnScrollListener(mOnScrollListener);
-        mDatas = userlist;
-        mAdapter.setData(userlist);
-        mHeaderAndFooterRecyclerViewAdapter.notifyDataSetChanged();
+//        mRecyclerView.addOnScrollListener(mOnScrollListener);
+//        mDatas = userlist;
+//        mAdapter.setData(userlist);
+//        mHeaderAndFooterRecyclerViewAdapter.notifyDataSetChanged();
     }
 
     @Override

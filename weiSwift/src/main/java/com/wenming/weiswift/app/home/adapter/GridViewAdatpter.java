@@ -82,6 +82,7 @@ public class GridViewAdatpter extends BaseAdapter {
                     public void onClick(View v) {
                         Intent intent=new Intent(mContext, CropCategoryActivity.class);
                         intent.putExtra("CropName",mCropList.get(position + mPosition * 9).getWeiba_name());
+                        intent.putExtra("weiba_id",mCropList.get(position+mPosition*9).getWeiba_id());
                         mContext.startActivity(intent);
                     }
                 });

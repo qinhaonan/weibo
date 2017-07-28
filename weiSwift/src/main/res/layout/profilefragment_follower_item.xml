@@ -8,8 +8,9 @@
     android:orientation="horizontal">
 
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center"
         android:layout_margin="10dp">
 
         <ImageView
@@ -41,7 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="闭关写代码"
+            android:text="用户名"
             android:singleLine="true"
             android:textColor="@color/follow_item_name"
             android:textSize="15sp" />
@@ -53,7 +54,7 @@
             android:layout_marginTop="10dp"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="五月会很多惊喜，涉及硬件/软件/服务多个方面。让我们一起畅想吧~"
+            android:text="专家类型"
             android:textColor="@color/follow_item_description"
             android:textSize="13sp" />
 
@@ -66,7 +67,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="来自"
+                android:text=""
                 android:textColor="@color/follow_item_constant_comefrom"
                 android:textSize="12sp" />
 
@@ -75,7 +76,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
-                android:text="微博推荐"
+                android:text="擅长领域"
                 android:textColor="@color/follow_item_comefrom"
                 android:textSize="12sp" />
         </LinearLayout>
@@ -90,26 +91,27 @@
         android:gravity="center">
 
 
-        <ImageView
-            android:id="@+id/follwer_relation_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:paddingLeft="14dp"
-            android:paddingRight="14dp"
-            android:paddingTop="12.5dp"
-            android:scaleType="center"
-            android:src="@drawable/card_icon_addattention" />
+        <!--<ImageView-->
+            <!--android:id="@+id/follwer_relation_icon"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_centerInParent="true"-->
+            <!--android:paddingLeft="14dp"-->
+            <!--android:paddingRight="14dp"-->
+            <!--android:paddingTop="12.5dp"-->
+            <!--android:scaleType="center"-->
+            <!--android:src="@drawable/card_icon_addattention" />-->
 
         <TextView
             android:id="@+id/follwer_relation_text"
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:layout_below="@+id/follwer_relation_icon"
+            android:layout_width="65dp"
+            android:layout_height="30dp"
             android:layout_centerInParent="true"
+            android:layout_marginRight="15dp"
             android:gravity="center"
-            android:text="加关注"
-            android:textColor="@color/follow_item_button_follow_none"
+            android:text="提问"
+            android:textColor="#ea6f5a"
+            android:background="@drawable/shape_question"
             android:textSize="10sp" />
 
     </RelativeLayout>

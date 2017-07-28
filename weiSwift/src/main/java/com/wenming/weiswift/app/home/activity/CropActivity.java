@@ -115,7 +115,8 @@ public class CropActivity extends BaseAppCompatActivity {
     public void initData() {
         HttpUtils httpUtils=new HttpUtils();
         httpUtils.send(HttpRequest.HttpMethod.POST, "http://192.168.1.176/thinksns_v3.0/index.php?" +
-                        "app=api&mod=Channel" +
+                        "app=api" +
+                        "&mod=Channel" +
                         "&act=get_all_channel" +
                         "&oauth_token=988b491a22040ef7634eb5b8f52e0986" +
                         "&oauth_token_secret=2a3d67f5f7bb03035e619518b364912e",
