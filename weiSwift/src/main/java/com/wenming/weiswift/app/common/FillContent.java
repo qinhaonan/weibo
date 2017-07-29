@@ -272,6 +272,9 @@ public class FillContent {
         }
 
     }
+    public static void  fillComment_num(final String reply_num,TextView comment){
+            comment.setText(reply_num);
+    }
 
     public static void fillButtonBar(final Context context, final Status status, LinearLayout bottombar_retweet, LinearLayout bottombar_comment, LinearLayout bottombar_attitude) {
         //如果转发的内容已经被删除,则不允许转发
@@ -391,6 +394,26 @@ public class FillContent {
     /**
      * 填充微博图片列表,包括原创微博和转发微博中的图片都可以使用
      */
+    public static void fillWeiBoImgList(ArrayList<String> imageDatas, Context context, RecyclerView recyclerview) {
+//        ArrayList<String> imageDatas = status.bmiddle_pic_urls;
+        if (imageDatas == null || imageDatas.size() == 0) {
+            recyclerview.setVisibility(View.GONE);
+            return;
+        }
+        if (recyclerview.getVisibility() == View.GONE) {
+            recyclerview.setVisibility(View.VISIBLE);
+        }
+        GridLayoutManager gridLayoutManager = initGridLayoutManager(imageDatas, context);
+        ImageAdapter imageAdapter = new ImageAdapter(imageDatas, context);
+        recyclerview.setHasFixedSize(true);
+        recyclerview.setAdapter(imageAdapter);
+        recyclerview.setLayoutManager(gridLayoutManager);
+        imageAdapter.setData(imageDatas);
+        imageAdapter.notifyDataSetChanged();
+    }
+    /**
+     * 填充微博图片列表,包括原创微博和转发微博中的图片都可以使用
+     */
     public static void fillWeiBoImgList(Status status, Context context, RecyclerView recyclerview) {
         ArrayList<String> imageDatas = status.bmiddle_pic_urls;
         if (imageDatas == null || imageDatas.size() == 0) {
@@ -408,7 +431,6 @@ public class FillContent {
         imageAdapter.setData(imageDatas);
         imageAdapter.notifyDataSetChanged();
     }
-
     /**
      * 根据图片数量，初始化GridLayoutManager，并且设置列数，
      * 当图片 = 1 的时候，显示1列
@@ -558,7 +580,80 @@ public class FillContent {
         });
         //setOnLongClickListener(longImg, gifImg, norImg, context, status, position);
     }
+    /**
+     * 填充微博列表图片
+     *
+     * @param context
+     * @param img_urlList
+     * @param options
+     * @param position
+     * @param longImg
+     * @param norImg
+     * @param gifImg
+     * @param imageLabel
+     */
+    public static void fillImageList(final Context context, final ArrayList<String> img_urlList, DisplayImageOptions options, final int position, final SubsamplingScaleImageView longImg, final ImageView norImg, final GifImageView gifImg, final ImageView imageLabel) {
+        final ArrayList<String> urllist=img_urlList;
+        ImageLoader.getInstance().loadImage(urllist.get(position), options, new SimpleImageLoadingListener() {
+            @Override
+            public void onLoadingStarted(String s, View view) {
+                setLabelForGif(urllist.get(position), imageLabel);
+            }
 
+            @Override
+            public void onLoadingComplete(String imageUri, View view, Bitmap bitmap) {
+                File file = DiskCacheUtils.findInCache(urllist.get(position), ImageLoader.getInstance().getDiskCache());
+                if (file == null) {
+                    return;
+                }
+                if (imageUri.endsWith(".gif")) {
+                    gifImg.setVisibility(View.VISIBLE);
+                    longImg.setVisibility(View.INVISIBLE);
+                    norImg.setVisibility(View.INVISIBLE);
+                    displayGif(file, gifImg, imageLabel);
+                } else if (ImageUtil.isLongImg(file, bitmap)) {
+                    longImg.setVisibility(View.VISIBLE);
+                    gifImg.setVisibility(View.INVISIBLE);
+                    norImg.setVisibility(View.INVISIBLE);
+                    displayLongPic(file, bitmap, longImg, imageLabel);
+                } else {
+                    norImg.setVisibility(View.VISIBLE);
+                    longImg.setVisibility(View.INVISIBLE);
+                    gifImg.setVisibility(View.INVISIBLE);
+                    displayNorImg(file, bitmap, norImg, imageLabel);
+                }
+            }
+        });
+        longImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, ImageDetailsActivity.class);
+                intent.putExtra("imagelist_url", urllist);
+                intent.putExtra("image_position", position);
+                context.startActivity(intent);
+            }
+        });
+        gifImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, ImageDetailsActivity.class);
+                intent.putExtra("imagelist_url", urllist);
+                intent.putExtra("image_position", position);
+                context.startActivity(intent);
+            }
+        });
+
+        norImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, ImageDetailsActivity.class);
+                intent.putExtra("imagelist_url", urllist);
+                intent.putExtra("image_position", position);
+                context.startActivity(intent);
+            }
+        });
+        //setOnLongClickListener(longImg, gifImg, norImg, context, status, position);
+    }
     private static void setOnLongClickListener(SubsamplingScaleImageView longImg, GifImageView gifImg, ImageView norImg, final Context context, final Status status, final int position) {
 
 

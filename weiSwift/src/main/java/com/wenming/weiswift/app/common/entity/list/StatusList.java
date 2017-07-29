@@ -82,9 +82,11 @@ public class StatusList implements Parcelable {
 //            status.created_at=questions[2].getPublish_time();
 //            status.id=questions[2].getUid();
 //            status.favorited=false;
-                status.source = "";
-                status.user.avatar_hd = questionList.get(0).getAvatar_big();
-                status.user.avatar_large = questionList.get(0).getAvatar_middle();
+                status.source = questionList.get(i).getApi_source().getTitle();
+                status.user.location=questionList.get(i).getApi_source().getSource_user_info().getLocation();
+                status.comments_count=Integer.valueOf(questionList.get(i).getComment_count());
+                status.user.avatar_hd = questionList.get(i).getAvatar_big();
+                status.user.avatar_large = questionList.get(i).getAvatar_middle();
                 status.user.name = questionList.get(i).getUname();
 //            status.created_at= transform(questions[i].getPublish_time());
 //                FillContentHelper.setImgUrl(status, questionList);

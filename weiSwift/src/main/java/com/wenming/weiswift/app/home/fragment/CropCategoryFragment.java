@@ -25,6 +25,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -36,6 +39,8 @@ import com.wenming.weiswift.R;
 import com.wenming.weiswift.app.common.BarManager;
 import com.wenming.weiswift.app.common.entity.Crop;
 import com.wenming.weiswift.app.common.entity.Question;
+import com.wenming.weiswift.app.common.entity.QuestionByIdEntity;
+import com.wenming.weiswift.app.common.entity.QuestionEntity;
 import com.wenming.weiswift.app.common.entity.Status;
 import com.wenming.weiswift.app.common.entity.User;
 import com.wenming.weiswift.app.common.entity.list.QuestionList;
@@ -122,8 +127,10 @@ public class CropCategoryFragment extends Fragment implements HomeFragmentView {
     private HomeHeadView homeHeadView;
     private List<Crop> cropList;
     private RelativeLayout rl_gridview;
+    private ArrayList<QuestionByIdEntity> questionEntities;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        initData();
         questionList = new QuestionList();
         mActivity = getActivity();
         mContext = getContext();
@@ -349,11 +356,15 @@ public class CropCategoryFragment extends Fragment implements HomeFragmentView {
     @Override
     public void updateListView(ArrayList<Status> statuselist) {
         mRecyclerView.addOnScrollListener(mOnScrollListener);
-        mDatas = statuselist;
-        mAdapter.setData(statuselist);
+//        mDatas = statuselist;
+//        mAdapter.setData(statuselist);
         mHeaderAndFooterRecyclerViewAdapter.notifyDataSetChanged();
     }
-
+    public void update(){
+        mRecyclerView.addOnScrollListener(mOnScrollListener);
+        mAdapter.setCateGoryData(questionEntities);
+        mHeaderAndFooterRecyclerViewAdapter.notifyDataSetChanged();
+    }
     @Override
     public void showLoadingIcon() {
         mSwipeRefreshLayout.post(new Runnable() {
@@ -481,7 +492,39 @@ public class CropCategoryFragment extends Fragment implements HomeFragmentView {
         BarManager barManager = new BarManager();
         barManager.showTopBar(mTopBar);
     }
+    public void initData(){
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("app", "api");
+        params.addBodyParameter("mod", "Weiba");
+        params.addBodyParameter("act", "get_posts");
+        params.addBodyParameter("oauth_token", "988b491a22040ef7634eb5b8f52e0986");
+        params.addBodyParameter("oauth_token_secret", "2a3d67f5f7bb03035e619518b364912e");
+        params.addBodyParameter("id",getArguments().getString("weiba_id"));
+        HttpUtils httpUtils = new HttpUtils();
+        httpUtils.send(HttpRequest.HttpMethod.POST, "http://192.168.1.176/thinksns_v3.0/index.php?", params, new RequestCallBack<Object>() {
+            @Override
+            public void onSuccess(ResponseInfo<Object> responseInfo) {
+                Log.d("PPPP", "onSuccess: " + "成" + responseInfo.result);
+                if(!(responseInfo.result).equals("[]")){
+                    JsonParser parser = new JsonParser();
+                    JsonArray jsonArray = parser.parse((String) responseInfo.result).getAsJsonArray();
+                    Gson gson=new Gson();
+                    questionEntities = new ArrayList<QuestionByIdEntity>();
+                    for (JsonElement question : jsonArray) {
+                        //使用GSON，直接转成Bean对象
+                        QuestionByIdEntity questionEntity = gson.fromJson(question, QuestionByIdEntity.class);
+                        questionEntities.add(questionEntity);
+                    }
+                }
+                update();
+            }
 
+            @Override
+            public void onFailure(HttpException e, String s) {
+                Log.d("PPPP", "onFailure: " + s);
+            }
+        });
+    }
 
 
 }

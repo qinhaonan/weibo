@@ -49,7 +49,10 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
             this.mData = status.origin_pic_urls;
         }
         this.mContext = context;
-
+    }
+    public ImageAdapter(ArrayList<String> imgList,Context context){
+        mData = imgList;
+        mContext=context;
     }
 
     @Override
@@ -65,7 +68,11 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        FillContent.fillImageList(mContext, mStatus, options, position, holder.longImg, holder.norImg, holder.gifImg, holder.imageLabel);
+        if(mStatus!=null&&mData==null) {
+            FillContent.fillImageList(mContext, mStatus, options, position, holder.longImg, holder.norImg, holder.gifImg, holder.imageLabel);
+        }else if(mData!=null&&mData.size()>0){
+            FillContent.fillImageList(mContext, mData, options, position, holder.longImg, holder.norImg, holder.gifImg, holder.imageLabel);
+        }
     }
 
     @Override

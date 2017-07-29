@@ -64,7 +64,7 @@ public class QuestionEntity {
     private IscollBean iscoll;
     private ApiSourceBean api_source;
     private int is_digg;
-    private List<?> user_group;
+//    private List<?> user_group;
 
     public int getFeed_id() {
         return feed_id;
@@ -266,13 +266,13 @@ public class QuestionEntity {
         this.is_digg = is_digg;
     }
 
-    public List<?> getUser_group() {
-        return user_group;
-    }
-
-    public void setUser_group(List<?> user_group) {
-        this.user_group = user_group;
-    }
+//    public List<?> getUser_group() {
+//        return user_group;
+//    }
+//
+//    public void setUser_group(List<?> user_group) {
+//        this.user_group = user_group;
+//    }
 
     public static class IscollBean {
         /**
@@ -363,7 +363,7 @@ public class QuestionEntity {
         private String app_row_id;
         private String source_table;
         private String source_id;
-        private GroupDataBean groupData;
+//        private GroupDataBean groupData;
 
         public String getPost_id() {
             return post_id;
@@ -605,13 +605,13 @@ public class QuestionEntity {
             this.source_id = source_id;
         }
 
-        public GroupDataBean getGroupData() {
-            return groupData;
-        }
-
-        public void setGroupData(GroupDataBean groupData) {
-            this.groupData = groupData;
-        }
+//        public GroupDataBean getGroupData() {
+//            return groupData;
+//        }
+//
+//        public void setGroupData(GroupDataBean groupData) {
+//            this.groupData = groupData;
+//        }
 
         public static class SourceUserInfoBean {
             /**
@@ -700,9 +700,9 @@ public class QuestionEntity {
             private String space_link;
             private String space_link_no;
             private String group_icon;
-            private List<?> medals;
-            private List<?> api_user_group;
-            private List<?> user_group;
+//            private List<?> medals;
+//            private List<?> api_user_group;
+//            private List<?> user_group;
 
             public String getUid() {
                 return uid;
@@ -1024,29 +1024,29 @@ public class QuestionEntity {
                 this.group_icon = group_icon;
             }
 
-            public List<?> getMedals() {
-                return medals;
-            }
-
-            public void setMedals(List<?> medals) {
-                this.medals = medals;
-            }
-
-            public List<?> getApi_user_group() {
-                return api_user_group;
-            }
-
-            public void setApi_user_group(List<?> api_user_group) {
-                this.api_user_group = api_user_group;
-            }
-
-            public List<?> getUser_group() {
-                return user_group;
-            }
-
-            public void setUser_group(List<?> user_group) {
-                this.user_group = user_group;
-            }
+//            public List<?> getMedals() {
+//                return medals;
+//            }
+//
+//            public void setMedals(List<?> medals) {
+//                this.medals = medals;
+//            }
+//
+//            public List<?> getApi_user_group() {
+//                return api_user_group;
+//            }
+//
+//            public void setApi_user_group(List<?> api_user_group) {
+//                this.api_user_group = api_user_group;
+//            }
+//
+//            public List<?> getUser_group() {
+//                return user_group;
+//            }
+//
+//            public void setUser_group(List<?> user_group) {
+//                this.user_group = user_group;
+//            }
         }
 
         public static class GroupDataBean {

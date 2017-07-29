@@ -80,24 +80,27 @@ public class CropAdapter extends RecyclerView.Adapter<CropAdapter.ContentFragmen
                 final Dialog mDialog = DialogUtils.createLoadingDialog(mContext, "加载中...");
                 if (mCropCategoryBean.get(position).getFollowing() == 0) {
                     HttpUtils httpUtils = new HttpUtils();
-                    httpUtils.send(HttpRequest.HttpMethod.POST, "http://192.168.1.176/thinksns_v3.0/index.php?" +
-                                    "app=api&" +
-                                    "mod=Weiba&" +
-                                    "act=create&" +
-                                    "oauth_token=988b491a22040ef7634eb5b8f52e0986" +
-//                                    "oauth_token=553cb8005c5dff47cca58aabefd74de7" +
-                                    "&oauth_token_secret=2a3d67f5f7bb03035e619518b364912e&" +
-//                                    "&oauth_token_secret=4dfa52f77ffe6d55fb1039fe70c70436&" +
-                                    "id=" + mCropCategoryBean.get(position).getWeiba_id()
+                    httpUtils.send(HttpRequest.HttpMethod.GET, "http://192.168.1.176/thinksns_v3.0/index.php?" +
+                                    "app=api" +
+                                    "&mod=Weiba" +
+                                    "&act=create" +
+                                    "&oauth_token=988b491a22040ef7634eb5b8f52e0986" +
+                                    "&oauth_token_secret=2a3d67f5f7bb03035e619518b364912e" +
+                                    "&user_id=" + mCropCategoryBean.get(position).getUid() +
+                                    "&id=" + mCropCategoryBean.get(position).getWeiba_id()
                             , null, new RequestCallBack<Object>() {
                                 @Override
                                 public void onSuccess(ResponseInfo<Object> responseInfo) {
-                                    Log.d(TAG, "onSuccess: 关注成功" + responseInfo);
-                                    mCropCategoryBean.get(position).setFollowing(1);
-                                    holder.img_is_following.setVisibility(View.VISIBLE);
+                                    if (((String) responseInfo.result).equals("1")) {
+                                        Log.d(TAG, "onSuccess: 关注成功" + responseInfo);
+                                        mCropCategoryBean.get(position).setFollowing(1);
+                                        holder.img_is_following.setVisibility(View.VISIBLE);
+                                        followingTotal++;
+                                        Log.d("total", "onSuccess: 选中2 " + followingTotal);
+                                    } else {
+                                        Log.d(TAG, "onSuccess: 关注失败" + responseInfo);
+                                    }
                                     DialogUtils.closeDialog(mDialog);
-                                    followingTotal++;
-                                    Log.d("total", "onSuccess: 选中2 " + followingTotal);
                                 }
 
                                 @Override
@@ -110,22 +113,25 @@ public class CropAdapter extends RecyclerView.Adapter<CropAdapter.ContentFragmen
                 } else {
                     HttpUtils httpUtils = new HttpUtils();
                     httpUtils.send(HttpRequest.HttpMethod.POST, "http://192.168.1.176/thinksns_v3.0/index.php?" +
-                                    "app=api&" +
-                                    "mod=Weiba&" +
-                                    "act=destroy&" +
-                                    "oauth_token=988b491a22040ef7634eb5b8f52e0986" +
-//                                    "oauth_token=553cb8005c5dff47cca58aabefd74de7" +
-                                    "&oauth_token_secret=2a3d67f5f7bb03035e619518b364912e&" +
-//                                    "&oauth_token_secret=4dfa52f77ffe6d55fb1039fe70c70436&" +
-                                    "id=" + mCropCategoryBean.get(position).getWeiba_id()
+                                    "app=api" +
+                                    "&mod=Weiba" +
+                                    "&act=destroy" +
+                                    "&oauth_token=988b491a22040ef7634eb5b8f52e0986" +
+                                    "&oauth_token_secret=2a3d67f5f7bb03035e619518b364912e" +
+                                    "&user_id=" + mCropCategoryBean.get(position).getUid() +
+                                    "&id=" + mCropCategoryBean.get(position).getWeiba_id()
                             , null, new RequestCallBack<Object>() {
                                 @Override
                                 public void onSuccess(ResponseInfo<Object> responseInfo) {
                                     DialogUtils.closeDialog(mDialog);
-                                    Log.d(TAG, "onSuccess: 取消关注成功" + responseInfo);
-                                    mCropCategoryBean.get(position).setFollowing(0);
-                                    holder.img_is_following.setVisibility(View.INVISIBLE);
-                                    followingTotal--;
+                                    if (((String) responseInfo.result).equals("1")) {
+                                        Log.d(TAG, "onSuccess: 取消关注成功" + responseInfo);
+                                        mCropCategoryBean.get(position).setFollowing(0);
+                                        holder.img_is_following.setVisibility(View.INVISIBLE);
+                                        followingTotal--;
+                                    } else {
+                                        Log.d("PPPP", "onFailure: 取消关注失败");
+                                    }
                                     Log.d("total", "onSuccess: 选中3 " + followingTotal);
                                 }
 

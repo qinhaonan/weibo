@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.wenming.weiswift.R;
 import com.wenming.weiswift.app.common.FillContent;
+import com.wenming.weiswift.app.common.entity.QuestionByIdEntity;
 import com.wenming.weiswift.app.common.entity.Status;
 import com.wenming.weiswift.app.home.activity.CommentDetailSwipeActivity;
 import com.wenming.weiswift.app.home.weiboitem.NewPauseOnScrollListener;
@@ -26,9 +28,13 @@ import com.wenming.weiswift.app.mvp.presenter.WeiBoArrowPresent;
 import com.wenming.weiswift.app.mvp.presenter.imp.WeiBoArrowPresenterImp;
 import com.wenming.weiswift.app.weibodetail.activity.OriginPicTextCommentDetailSwipeActivity;
 import com.wenming.weiswift.app.weibodetail.activity.RetweetPicTextCommentDetailSwipeActivity;
+import com.wenming.weiswift.utils.CutOutUtil;
 import com.wenming.weiswift.widget.emojitextview.EmojiTextView;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by wenmingvs on 2015/12/29.
@@ -38,6 +44,7 @@ public abstract class WeiboAdapter extends RecyclerView.Adapter<ViewHolder> {
     private static final int TYPE_ORINGIN_ITEM = 0;
     private static final int TYPE_RETWEET_ITEM = 3;
     private ArrayList<Status> mDatas;
+    private ArrayList<QuestionByIdEntity> mCateDatas;
     private Context mContext;
     private View mView;
     private Status status;
@@ -78,7 +85,7 @@ public abstract class WeiboAdapter extends RecyclerView.Adapter<ViewHolder> {
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         if (holder instanceof OriginViewHolder) {
             //如果这条原创微博没有被删除
-            if (mDatas.get(position).user != null) {
+            if (mDatas != null&&mCateDatas==null) {
                 status = mDatas.get(position);
                 ((OriginViewHolder) holder).titlebar_layout.setVisibility(View.VISIBLE);
                 ((OriginViewHolder) holder).bottombar_layout.setVisibility(View.VISIBLE);
@@ -89,7 +96,8 @@ public abstract class WeiboAdapter extends RecyclerView.Adapter<ViewHolder> {
                 FillContent.fillButtonBar(mContext, mDatas.get(position), ((OriginViewHolder) holder).bottombar_retweet, ((OriginViewHolder) holder).bottombar_comment, ((OriginViewHolder) holder).bottombar_attitude, ((OriginViewHolder) holder).comment, ((OriginViewHolder) holder).redirect, ((OriginViewHolder) holder).feedlike);
                 FillContent.fillComment_num(mDatas.get(position), ((OriginViewHolder) holder).tv_comment);
                 FillContent.fillWeiBoImgList(mDatas.get(position), mContext, ((OriginViewHolder) holder).imageList);
-
+                ((OriginViewHolder) holder).weibo_comefrom.setText(mDatas.get(position).user.location);
+                ((OriginViewHolder) holder).tv_weibaCategory.setText(mDatas.get(position).source);
                 ((OriginViewHolder) holder).bottombar_layout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -139,6 +147,16 @@ public abstract class WeiboAdapter extends RecyclerView.Adapter<ViewHolder> {
 
                     }
                 });
+
+            }else if(mCateDatas!=null){
+//                FillContent.fillTitleBar(mContext, mDatas.get(position), ((OriginViewHolder) holder).profile_img, ((OriginViewHolder) holder).profile_verified, ((OriginViewHolder) holder).profile_name, ((OriginViewHolder) holder).profile_time, ((OriginViewHolder) holder).weibo_comefrom);
+                FillContent.fillWeiBoContent(CutOutUtil.getText(mCateDatas.get(position).getContent()), mContext, ((OriginViewHolder) holder).weibo_content);
+//                FillContent.fillButtonBar(mContext, mDatas.get(position), ((OriginViewHolder) holder).bottombar_retweet, ((OriginViewHolder) holder).bottombar_comment, ((OriginViewHolder) holder).bottombar_attitude, ((OriginViewHolder) holder).comment, ((OriginViewHolder) holder).redirect, ((OriginViewHolder) holder).feedlike);
+                FillContent.fillComment_num(mCateDatas.get(position).getReply_count(), ((OriginViewHolder) holder).tv_comment);
+                ArrayList<String> stringList=(ArrayList<String>) CutOutUtil.getImgSrc(mCateDatas.get(position).getContent());
+                FillContent.fillWeiBoImgList(stringList, mContext, ((OriginViewHolder) holder).imageList);
+                ((OriginViewHolder) holder).tv_weibaCategory.setText(mCateDatas.get(position).getTitle());
+                ((OriginViewHolder) holder).weibo_comefrom.setText(mCateDatas.get(position).getAuthor_info().getLocation());
 
             }
             //如果这条原创微博被删除
@@ -204,11 +222,12 @@ public abstract class WeiboAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     @Override
     public int getItemCount() {
-        if (mDatas != null) {
+        if (mDatas != null&&mCateDatas==null) {
             return mDatas.size();
-        } else {
-            return 0;
+        } else if(mCateDatas!=null){
+            return mCateDatas.size();
         }
+        return 0;
     }
 
     @Override
@@ -223,6 +242,9 @@ public abstract class WeiboAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     public void setData(ArrayList<Status> data) {
         this.mDatas = data;
+    }
+    public void setCateGoryData(ArrayList<QuestionByIdEntity> data) {
+        this.mCateDatas = data;
     }
 
     public abstract void arrowClick(Status status, int position, Bitmap bitmap);
@@ -253,7 +275,7 @@ public abstract class WeiboAdapter extends RecyclerView.Adapter<ViewHolder> {
         public LinearLayout bottombar_attitude;
         public LinearLayout ll_solution;
         public TextView tv_comment;
-
+        public TextView tv_weibaCategory;
         public OriginViewHolder(View v) {
             super(v);
             origin_weibo_layout = (LinearLayout) v.findViewById(R.id.origin_weibo_layout);
@@ -277,6 +299,7 @@ public abstract class WeiboAdapter extends RecyclerView.Adapter<ViewHolder> {
             bottombar_retweet = (LinearLayout) v.findViewById(R.id.bottombar_retweet);
             bottombar_comment = (LinearLayout) v.findViewById(R.id.bottombar_comment);
             bottombar_attitude = (LinearLayout) v.findViewById(R.id.bottombar_attitude);
+            tv_weibaCategory=(TextView)v.findViewById(R.id.weibaCategory);
         }
     }
 
@@ -299,6 +322,7 @@ public abstract class WeiboAdapter extends RecyclerView.Adapter<ViewHolder> {
         public LinearLayout bottombar_comment;
         public LinearLayout bottombar_attitude;
         public LinearLayout retweetStatus_layout;
+
 
 
         public RetweetViewHolder(View v) {

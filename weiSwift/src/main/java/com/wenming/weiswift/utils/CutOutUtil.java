@@ -30,6 +30,13 @@ public class CutOutUtil {
         }
         return pics;
     }
+    public static String getText(String str){
+        String patternString = "<[^>]+>";
+        Pattern pattern = Pattern.compile(patternString);
+        Matcher matcher = pattern.matcher(str);
+        String resultString =  matcher.replaceAll("");
+        return resultString;
+    }
     public static String getContent(String str){
         String content=str.substring((str.indexOf("】"))+1,str.length());
         content=content.replaceAll("&nbsp;","");
