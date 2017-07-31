@@ -5,16 +5,25 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <SearchView
-        android:id="@+id/searchView"
+    <!--<SearchView-->
+    <!--android:id="@+id/searchView"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="30dp"-->
+    <!--android:layout_marginBottom="5dp"-->
+    <!--android:layout_marginLeft="8dp"-->
+    <!--android:layout_marginRight="8dp"-->
+    <!--android:layout_marginTop="5dp"-->
+    <!--android:background="@drawable/rect_white"-->
+    <!--android:searchIcon="@drawable/searchbar_second_textfield_search_icon" />-->
+    <Button
+        android:id="@+id/btn_search"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="25dp"
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="5dp"
-        android:background="@drawable/rect_white"
-        android:searchIcon="@drawable/searchbar_second_textfield_search_icon" />
+        android:background="@drawable/rect_white" />
 
     <TextView
         android:id="@+id/weibotype"
@@ -46,8 +55,8 @@
             android:id="@+id/magic_indicator1"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true" />
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" />
     </RelativeLayout>
 
     <include layout="@layout/expert_question_layout" />

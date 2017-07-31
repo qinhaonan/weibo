@@ -15,10 +15,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.wenming.weiswift.R;
 import com.wenming.weiswift.app.common.FillContent;
 import com.wenming.weiswift.app.common.entity.QuestionByIdEntity;
+import com.wenming.weiswift.app.common.entity.QuestionEntity;
 import com.wenming.weiswift.app.common.entity.Status;
 import com.wenming.weiswift.app.home.activity.CommentDetailSwipeActivity;
 import com.wenming.weiswift.app.home.weiboitem.NewPauseOnScrollListener;
@@ -28,6 +31,7 @@ import com.wenming.weiswift.app.mvp.presenter.WeiBoArrowPresent;
 import com.wenming.weiswift.app.mvp.presenter.imp.WeiBoArrowPresenterImp;
 import com.wenming.weiswift.app.weibodetail.activity.OriginPicTextCommentDetailSwipeActivity;
 import com.wenming.weiswift.app.weibodetail.activity.RetweetPicTextCommentDetailSwipeActivity;
+import com.wenming.weiswift.utils.CropCircleTransformation;
 import com.wenming.weiswift.utils.CutOutUtil;
 import com.wenming.weiswift.widget.emojitextview.EmojiTextView;
 
@@ -48,6 +52,7 @@ public abstract class WeiboAdapter extends RecyclerView.Adapter<ViewHolder> {
     private Context mContext;
     private View mView;
     private Status status;
+    private ArrayList<QuestionEntity> mQuestionData;
 
     public WeiboAdapter(ArrayList<Status> datas, Context context) {
         this.mDatas = datas;
@@ -85,7 +90,7 @@ public abstract class WeiboAdapter extends RecyclerView.Adapter<ViewHolder> {
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         if (holder instanceof OriginViewHolder) {
             //如果这条原创微博没有被删除
-            if (mDatas != null&&mCateDatas==null) {
+            if (mDatas != null&&mCateDatas==null&&mQuestionData==null) {
                 status = mDatas.get(position);
                 ((OriginViewHolder) holder).titlebar_layout.setVisibility(View.VISIBLE);
                 ((OriginViewHolder) holder).bottombar_layout.setVisibility(View.VISIBLE);
@@ -153,11 +158,35 @@ public abstract class WeiboAdapter extends RecyclerView.Adapter<ViewHolder> {
                 FillContent.fillWeiBoContent(CutOutUtil.getText(mCateDatas.get(position).getContent()), mContext, ((OriginViewHolder) holder).weibo_content);
 //                FillContent.fillButtonBar(mContext, mDatas.get(position), ((OriginViewHolder) holder).bottombar_retweet, ((OriginViewHolder) holder).bottombar_comment, ((OriginViewHolder) holder).bottombar_attitude, ((OriginViewHolder) holder).comment, ((OriginViewHolder) holder).redirect, ((OriginViewHolder) holder).feedlike);
                 FillContent.fillComment_num(mCateDatas.get(position).getReply_count(), ((OriginViewHolder) holder).tv_comment);
-                ArrayList<String> stringList=(ArrayList<String>) CutOutUtil.getImgSrc(mCateDatas.get(position).getContent());
-                FillContent.fillWeiBoImgList(stringList, mContext, ((OriginViewHolder) holder).imageList);
+                ArrayList<String> img_urlList=(ArrayList<String>) CutOutUtil.getImgSrc(mCateDatas.get(position).getContent());
+                FillContent.fillWeiBoImgList(img_urlList, mContext, ((OriginViewHolder) holder).imageList);
                 ((OriginViewHolder) holder).tv_weibaCategory.setText(mCateDatas.get(position).getTitle());
                 ((OriginViewHolder) holder).weibo_comefrom.setText(mCateDatas.get(position).getAuthor_info().getLocation());
-
+                ((OriginViewHolder) holder).profile_name.setText(mCateDatas.get(position).getAuthor_info().getUname());
+                Glide.with(mContext)
+                        .load(mCateDatas.get(position).getAuthor_info().getAvatar_small())
+                        .placeholder(R.drawable.loading)
+                        .error(R.drawable.loading)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .bitmapTransform(new CropCircleTransformation(mContext))
+                        .crossFade(1000)
+                        .into(((OriginViewHolder) holder).profile_img);
+            }else if(mQuestionData!=null){
+                FillContent.fillWeiBoContent(CutOutUtil.getText(mQuestionData.get(position).getApi_source().getContent()), mContext, ((OriginViewHolder) holder).weibo_content);
+                FillContent.fillComment_num(mQuestionData.get(position).getComment_all_count(), ((OriginViewHolder) holder).tv_comment);
+                ArrayList<String> img_urlList=(ArrayList<String>) CutOutUtil.getImgSrc(mQuestionData.get(position).getApi_source().getContent());
+                FillContent.fillWeiBoImgList(img_urlList, mContext, ((OriginViewHolder) holder).imageList);
+                ((OriginViewHolder) holder).tv_weibaCategory.setText(mQuestionData.get(position).getApi_source().getTitle());
+                ((OriginViewHolder) holder).weibo_comefrom.setText(mQuestionData.get(position).getApi_source().getSource_user_info().getLocation());
+                ((OriginViewHolder) holder).profile_name.setText(mQuestionData.get(position).getUname());
+                Glide.with(mContext)
+                        .load(mQuestionData.get(position).getAvatar_small())
+                        .placeholder(R.drawable.loading)
+                        .error(R.drawable.loading)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .bitmapTransform(new CropCircleTransformation(mContext))
+                        .crossFade(1000)
+                        .into(((OriginViewHolder) holder).profile_img);
             }
             //如果这条原创微博被删除
             else {
@@ -167,7 +196,6 @@ public abstract class WeiboAdapter extends RecyclerView.Adapter<ViewHolder> {
                 ((OriginViewHolder) holder).splitLine.setVisibility(View.VISIBLE);
                 ((OriginViewHolder) holder).favoritedelete.setVisibility(View.VISIBLE);
                 FillContent.fillWeiBoContent(mDatas.get(position).text, mContext, ((OriginViewHolder) holder).weibo_content);
-
                 ((OriginViewHolder) holder).favoritedelete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -176,8 +204,6 @@ public abstract class WeiboAdapter extends RecyclerView.Adapter<ViewHolder> {
                     }
                 });
             }
-
-
         } else if (holder instanceof RetweetViewHolder) {
             FillContent.fillTitleBar(mContext, mDatas.get(position), ((RetweetViewHolder) holder).profile_img, ((RetweetViewHolder) holder).profile_verified, ((RetweetViewHolder) holder).profile_name, ((RetweetViewHolder) holder).profile_time, ((RetweetViewHolder) holder).weibo_comefrom);
             FillContent.fillRetweetContent(mDatas.get(position), mContext, ((RetweetViewHolder) holder).origin_nameAndcontent);
@@ -222,10 +248,12 @@ public abstract class WeiboAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     @Override
     public int getItemCount() {
-        if (mDatas != null&&mCateDatas==null) {
+        if (mDatas != null&&mCateDatas==null&&mQuestionData==null) {
             return mDatas.size();
         } else if(mCateDatas!=null){
             return mCateDatas.size();
+        }else if(mQuestionData!=null){
+            return mQuestionData.size();
         }
         return 0;
     }
@@ -245,6 +273,9 @@ public abstract class WeiboAdapter extends RecyclerView.Adapter<ViewHolder> {
     }
     public void setCateGoryData(ArrayList<QuestionByIdEntity> data) {
         this.mCateDatas = data;
+    }
+    public void setSearchData(ArrayList<QuestionEntity> questionList){
+        mQuestionData = questionList;
     }
 
     public abstract void arrowClick(Status status, int position, Bitmap bitmap);

@@ -18,7 +18,6 @@ public class Expert {
     public HashMap<String, ExpertBean> expertMap;
 
 
-
     public static class ExpertBean {
         public void setUname(String uname) {
             this.uname = uname;
@@ -76,10 +75,23 @@ public class Expert {
          */
 
         private String uid;
-//        private String login;
+        //        private String login;
 //        private String login_salt;
         private String uname;
-//        private String email;
+        private UserGroup user_group;
+
+        public void setUser_group(UserGroup user_group) {
+            this.user_group = user_group;
+        }
+
+        public UserGroup getUser_group() {
+
+            return user_group;
+        }
+
+        private String avatar_middle;
+
+        //        private String email;
 //        private String sex;
 //        private String location;
 //        private String is_audit;
@@ -107,13 +119,100 @@ public class Expert {
 //        private String send_email_time;
 //        private String avatar_original;
 //        private String avatar_big;
-        private String avatar_middle;
 //        private String avatar_small;
 //        private String avatar_tiny;
 //        private String avatar_url;
 //        private String space_url;
 //        private String space_link;
 //        private String space_link_no;
+        public static class UserGroup {
+            public static class UserGroupBean {
+                /**
+                 * user_group_id : 5
+                 * user_group_name : 个人认证
+                 * ctime : 1350012209
+                 * user_group_icon : v_01.gif
+                 * user_group_type : 0
+                 * app_name : public
+                 * is_authenticate : 1
+                 * user_group_icon_url : http://192.168.1.176/thinksns_v3.0/addons/theme/stv1/_static/image/usergroup/v_01.gif
+                 */
+
+                private String user_group_id;
+                private String user_group_name;
+                private String ctime;
+                private String user_group_icon;
+                private String user_group_type;
+                private String app_name;
+                private String is_authenticate;
+                private String user_group_icon_url;
+
+                public String getUser_group_id() {
+                    return user_group_id;
+                }
+
+                public void setUser_group_id(String user_group_id) {
+                    this.user_group_id = user_group_id;
+                }
+
+                public String getUser_group_name() {
+                    return user_group_name;
+                }
+
+                public void setUser_group_name(String user_group_name) {
+                    this.user_group_name = user_group_name;
+                }
+
+                public String getCtime() {
+                    return ctime;
+                }
+
+                public void setCtime(String ctime) {
+                    this.ctime = ctime;
+                }
+
+                public String getUser_group_icon() {
+                    return user_group_icon;
+                }
+
+                public void setUser_group_icon(String user_group_icon) {
+                    this.user_group_icon = user_group_icon;
+                }
+
+                public String getUser_group_type() {
+                    return user_group_type;
+                }
+
+                public void setUser_group_type(String user_group_type) {
+                    this.user_group_type = user_group_type;
+                }
+
+                public String getApp_name() {
+                    return app_name;
+                }
+
+                public void setApp_name(String app_name) {
+                    this.app_name = app_name;
+                }
+
+                public String getIs_authenticate() {
+                    return is_authenticate;
+                }
+
+                public void setIs_authenticate(String is_authenticate) {
+                    this.is_authenticate = is_authenticate;
+                }
+
+                public String getUser_group_icon_url() {
+                    return user_group_icon_url;
+                }
+
+                public void setUser_group_icon_url(String user_group_icon_url) {
+                    this.user_group_icon_url = user_group_icon_url;
+                }
+
+            }
+        }
 
         public String getUid() {
             return uid;
@@ -123,7 +222,7 @@ public class Expert {
             this.uid = uid;
         }
 
-//        public String getLogin() {
+        //        public String getLogin() {
 //            return login;
 //        }
 //

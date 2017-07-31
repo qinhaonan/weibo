@@ -12,7 +12,7 @@
                     android:id="@+id/profile_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="红楼"
+                    android:text="姓名"
                     android:layout_marginLeft="10dp"
                     android:layout_gravity="center"
                     android:textColor="@color/home_weiboitem_title_profile_name"

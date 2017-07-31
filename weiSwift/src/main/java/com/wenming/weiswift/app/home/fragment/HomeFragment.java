@@ -13,6 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -22,6 +23,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -44,6 +46,8 @@ import com.wenming.weiswift.app.common.entity.Status;
 import com.wenming.weiswift.app.common.entity.User;
 import com.wenming.weiswift.app.common.entity.list.QuestionList;
 import com.wenming.weiswift.app.home.activity.CropActivity;
+import com.wenming.weiswift.app.home.activity.SearchActivity;
+import com.wenming.weiswift.app.home.activity.SearchResultActivity;
 import com.wenming.weiswift.app.home.adapter.CropAdapter;
 import com.wenming.weiswift.app.home.adapter.GridPagerAdapter;
 import com.wenming.weiswift.app.home.adapter.GridViewAdatpter;
@@ -132,6 +136,8 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
     private List<Crop> cropList;
     private RelativeLayout rl_gridview;
     private List<PublicWeiBoEntity.WeiBo> weiBoList;
+    private Button btn_search;
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         token();
         questionList = new QuestionList();
@@ -152,15 +158,27 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
         mToastBg = (RelativeLayout) mView.findViewById(R.id.toast_bg);
         homeHeadView = new HomeHeadView(mContext);
 //        LinearLayout linearLayout= (LinearLayout) homeHeadView.findViewById(R.id.ll_header);
-        vp_View = inflater.inflate(R.layout.headview_homefragment, container, false);
-        rl_gridview = (RelativeLayout) vp_View.findViewById(R.id.rl_gridview);
+//        vp_View = inflater.inflate(R.layout.headview_homefragment, container, false);
+//        rl_gridview = (RelativeLayout) vp_View.findViewById(R.id.rl_gridview);
         viewPager = (ViewPager) homeHeadView.findViewById(R.id.vp_channel);
-
+        btn_search= (Button) homeHeadView.findViewById(R.id.btn_search);
         initData2();
-        initRecyclerView();
-        initRefreshLayout();
+        initView();
         //屏蔽tittle的点击事件。
         //  initGroupWindows();
+        return mView;
+    }
+
+    private void initView() {
+        btn_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: 搜索");
+                mActivity.startActivity(new Intent(mContext, SearchActivity.class));
+            }
+        });
+        initRecyclerView();
+        initRefreshLayout();
         mSwipeRefreshLayout.post(new Runnable() {
             @Override
             public void run() {
@@ -173,8 +191,6 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
             }
         });
 
-
-        return mView;
     }
 
     private void initData() {

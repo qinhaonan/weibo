@@ -55,7 +55,8 @@
         <activity android:name=".app.weibodetail.activity.RetweetPicTextCommentDetailSwipeActivity" />
         <activity android:name=".app.home.activity.ExpertDetailsActivity"/>
         <activity android:name=".app.message.mention.activity.MentionSwipeActivity" />
-
+        <activity android:name=".app.home.activity.SearchActivity"/>
+        <activity android:name=".app.home.activity.SearchResultActivity"/>
         <activity android:name=".app.message.comment.activity.CommentSwipeActivity" />
 
         <activity android:name=".app.myself.myweibo.activity.MyWeiBoSwipeActivity" />

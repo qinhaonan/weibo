@@ -10,7 +10,7 @@
         android:id="@+id/profile_img"
         android:layout_width="28dp"
         android:layout_height="28dp"
-        android:src="@drawable/example_profileimg" />
+        android:src="@drawable/default_zj" />
 
     <ImageView
         android:id="@+id/profile_verified"

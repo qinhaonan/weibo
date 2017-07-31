@@ -246,9 +246,7 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
         params.addBodyParameter("app", "api");
         params.addBodyParameter("mod", "Weiba");
         params.addBodyParameter("act", "get_all_user_cate");
-//            params.addBodyParameter("oauth_token", "553cb8005c5dff47cca58aabefd74de7");
         params.addBodyParameter("oauth_token", "988b491a22040ef7634eb5b8f52e0986");
-//            params.addBodyParameter("oauth_token_secret", "4dfa52f77ffe6d55fb1039fe70c70436");
         params.addBodyParameter("oauth_token_secret", "2a3d67f5f7bb03035e619518b364912e");
         HttpUtils httpUtils = new HttpUtils();
         httpUtils.send(HttpRequest.HttpMethod.POST, Constants.ZHONGZHIWULIANG_REQUEST_URL, params, new RequestCallBack<Object>() {
@@ -295,7 +293,7 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
                 "&act=get_all_user" +
                 "&oauth_token=988b491a22040ef7634eb5b8f52e0986" +
                 "&oauth_token_secret=2a3d67f5f7bb03035e619518b364912e" +
-                "&cid=1", null, new RequestCallBack<Object>() {
+                "&cid=2", null, new RequestCallBack<Object>() {
             @Override
             public void onSuccess(ResponseInfo<Object> responseInfo) {
                 Log.d(TAG, "onSuccess: 获取专家");

@@ -99,7 +99,6 @@ public class CropCategoryFragment extends Fragment implements HomeFragmentView {
     private boolean mComeFromAccoutActivity;
     private String mUserName;
     private Question question[];
-    private QuestionList questionList;
     /**
      * 顶部导航栏
      */
@@ -128,10 +127,11 @@ public class CropCategoryFragment extends Fragment implements HomeFragmentView {
     private List<Crop> cropList;
     private RelativeLayout rl_gridview;
     private ArrayList<QuestionByIdEntity> questionEntities;
+    private ArrayList<QuestionEntity> questionList;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        initData();
-        questionList = new QuestionList();
+        initData2();
+//        initData();
         mActivity = getActivity();
         mContext = getContext();
         mHomePresent = new HomeFragmentPresentImp(this);
@@ -174,6 +174,8 @@ public class CropCategoryFragment extends Fragment implements HomeFragmentView {
 
         return mView;
     }
+
+
 
     @Override
     public void onDestroyView() {
@@ -362,7 +364,11 @@ public class CropCategoryFragment extends Fragment implements HomeFragmentView {
     }
     public void update(){
         mRecyclerView.addOnScrollListener(mOnScrollListener);
-        mAdapter.setCateGoryData(questionEntities);
+        if(questionEntities!=null&&questionEntities.size()!=0) {
+            mAdapter.setCateGoryData(questionEntities);
+        }else if (questionList!=null&&questionList.size()>0){
+            mAdapter.setSearchData(questionList);
+        }
         mHeaderAndFooterRecyclerViewAdapter.notifyDataSetChanged();
     }
     @Override
@@ -525,6 +531,48 @@ public class CropCategoryFragment extends Fragment implements HomeFragmentView {
             }
         });
     }
+    private void initData2() {
+        RequestParams params = new RequestParams();
+        params.addBodyParameter("app", "api");
+        params.addBodyParameter("mod", "WeiboStatuses");
+        params.addBodyParameter("act", "weibo_search_weibo");
+        params.addBodyParameter("key", getArguments().getString("key"));
+        params.addBodyParameter("oauth_token", "988b491a22040ef7634eb5b8f52e0986");
+        params.addBodyParameter("oauth_token_secret","2a3d67f5f7bb03035e619518b364912e");
+        HttpUtils httpUtils = new HttpUtils();
+        httpUtils.send(HttpRequest.HttpMethod.POST, "http://192.168.1.176/thinksns_v3.0/index.php?", params, new RequestCallBack<Object>() {
+            @Override
+            public void onSuccess(ResponseInfo<Object> responseInfo) {
+//                Log.d("PPPP", "onSuccess: " + "成" + responseInfo.result);
+//                JsonParser jsonParser=new JsonParser();
+//                JsonArray jsonArray=jsonParser.parse((String)responseInfo.result).getAsJsonArray();
+//                Gson gson=new Gson();
+//                ArrayList<QuestionEntity> questionList=new ArrayList<>();
+//                for (JsonElement question:jsonArray){
+//                    QuestionEntity questionEntity=gson.fromJson(question,QuestionEntity.class);
+//                    questionList.add(questionEntity);
+//                }
+//                update();
+                Log.d("PPPP", "onSuccess: " + "成" + responseInfo.result);
+                if(!(responseInfo.result).equals("[]")){
+                    JsonParser jsonParser=new JsonParser();
+                    JsonArray jsonArray=jsonParser.parse((String)responseInfo.result).getAsJsonArray();
+                    Gson gson=new Gson();
+                    questionList = new ArrayList<QuestionEntity>();
+                    for (JsonElement question:jsonArray){
+                        QuestionEntity questionEntity=gson.fromJson(question,QuestionEntity.class);
+                        questionList.add(questionEntity);
+                    }
+                }
+                update();
+            }
 
+            @Override
+            public void onFailure(HttpException e, String s) {
+                Log.d("PPPP", "onFailure: " + s);
+            }
+        });
+
+    }
 
 }
