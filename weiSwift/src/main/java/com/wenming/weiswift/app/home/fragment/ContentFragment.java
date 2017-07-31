@@ -25,6 +25,7 @@ import com.wenming.weiswift.R;
 import com.wenming.weiswift.app.common.entity.CropCategoryEntity;
 import com.wenming.weiswift.app.common.entity.Question;
 import com.wenming.weiswift.app.home.adapter.CropAdapter;
+import com.wenming.weiswift.app.login.Constants;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -67,7 +68,7 @@ public class ContentFragment extends Fragment{
 //        params.addBodyParameter("oauth_token_secret","4dfa52f77ffe6d55fb1039fe70c70436");
         params.addBodyParameter("category_id",mcid);
         HttpUtils httpUtils = new HttpUtils();
-        httpUtils.send(HttpRequest.HttpMethod.POST,"http://192.168.1.176/thinksns_v3.0/index.php?" ,params, new RequestCallBack<Object>() {
+        httpUtils.send(HttpRequest.HttpMethod.POST, Constants.ZHONGZHIWULIANG_REQUEST_URL,params, new RequestCallBack<Object>() {
             @Override
             public void onSuccess(ResponseInfo<Object> responseInfo) {
                 Log.d("PPPP", "onSuccess: "+"成"+mcid+responseInfo.result);
@@ -96,7 +97,7 @@ public class ContentFragment extends Fragment{
 //        params.addBodyParameter("cid",mcid);
         HttpUtils httpUtils = new HttpUtils();
 //        httpUtils.send(HttpRequest.HttpMethod.POST,"http://192.168.1.176/thinksns_v3.0/index.php?app=api&mod=Weiba&act=get_weiba_by_cate&oauth_token=553cb8005c5dff47cca58aabefd74de7&oauth_token_secret=4dfa52f77ffe6d55fb1039fe70c70436&cid="+mcid ,null, new RequestCallBack<Object>() {
-        httpUtils.send(HttpRequest.HttpMethod.POST,"http://192.168.1.176/thinksns_v3.0/index.php?" +
+        httpUtils.send(HttpRequest.HttpMethod.POST,Constants.ZHONGZHIWULIANG_REQUEST_URL +
                 "app=api&mod=Weiba" +
                 "&act=get_weiba_by_cate" +
                 "&oauth_token=988b491a22040ef7634eb5b8f52e0986" +

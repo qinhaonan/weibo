@@ -13,7 +13,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -22,7 +21,6 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.LinearLayout;
@@ -38,30 +36,26 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.wenming.weiswift.R;
+import com.wenming.weiswift.app.common.BarManager;
 import com.wenming.weiswift.app.common.entity.Crop;
-import com.wenming.weiswift.app.common.entity.CropChannel;
 import com.wenming.weiswift.app.common.entity.PublicWeiBoEntity;
 import com.wenming.weiswift.app.common.entity.Question;
 import com.wenming.weiswift.app.common.entity.Status;
 import com.wenming.weiswift.app.common.entity.User;
 import com.wenming.weiswift.app.common.entity.list.QuestionList;
-import com.wenming.weiswift.app.home.activity.CropActivity;
 import com.wenming.weiswift.app.home.activity.SearchActivity;
-import com.wenming.weiswift.app.home.activity.SearchResultActivity;
-import com.wenming.weiswift.app.home.adapter.CropAdapter;
 import com.wenming.weiswift.app.home.adapter.GridPagerAdapter;
 import com.wenming.weiswift.app.home.adapter.GridViewAdatpter;
 import com.wenming.weiswift.app.home.adapter.ScaleCircleNavigator;
+import com.wenming.weiswift.app.home.adapter.WeiboAdapter;
+import com.wenming.weiswift.app.home.weiboitem.HomeHeadView;
+import com.wenming.weiswift.app.home.weiboitem.TimelineArrowWindow;
+import com.wenming.weiswift.app.home.widget.GroupPopWindow;
+import com.wenming.weiswift.app.home.widget.IGroupItemClick;
+import com.wenming.weiswift.app.login.Constants;
 import com.wenming.weiswift.app.mvp.presenter.HomeFragmentPresent;
 import com.wenming.weiswift.app.mvp.presenter.imp.HomeFragmentPresentImp;
 import com.wenming.weiswift.app.mvp.view.HomeFragmentView;
-import com.wenming.weiswift.app.common.BarManager;
-import com.wenming.weiswift.app.login.Constants;
-import com.wenming.weiswift.app.home.widget.GroupPopWindow;
-import com.wenming.weiswift.app.home.widget.IGroupItemClick;
-import com.wenming.weiswift.app.home.weiboitem.HomeHeadView;
-import com.wenming.weiswift.app.home.weiboitem.TimelineArrowWindow;
-import com.wenming.weiswift.app.home.adapter.WeiboAdapter;
 import com.wenming.weiswift.utils.DensityUtil;
 import com.wenming.weiswift.utils.DesBase64Tool;
 import com.wenming.weiswift.utils.ScreenUtil;
@@ -76,7 +70,6 @@ import net.lucode.hackware.magicindicator.ViewPagerHelper;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -203,7 +196,7 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
 //            params.addBodyParameter("oauth_token_secret", "4dfa52f77ffe6d55fb1039fe70c70436");
             params.addBodyParameter("oauth_token_secret", "2a3d67f5f7bb03035e619518b364912e");
             HttpUtils httpUtils = new HttpUtils();
-            httpUtils.send(HttpRequest.HttpMethod.POST, "http://192.168.1.176/thinksns_v3.0/index.php?", params, new RequestCallBack<Object>() {
+            httpUtils.send(HttpRequest.HttpMethod.POST, Constants.ZHONGZHIWULIANG_REQUEST_URL, params, new RequestCallBack<Object>() {
                 @Override
                 public void onSuccess(ResponseInfo<Object> responseInfo) {
                     Log.d("PPPP", "onSuccess: " + "成" + responseInfo.result);
@@ -250,7 +243,7 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
 //            params.addBodyParameter("oauth_token_secret", "4dfa52f77ffe6d55fb1039fe70c70436");
         params.addBodyParameter("oauth_token_secret", "2a3d67f5f7bb03035e619518b364912e");
         HttpUtils httpUtils = new HttpUtils();
-        httpUtils.send(HttpRequest.HttpMethod.POST, "http://192.168.1.176/thinksns_v3.0/index.php?", params, new RequestCallBack<Object>() {
+        httpUtils.send(HttpRequest.HttpMethod.POST, Constants.ZHONGZHIWULIANG_REQUEST_URL, params, new RequestCallBack<Object>() {
             @Override
             public void onSuccess(ResponseInfo<Object> responseInfo) {
                 Log.d("PPPP", "onSuccess: " + "成" + responseInfo.result);
@@ -674,7 +667,7 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
         params.addBodyParameter("oauth_token_secret", "2a3d67f5f7bb03035e619518b364912e");
 //        params.addBodyParameter("oauth_token_secret", "4dfa52f77ffe6d55fb1039fe70c70436");
         HttpUtils httpUtils=new HttpUtils();
-        httpUtils.send(HttpRequest.HttpMethod.GET, "http://192.168.1.176/thinksns_v3.0/index.php?",
+        httpUtils.send(HttpRequest.HttpMethod.GET, Constants.ZHONGZHIWULIANG_REQUEST_URL,
                 null, new RequestCallBack<Object>() {
                     @Override
                     public void onSuccess(ResponseInfo<Object> responseInfo) {

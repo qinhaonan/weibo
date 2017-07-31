@@ -14,8 +14,6 @@ import android.os.IBinder;
 import android.os.Message;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
 
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -24,32 +22,21 @@ import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
-import com.sina.weibo.sdk.component.view.AttentionComponentView;
 import com.sina.weibo.sdk.exception.WeiboException;
 import com.sina.weibo.sdk.net.RequestListener;
 import com.wenming.weiswift.R;
 import com.wenming.weiswift.app.api.CommentsAPI;
 import com.wenming.weiswift.app.api.StatusesAPI;
+import com.wenming.weiswift.app.home.activity.MainActivity;
 import com.wenming.weiswift.app.login.AccessTokenKeeper;
 import com.wenming.weiswift.app.login.Constants;
-import com.wenming.weiswift.app.home.activity.MainActivity;
 import com.wenming.weiswift.app.login.fragment.post.bean.CommentReplyBean;
 import com.wenming.weiswift.app.login.fragment.post.bean.WeiBoCommentBean;
 import com.wenming.weiswift.app.login.fragment.post.bean.WeiBoCreateBean;
-import com.wenming.weiswift.utils.HttpUtil;
 import com.wenming.weiswift.utils.ToastUtil;
 
-import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.DefaultHttpClient;
-
 import java.io.File;
-import java.net.HttpURLConnection;
-
-import static com.sina.weibo.sdk.openapi.legacy.AccountAPI.CAPITAL.H;
 
 
 /**
@@ -198,7 +185,7 @@ public class PostService extends Service {
 //        params.addBodyParameter("oauth_token_secret","4dfa52f77ffe6d55fb1039fe70c70436");
         params.addBodyParameter("form","2");
         params.addBodyParameter("file",new File( weiBoCreateBean.selectImgList.get(0).getImageFile().getAbsolutePath()));
-        httpUtils.send(HttpRequest.HttpMethod.POST,"http://192.168.1.176/thinksns_v3.0/index.php?" ,params, new RequestCallBack<Object>() {
+        httpUtils.send(HttpRequest.HttpMethod.POST,Constants.ZHONGZHIWULIANG_REQUEST_URL ,params, new RequestCallBack<Object>() {
             @Override
             public void onSuccess(ResponseInfo<Object> responseInfo) {
                 Log.d("PPPP", "onSuccess: "+"成功了"+responseInfo.result);
@@ -229,7 +216,7 @@ public class PostService extends Service {
 //        });
         HttpUtils httpUtils = new HttpUtils();
 //        httpUtils.send(HttpRequest.HttpMethod.POST, "http://192.168.1.176/thinksns_v3.0/index.php?app=api&mod=WeiboStatuses&act=update&oauth_token=553cb8005c5dff47cca58aabefd74de7&content="
-        httpUtils.send(HttpRequest.HttpMethod.POST, "http://192.168.1.176/thinksns_v3.0/index.php?" +
+        httpUtils.send(HttpRequest.HttpMethod.POST,Constants.ZHONGZHIWULIANG_REQUEST_URL+
                         "app=api&" +
                         "mod=WeiboStatuses&" +
                         "act=update&" +

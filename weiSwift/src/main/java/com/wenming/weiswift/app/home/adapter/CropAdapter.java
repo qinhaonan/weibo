@@ -2,20 +2,16 @@ package com.wenming.weiswift.app.home.adapter;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.gson.Gson;
-import com.lidroid.xutils.BitmapUtils;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -23,9 +19,8 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
 import com.wenming.weiswift.R;
 import com.wenming.weiswift.app.common.entity.CropCategoryEntity;
-import com.wenming.weiswift.app.common.entity.CropTypeEntity;
-import com.wenming.weiswift.app.common.entity.Question;
 import com.wenming.weiswift.app.home.widget.DialogUtils;
+import com.wenming.weiswift.app.login.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +75,7 @@ public class CropAdapter extends RecyclerView.Adapter<CropAdapter.ContentFragmen
                 final Dialog mDialog = DialogUtils.createLoadingDialog(mContext, "加载中...");
                 if (mCropCategoryBean.get(position).getFollowing() == 0) {
                     HttpUtils httpUtils = new HttpUtils();
-                    httpUtils.send(HttpRequest.HttpMethod.GET, "http://192.168.1.176/thinksns_v3.0/index.php?" +
+                    httpUtils.send(HttpRequest.HttpMethod.GET, Constants.ZHONGZHIWULIANG_REQUEST_URL +
                                     "app=api" +
                                     "&mod=Weiba" +
                                     "&act=create" +
@@ -112,7 +107,7 @@ public class CropAdapter extends RecyclerView.Adapter<CropAdapter.ContentFragmen
 
                 } else {
                     HttpUtils httpUtils = new HttpUtils();
-                    httpUtils.send(HttpRequest.HttpMethod.POST, "http://192.168.1.176/thinksns_v3.0/index.php?" +
+                    httpUtils.send(HttpRequest.HttpMethod.POST, Constants.ZHONGZHIWULIANG_REQUEST_URL +
                                     "app=api" +
                                     "&mod=Weiba" +
                                     "&act=destroy" +

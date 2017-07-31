@@ -10,9 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import net.sf.json.JSONObject;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -22,22 +20,15 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import com.wenming.weiswift.R;
 import com.wenming.weiswift.app.common.base.BaseAppCompatActivity;
 import com.wenming.weiswift.app.common.entity.CropChannel;
-import com.wenming.weiswift.app.common.entity.CropEntity;
 import com.wenming.weiswift.app.common.entity.CropTypeEntity;
-import com.wenming.weiswift.app.common.entity.Status;
-import com.wenming.weiswift.app.home.adapter.CropAdapter;
 import com.wenming.weiswift.app.home.fragment.ContentFragment;
 import com.wenming.weiswift.app.home.fragment.LeftFragment;
-import com.wenming.weiswift.utils.HttpUtil;
-
+import com.wenming.weiswift.app.login.Constants;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by qhn on 2017/7/15.
@@ -114,7 +105,7 @@ public class CropActivity extends BaseAppCompatActivity {
 
     public void initData() {
         HttpUtils httpUtils=new HttpUtils();
-        httpUtils.send(HttpRequest.HttpMethod.POST, "http://192.168.1.176/thinksns_v3.0/index.php?" +
+        httpUtils.send(HttpRequest.HttpMethod.POST, Constants.ZHONGZHIWULIANG_REQUEST_URL +
                         "app=api" +
                         "&mod=Channel" +
                         "&act=get_all_channel" +
@@ -150,7 +141,7 @@ public class CropActivity extends BaseAppCompatActivity {
     public void initData2(){
         HttpUtils httpUtils=new HttpUtils();
         httpUtils.send(HttpRequest.HttpMethod.GET,
-                "http://192.168.1.176/thinksns_v3.0/index.php?" +
+                Constants.ZHONGZHIWULIANG_REQUEST_URL +
                         "app=api" +
                         "&mod=Weiba" +
                         "&act=get_all_weiba_cate" +

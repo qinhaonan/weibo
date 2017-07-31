@@ -1,32 +1,29 @@
 package com.wenming.weiswift.app.home.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
+import android.widget.TextView;
+import android.widget.Toast;
 
-
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
-import com.google.gson.reflect.TypeToken;
-import com.lidroid.xutils.HttpUtils;
-import com.lidroid.xutils.exception.HttpException;
-import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseInfo;
-import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.lidroid.xutils.http.client.HttpRequest;
 import com.wenming.weiswift.R;
+import com.wenming.weiswift.app.common.GreedDao.GreenDaoHelper;
+import com.wenming.weiswift.app.common.GreedDao.UserDao;
+import com.wenming.weiswift.app.common.GreedDao.model.User;
 import com.wenming.weiswift.app.common.base.BaseAppCompatActivity;
-import com.wenming.weiswift.app.common.entity.Crop;
-import com.wenming.weiswift.app.common.entity.QuestionEntity;
+import com.wenming.weiswift.app.home.adapter.SearchViewGreenDaoAdapter;
 import com.wenming.weiswift.utils.DensityUtil;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
+import java.lang.reflect.Field;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -36,61 +33,168 @@ import java.util.List;
 public class SearchActivity extends BaseAppCompatActivity {
 
     private SearchView searchView;
+    private Button btn_search;
+    UserDao userDao;
+    GreenDaoHelper helper;
+    String name = "";
+    List<User> list;
+    SearchViewGreenDaoAdapter adapter;
+    Button searchGreendaoDelete;
+    ListView searchGreendaoLv;
+    private RelativeLayout searchGreendaoRl;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_search);
         initView();
+        initDbHelp();
+        initDate();
     }
+
+    private void initDate() {
+        //搜索历史列表
+        updateList();
+        //搜索文本监听
+
+    }
+    private void updateList() {
+        //查询所有
+        list = userDao.queryBuilder().list();
+        //这里用于判断是否有数据
+        if (list.size()==0){
+            searchGreendaoRl.setVisibility(View.VISIBLE);
+            searchGreendaoDelete.setVisibility(View.GONE);
+        }else {
+            searchGreendaoRl.setVisibility(View.GONE);
+            searchGreendaoDelete.setVisibility(View.VISIBLE);
+        }
+        //list倒序排列
+        Collections.reverse(list);
+        adapter = new SearchViewGreenDaoAdapter(mContext, list);
+        searchGreendaoLv.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+
+    }
+
+
+    private void initDbHelp() {
+        helper = new GreenDaoHelper(this);
+        userDao = helper.initDao().getUserDao();
+    }
+
 
     private void initView() {
-        searchView = (SearchView) findViewById(R.id.searchView);
         final Intent intent = new Intent(SearchActivity.this, SearchResultActivity.class);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(
-        ) {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-//                search(query);
-                intent.putExtra("key",query);
-                startActivity(intent);
-                return false;
+        searchView = (SearchView) findViewById(R.id.searchView);
+        searchGreendaoRl = (RelativeLayout) findViewById(R.id.search_greendao_rl);
+        searchGreendaoDelete = (Button) findViewById(R.id.search_greendao_delete);
+        searchGreendaoLv = (ListView) findViewById(R.id.search_greendao_lv);
+        // 去掉下划线
+        if (searchView != null) {
+            try {        //--拿到字节码
+                Class<?> argClass = searchView.getClass();
+                //--指定某个私有属性,mSearchPlate是搜索框父布局的名字
+                Field ownField = argClass.getDeclaredField("mSearchPlate");
+                //--暴力反射,只有暴力反射才能拿到私有属性
+                ownField.setAccessible(true);
+                View mView = (View) ownField.get(searchView);
+                //--设置背景
+                mView.setBackgroundColor(Color.TRANSPARENT);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-    }
-
-    private void search(String key) {
-        RequestParams params = new RequestParams();
-        params.addBodyParameter("app", "api");
-        params.addBodyParameter("mod", "WeiboStatuses");
-        params.addBodyParameter("act", "weibo_search_weibo");
-        params.addBodyParameter("key", key);
-        params.addBodyParameter("oauth_token", "988b491a22040ef7634eb5b8f52e0986");
-        params.addBodyParameter("oauth_token_secret","2a3d67f5f7bb03035e619518b364912e");
-        HttpUtils httpUtils = new HttpUtils();
-        httpUtils.send(HttpRequest.HttpMethod.POST, "http://192.168.1.176/thinksns_v3.0/index.php?", params, new RequestCallBack<Object>() {
-            @Override
-            public void onSuccess(ResponseInfo<Object> responseInfo) {
-                Log.d("PPPP", "onSuccess: " + "成" + responseInfo.result);
-                JsonParser jsonParser=new JsonParser();
-                JsonArray jsonArray=jsonParser.parse((String)responseInfo.result).getAsJsonArray();
-                Gson gson=new Gson();
-                ArrayList<QuestionEntity> questionList=new ArrayList<>();
-                for (JsonElement question:jsonArray){
-                    QuestionEntity questionEntity=gson.fromJson(question,QuestionEntity.class);
-                    questionList.add(questionEntity);
+            btn_search = (Button) findViewById(R.id.btn_search);
+            btn_search.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    intent.putExtra("key", name);
+                    startActivity(intent);
+                    insertDB();
                 }
-            }
+           });
+            searchGreendaoDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    delectAllDB();
+                }
+            });
+            //设置字体
+            int id = searchView.getContext().getResources().getIdentifier("android:id/search_src_text",null,null);
+            //获取到TextView的控件
+            TextView textView = (TextView) searchView.findViewById(id);
+            //设置字体大小为14sp
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+            android.widget.LinearLayout.LayoutParams layoutParams = (android.widget.LinearLayout.LayoutParams) textView.getLayoutParams();
+            layoutParams.bottomMargin = DensityUtil.dp2px(SearchActivity.this,-2.6f);
+            textView.setLayoutParams(layoutParams);
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(
+            ) {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    name = query;
+                    intent.putExtra("key", query);
+                    startActivity(intent);
+                    insertDB();
+                    return false;
+                }
 
-            @Override
-            public void onFailure(HttpException e, String s) {
-                Log.d("PPPP", "onFailure: " + s);
-            }
-        });
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    name = newText;
+                    Log.e("newText---------", newText);
+                    if (name.equals("")) {
+//                    searchGreendaoLv.setFilterText(name);
+                    } else {
+//                    insertDB();
+//                    searchGreendaoLv.clearTextFilter();
+                    }
+
+                    return false;
+                }
+            });
+        }
     }
+    private void delectAllDB() {
+        try {
+            userDao.deleteAll();
+            list.clear();
+            adapter.notifyDataSetChanged();
+            searchGreendaoRl.setVisibility(View.VISIBLE);
+            searchGreendaoDelete.setVisibility(View.GONE);
+            Toast.makeText(mContext, "清空数据库", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Log.e("exception-----delete", "message:" + e.getMessage() + "");
+        }
+    }
+
+    private void insertDB() {
+        try {
+            if (list.size() < 8) {
+                //删除已经存在重复的搜索历史
+                List<User> list2 = userDao.queryBuilder()
+                        .where(UserDao.Properties.Name.eq(name)).build().list();
+                userDao.deleteInTx(list2);
+                //添加
+                if (!name.equals(""))
+                    userDao.insert(new User(null, name));
+                Toast.makeText(mContext, "插入数据成功:" + name, Toast.LENGTH_SHORT).show();
+            } else {
+                //删除第一条数据，用于替换最后一条搜索
+                userDao.delete(userDao.queryBuilder().list().get(0));
+                //删除已经存在重复的搜索历史
+                List<User> list3 = userDao.queryBuilder()
+                        .where(UserDao.Properties.Name.eq(name)).build().list();
+                userDao.deleteInTx(list3);
+                //添加
+                if (!name.equals(""))
+                    userDao.insert(new User(null, name));
+            }
+            updateList();
+        } catch (Exception e) {
+            Toast.makeText(mContext, "插入失败", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
 }

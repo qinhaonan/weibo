@@ -507,7 +507,7 @@ public class CropCategoryFragment extends Fragment implements HomeFragmentView {
         params.addBodyParameter("oauth_token_secret", "2a3d67f5f7bb03035e619518b364912e");
         params.addBodyParameter("id",getArguments().getString("weiba_id"));
         HttpUtils httpUtils = new HttpUtils();
-        httpUtils.send(HttpRequest.HttpMethod.POST, "http://192.168.1.176/thinksns_v3.0/index.php?", params, new RequestCallBack<Object>() {
+        httpUtils.send(HttpRequest.HttpMethod.POST, Constants.ZHONGZHIWULIANG_REQUEST_URL, params, new RequestCallBack<Object>() {
             @Override
             public void onSuccess(ResponseInfo<Object> responseInfo) {
                 Log.d("PPPP", "onSuccess: " + "成" + responseInfo.result);
@@ -540,7 +540,7 @@ public class CropCategoryFragment extends Fragment implements HomeFragmentView {
         params.addBodyParameter("oauth_token", "988b491a22040ef7634eb5b8f52e0986");
         params.addBodyParameter("oauth_token_secret","2a3d67f5f7bb03035e619518b364912e");
         HttpUtils httpUtils = new HttpUtils();
-        httpUtils.send(HttpRequest.HttpMethod.POST, "http://192.168.1.176/thinksns_v3.0/index.php?", params, new RequestCallBack<Object>() {
+        httpUtils.send(HttpRequest.HttpMethod.POST, Constants.ZHONGZHIWULIANG_REQUEST_URL, params, new RequestCallBack<Object>() {
             @Override
             public void onSuccess(ResponseInfo<Object> responseInfo) {
 //                Log.d("PPPP", "onSuccess: " + "成" + responseInfo.result);
