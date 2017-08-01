@@ -88,6 +88,7 @@ public class StatusList implements Parcelable {
                 status.user.avatar_hd = questionList.get(i).getAvatar_big();
                 status.user.avatar_large = questionList.get(i).getAvatar_middle();
                 status.user.name = questionList.get(i).getUname();
+                status.id=questionList.get(i).getApi_source().getPost_id();
 //            status.created_at= transform(questions[i].getPublish_time());
 //                FillContentHelper.setImgUrl(status, questionList);
                 FillContentHelper.setImgUrl(status, imgUrl);

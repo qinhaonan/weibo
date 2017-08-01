@@ -6,14 +6,12 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -25,8 +23,6 @@ import com.wenming.weiswift.app.common.entity.QuestionEntity;
 import com.wenming.weiswift.app.common.entity.Status;
 import com.wenming.weiswift.app.home.activity.CommentDetailSwipeActivity;
 import com.wenming.weiswift.app.home.weiboitem.NewPauseOnScrollListener;
-import com.wenming.weiswift.app.login.fragment.post.idea.IdeaSwipeActivity;
-import com.wenming.weiswift.app.message.comment.activity.CommentSwipeActivity;
 import com.wenming.weiswift.app.mvp.presenter.WeiBoArrowPresent;
 import com.wenming.weiswift.app.mvp.presenter.imp.WeiBoArrowPresenterImp;
 import com.wenming.weiswift.app.weibodetail.activity.OriginPicTextCommentDetailSwipeActivity;
@@ -36,9 +32,6 @@ import com.wenming.weiswift.utils.CutOutUtil;
 import com.wenming.weiswift.widget.emojitextview.EmojiTextView;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * Created by wenmingvs on 2015/12/29.
@@ -125,6 +118,7 @@ public abstract class WeiboAdapter extends RecyclerView.Adapter<ViewHolder> {
                     public void onClick(View v) {
                         Intent intent = new Intent(mContext, OriginPicTextCommentDetailSwipeActivity.class);
                         intent.putExtra("weiboitem", mDatas.get(position));
+                        intent.putExtra("post_id", mDatas.get(position).id);
                         mContext.startActivity(intent);
                     }
                 });

@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -17,34 +18,25 @@ import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 import com.lidroid.xutils.http.client.HttpRequest;
-import com.sina.weibo.sdk.exception.WeiboException;
-import com.sina.weibo.sdk.net.RequestListener;
 import com.wenming.weiswift.R;
-import com.wenming.weiswift.app.api.StatusesAPI;
+import com.wenming.weiswift.app.common.FillContent;
+import com.wenming.weiswift.app.common.base.BaseSwipeActivity;
 import com.wenming.weiswift.app.common.entity.Comment;
 import com.wenming.weiswift.app.common.entity.CommentEntity;
-import com.wenming.weiswift.app.common.entity.QuestionEntity;
 import com.wenming.weiswift.app.common.entity.Status;
+import com.wenming.weiswift.app.home.adapter.CommentDetailAdapter;
+import com.wenming.weiswift.app.home.adapter.MentionDetailAdapter;
+import com.wenming.weiswift.app.login.Constants;
 import com.wenming.weiswift.app.mvp.model.imp.StatusDetailModelImp;
 import com.wenming.weiswift.app.mvp.presenter.DetailActivityPresent;
 import com.wenming.weiswift.app.mvp.presenter.imp.DetailActivityPresentImp;
 import com.wenming.weiswift.app.mvp.view.DetailActivityView;
-import com.wenming.weiswift.app.common.base.BaseSwipeActivity;
-import com.wenming.weiswift.app.common.FillContent;
-import com.wenming.weiswift.app.login.AccessTokenKeeper;
-import com.wenming.weiswift.app.login.Constants;
-import com.wenming.weiswift.app.home.adapter.CommentDetailAdapter;
-import com.wenming.weiswift.app.home.adapter.MentionDetailAdapter;
 import com.wenming.weiswift.app.weibodetail.headview.OnDetailButtonClickListener;
 import com.wenming.weiswift.utils.RequestUtil;
-import com.wenming.weiswift.utils.ToastUtil;
 import com.wenming.weiswift.widget.endlessrecyclerview.EndlessRecyclerOnScrollListener;
 import com.wenming.weiswift.widget.endlessrecyclerview.HeaderAndFooterRecyclerViewAdapter;
 import com.wenming.weiswift.widget.endlessrecyclerview.utils.RecyclerViewStateUtils;
 import com.wenming.weiswift.widget.endlessrecyclerview.weight.LoadingFooter;
-
-import org.json.JSONArray;
-import org.json.JSONException;
 
 import java.util.ArrayList;
 
@@ -76,20 +68,23 @@ public abstract class BaseDetailSwipeActivity extends BaseSwipeActivity implemen
     public LinearLayout bottombar_comment;
     public LinearLayout bottombar_attitude;
     private ArrayList<CommentEntity> commentlist;
-
+    private String post_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
         setContentView(R.layout.messagefragment_base_layout);
+        post_id = getIntent().getStringExtra("post_id");
         initCommentData();
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.base_swipe_refresh_widget);
         bottombar_retweet = (LinearLayout) findViewById(R.id.bottombar_retweet);
         bottombar_comment = (LinearLayout) findViewById(R.id.bottombar_comment);
         bottombar_attitude = (LinearLayout) findViewById(R.id.bottombar_attitude);
+        TextView tv_toolbar= (TextView) findViewById(R.id.toolbar_username);
         mRecyclerView = (RecyclerView) findViewById(R.id.base_RecyclerView);
         mStatus = getIntent().getParcelableExtra("weiboitem");
+        tv_toolbar.setText(mStatus.user.name+"的问题");
         mDetailActivityPresent = new DetailActivityPresentImp(this);
         initRefreshLayout();
         initRecyclerView();
@@ -113,7 +108,7 @@ public abstract class BaseDetailSwipeActivity extends BaseSwipeActivity implemen
                         "act=comment_list&" +
                         "oauth_token=988b491a22040ef7634eb5b8f52e0986&" +
                         "oauth_token_secret=2a3d67f5f7bb03035e619518b364912e&" +
-                        "id=8", new RequestCallBack() {
+                        "id="+post_id, new RequestCallBack() {
                     @Override
                     public void onSuccess(ResponseInfo responseInfo) {
                         Log.d("tag", "onSuccess: ");
