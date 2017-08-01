@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="45dp"
+    android:background="#f5f5f5"
+    android:orientation="horizontal">
+    <Button
+        android:layout_width="45dp"
+        android:layout_height="match_parent" />
+    <TextView
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="我解答"
+        android:textColor="@color/black"
+        android:textSize="14sp"/>
+    <Button
+        android:layout_width="55dp"
+        android:layout_height="match_parent"
+        android:text="提交"/>
+</LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#d5d5d5"/>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="120dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp">
+
+        <EditText
+            android:id="@+id/edt_question"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:background="@drawable/question_edt_seletcor"
+            android:gravity="left|top"
+            android:hint="请详细描述你的问题，最少5个字"
+            android:inputType="textMultiLine"
+            android:minLines="5"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textSize="12sp" />
+        <TextView
+            android:id="@+id/tv_question_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:text="0/140"/>
+    </RelativeLayout>
+    <ImageView
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/add_pic"/>
+</LinearLayout>

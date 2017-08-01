@@ -33,6 +33,7 @@ import com.wenming.weiswift.app.common.entity.Comment;
 import com.wenming.weiswift.app.common.entity.Expert;
 import com.wenming.weiswift.app.common.entity.Status;
 import com.wenming.weiswift.app.common.entity.User;
+import com.wenming.weiswift.app.home.activity.CommentActivity;
 import com.wenming.weiswift.app.mvp.model.imp.StatusDetailModelImp;
 import com.wenming.weiswift.app.imgpreview.ImageDetailsActivity;
 import com.wenming.weiswift.app.imgpreview.SaveImageDialog;
@@ -321,9 +322,13 @@ public class FillContent {
         bottombar_comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, IdeaSwipeActivity.class);
-                intent.putExtra("ideaType", PostService.POST_SERVICE_COMMENT_STATUS);
-                intent.putExtra("status", status);
+//                Intent intent = new Intent(context, IdeaSwipeActivity.class);
+//                intent.putExtra("ideaType", PostService.POST_SERVICE_COMMENT_STATUS);
+//                intent.putExtra("status", status);
+//                context.startActivity(intent);
+                Intent intent = new Intent(context, CommentActivity.class);
+//                intent.putExtra("ideaType", PostService.POST_SERVICE_COMMENT_STATUS);
+//                intent.putExtra("status", status);
                 context.startActivity(intent);
             }
         });
@@ -338,12 +343,12 @@ public class FillContent {
             }
         });
 
-        bottombar_attitude.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //点赞动画
-            }
-        });
+//        bottombar_attitude.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //点赞动画
+//            }
+//        });
     }
 
 

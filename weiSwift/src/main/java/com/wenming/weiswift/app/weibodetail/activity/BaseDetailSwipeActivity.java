@@ -5,14 +5,25 @@ import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
 import com.sina.weibo.sdk.exception.WeiboException;
 import com.sina.weibo.sdk.net.RequestListener;
 import com.wenming.weiswift.R;
 import com.wenming.weiswift.app.api.StatusesAPI;
 import com.wenming.weiswift.app.common.entity.Comment;
+import com.wenming.weiswift.app.common.entity.CommentEntity;
+import com.wenming.weiswift.app.common.entity.QuestionEntity;
 import com.wenming.weiswift.app.common.entity.Status;
 import com.wenming.weiswift.app.mvp.model.imp.StatusDetailModelImp;
 import com.wenming.weiswift.app.mvp.presenter.DetailActivityPresent;
@@ -25,6 +36,7 @@ import com.wenming.weiswift.app.login.Constants;
 import com.wenming.weiswift.app.home.adapter.CommentDetailAdapter;
 import com.wenming.weiswift.app.home.adapter.MentionDetailAdapter;
 import com.wenming.weiswift.app.weibodetail.headview.OnDetailButtonClickListener;
+import com.wenming.weiswift.utils.RequestUtil;
 import com.wenming.weiswift.utils.ToastUtil;
 import com.wenming.weiswift.widget.endlessrecyclerview.EndlessRecyclerOnScrollListener;
 import com.wenming.weiswift.widget.endlessrecyclerview.HeaderAndFooterRecyclerViewAdapter;
@@ -63,6 +75,7 @@ public abstract class BaseDetailSwipeActivity extends BaseSwipeActivity implemen
     public LinearLayout bottombar_retweet;
     public LinearLayout bottombar_comment;
     public LinearLayout bottombar_attitude;
+    private ArrayList<CommentEntity> commentlist;
 
 
     @Override
@@ -70,6 +83,7 @@ public abstract class BaseDetailSwipeActivity extends BaseSwipeActivity implemen
         super.onCreate(savedInstanceState);
         mContext = this;
         setContentView(R.layout.messagefragment_base_layout);
+        initCommentData();
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.base_swipe_refresh_widget);
         bottombar_retweet = (LinearLayout) findViewById(R.id.bottombar_retweet);
         bottombar_comment = (LinearLayout) findViewById(R.id.bottombar_comment);
@@ -90,6 +104,34 @@ public abstract class BaseDetailSwipeActivity extends BaseSwipeActivity implemen
             }
         });
         FillContent.fillDetailButtonBar(mContext, mStatus, bottombar_retweet, bottombar_comment, bottombar_attitude);
+    }
+
+    private void initCommentData() {
+        RequestUtil.requestGet(HttpRequest.HttpMethod.GET,
+                Constants.ZHONGZHIWULIANG_REQUEST_URL+
+                        "app=api&mod=Weiba&" +
+                        "act=comment_list&" +
+                        "oauth_token=988b491a22040ef7634eb5b8f52e0986&" +
+                        "oauth_token_secret=2a3d67f5f7bb03035e619518b364912e&" +
+                        "id=8", new RequestCallBack() {
+                    @Override
+                    public void onSuccess(ResponseInfo responseInfo) {
+                        Log.d("tag", "onSuccess: ");
+                        JsonParser jsonParser=new JsonParser();
+                        JsonArray jsonArray=jsonParser.parse((String)responseInfo.result).getAsJsonArray();
+                        Gson gson=new Gson();
+                        commentlist = new ArrayList<>();
+                        for (JsonElement question:jsonArray){
+                            CommentEntity commentEntity=gson.fromJson(question,CommentEntity.class);
+                            commentlist.add(commentEntity);
+                        }
+                        updata();
+                    }
+                    @Override
+                    public void onFailure(HttpException e, String s) {
+
+                    }
+                });
     }
 
     protected void initRefreshLayout() {
@@ -128,26 +170,26 @@ public abstract class BaseDetailSwipeActivity extends BaseSwipeActivity implemen
      * 异步请求评论，转发，赞数
      */
     public void getWeiBoCount() {
-        mSwipeRefreshLayout.setRefreshing(true);
-        StatusesAPI statusesAPI = new StatusesAPI(mContext, Constants.APP_KEY, AccessTokenKeeper.readAccessToken(mContext));
-        statusesAPI.count(new String[]{mStatus.id}, new RequestListener() {
-            @Override
-            public void onComplete(String response) {
-                try {
-                    JSONArray jsonArray = new JSONArray(response);
-                    mLastestComments = jsonArray.getJSONObject(0).optInt("comments");
-                    mLastestReposts = jsonArray.getJSONObject(0).optInt("reposts");
-                    mLastestAttitudes = jsonArray.getJSONObject(0).optInt("attitudes");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onWeiboException(WeiboException e) {
-                ToastUtil.showShort(mContext, e.getMessage());
-            }
-        });
+//        mSwipeRefreshLayout.setRefreshing(true);
+//        StatusesAPI statusesAPI = new StatusesAPI(mContext, Constants.APP_KEY, AccessTokenKeeper.readAccessToken(mContext));
+//        statusesAPI.count(new String[]{mStatus.id}, new RequestListener() {
+//            @Override
+//            public void onComplete(String response) {
+//                try {
+//                    JSONArray jsonArray = new JSONArray(response);
+//                    mLastestComments = jsonArray.getJSONObject(0).optInt("comments");
+//                    mLastestReposts = jsonArray.getJSONObject(0).optInt("reposts");
+//                    mLastestAttitudes = jsonArray.getJSONObject(0).optInt("attitudes");
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//            @Override
+//            public void onWeiboException(WeiboException e) {
+//                ToastUtil.showShort(mContext, e.getMessage());
+//            }
+//        });
     }
 
 
@@ -175,74 +217,78 @@ public abstract class BaseDetailSwipeActivity extends BaseSwipeActivity implemen
 
     @Override
     public void updateRepostListView(ArrayList<Status> mentionlist, boolean resetAdapter) {
-        if (resetAdapter) {
-            mNoMoreData = false;
-            mRepostAdapter = new MentionDetailAdapter(mContext, mentionlist);
-            mRepostFooterAdapter = new HeaderAndFooterRecyclerViewAdapter(mRepostAdapter);
-            LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
-            mRecyclerView.setLayoutManager(layoutManager);
-            mRecyclerView.setAdapter(mRepostFooterAdapter);
-            addHeaderView(mCurrentGroup);
-            //纠正微博的转发数
-            if (mentionlist.size() > mLastestReposts) {
-                mLastestReposts = mentionlist.size();
-            }
-            refreshDetailBar(mLastestComments, mLastestReposts, mLastestAttitudes);
-        }
-        mRecyclerView.clearOnScrollListeners();
-        mRecyclerView.addOnScrollListener(mScrollListener);
-        mRepostDatas = mentionlist;
-        mRepostAdapter.setData(mentionlist);
-        mRepostFooterAdapter = new HeaderAndFooterRecyclerViewAdapter(mRepostAdapter);
-        mRepostFooterAdapter.notifyDataSetChanged();
+//        if (resetAdapter) {
+//            mNoMoreData = false;
+//            mRepostAdapter = new MentionDetailAdapter(mContext, mentionlist);
+//            mRepostFooterAdapter = new HeaderAndFooterRecyclerViewAdapter(mRepostAdapter);
+//            LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
+//            mRecyclerView.setLayoutManager(layoutManager);
+//            mRecyclerView.setAdapter(mRepostFooterAdapter);
+//            addHeaderView(mCurrentGroup);
+//            //纠正微博的转发数
+//            if (mentionlist.size() > mLastestReposts) {
+//                mLastestReposts = mentionlist.size();
+//            }
+//            refreshDetailBar(mLastestComments, mLastestReposts, mLastestAttitudes);
+//        }
+//        mRecyclerView.clearOnScrollListeners();
+//        mRecyclerView.addOnScrollListener(mScrollListener);
+//        mRepostDatas = mentionlist;
+//        mRepostAdapter.setData(mentionlist);
+//        mRepostFooterAdapter = new HeaderAndFooterRecyclerViewAdapter(mRepostAdapter);
+//        mRepostFooterAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void updateCommentListView(ArrayList<Comment> commentlist, boolean resetAdapter) {
-        if (resetAdapter) {
-            mNoMoreData = false;
-            mCommentAdapter = new CommentDetailAdapter(mContext, commentlist);
-            mCommentFooterAdapter = new HeaderAndFooterRecyclerViewAdapter(mCommentAdapter);
-            LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
-            mRecyclerView.setLayoutManager(layoutManager);
-            mRecyclerView.setAdapter(mCommentFooterAdapter);
-            addHeaderView(mCurrentGroup);
-            if (commentlist.size() > mLastestComments) {
-                mLastestComments = commentlist.size();
-            }
-            refreshDetailBar(mLastestComments, mLastestReposts, mLastestAttitudes);
-        }
-        mRecyclerView.clearOnScrollListeners();
-        mRecyclerView.addOnScrollListener(mScrollListener);
-        mCommentDatas = commentlist;
-        mCommentAdapter.setData(commentlist);
-        mCommentFooterAdapter = new HeaderAndFooterRecyclerViewAdapter(mCommentAdapter);
+//        if (resetAdapter) {
+//            mNoMoreData = false;
+//            mCommentAdapter = new CommentDetailAdapter(mContext, commentlist);
+//            mCommentFooterAdapter = new HeaderAndFooterRecyclerViewAdapter(mCommentAdapter);
+//            LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
+//            mRecyclerView.setLayoutManager(layoutManager);
+//            mRecyclerView.setAdapter(mCommentFooterAdapter);
+//            addHeaderView(mCurrentGroup);
+//            if (commentlist.size() > mLastestComments) {
+//                mLastestComments = commentlist.size();
+//            }
+//            refreshDetailBar(mLastestComments, mLastestReposts, mLastestAttitudes);
+//        }
+//        mRecyclerView.clearOnScrollListeners();
+//        mRecyclerView.addOnScrollListener(mScrollListener);
+//        mCommentDatas = commentlist;
+//        mCommentAdapter.setData(commentlist);
+//        mCommentFooterAdapter = new HeaderAndFooterRecyclerViewAdapter(mCommentAdapter);
+//        mCommentFooterAdapter.notifyDataSetChanged();
+    }
+    public void updata(){
+        mCommentAdapter.setCommentData(commentlist);
         mCommentFooterAdapter.notifyDataSetChanged();
     }
 
 
     public void updateEmptyRepostHeadView() {
-        mNoMoreData = true;
-        mRepostAdapter = new MentionDetailAdapter(mContext, mRepostDatas);
-        mRepostFooterAdapter = new HeaderAndFooterRecyclerViewAdapter(mRepostAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
-        mRecyclerView.setAdapter(mRepostFooterAdapter);
-        mRecyclerView.clearOnScrollListeners();
-        addHeaderView(mCurrentGroup);
-        mRepostFooterAdapter.notifyDataSetChanged();
-        refreshDetailBar(mLastestComments, 0, mLastestAttitudes);
+//        mNoMoreData = true;
+//        mRepostAdapter = new MentionDetailAdapter(mContext, mRepostDatas);
+//        mRepostFooterAdapter = new HeaderAndFooterRecyclerViewAdapter(mRepostAdapter);
+//        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+//        mRecyclerView.setAdapter(mRepostFooterAdapter);
+//        mRecyclerView.clearOnScrollListeners();
+//        addHeaderView(mCurrentGroup);
+//        mRepostFooterAdapter.notifyDataSetChanged();
+//        refreshDetailBar(mLastestComments, 0, mLastestAttitudes);
     }
 
     public void updateEmptyCommentHeadView() {
-        mNoMoreData = true;
-        mCommentAdapter = new CommentDetailAdapter(mContext, mCommentDatas);
-        mCommentFooterAdapter = new HeaderAndFooterRecyclerViewAdapter(mCommentAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
-        mRecyclerView.setAdapter(mCommentFooterAdapter);
-        mRecyclerView.clearOnScrollListeners();
-        addHeaderView(mCurrentGroup);
-        mCommentFooterAdapter.notifyDataSetChanged();
-        refreshDetailBar(0, mLastestReposts, mLastestAttitudes);
+//        mNoMoreData = true;
+//        mCommentAdapter = new CommentDetailAdapter(mContext, mCommentDatas);
+//        mCommentFooterAdapter = new HeaderAndFooterRecyclerViewAdapter(mCommentAdapter);
+//        mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
+//        mRecyclerView.setAdapter(mCommentFooterAdapter);
+//        mRecyclerView.clearOnScrollListeners();
+//        addHeaderView(mCurrentGroup);
+//        mCommentFooterAdapter.notifyDataSetChanged();
+//        refreshDetailBar(0, mLastestReposts, mLastestAttitudes);
     }
 
 

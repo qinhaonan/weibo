@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.wenming.weiswift.R;
 import com.wenming.weiswift.app.common.GreedDao.model.User;
+import com.wenming.weiswift.app.home.activity.SearchActivity;
 
 import java.util.List;
 
@@ -54,7 +55,9 @@ public class SearchViewGreenDaoAdapter extends BaseAdapter{
             viewHolder.flowlayout_tv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(context,tv.getName()+"",Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(context,tv.getName()+"",Toast.LENGTH_SHORT).show();
+                    ((SearchActivity)context).setText(tv.getName());
+
                 }
             });
             convertView.setTag(viewHolder);

@@ -81,7 +81,7 @@ public class OriginPicTextHeaderView extends LinearLayout {
         commentView = (TextView) mView.findViewById(R.id.commentBar_comment);
         retweetView = (TextView) mView.findViewById(R.id.commentBar_retweet);
         likeView = (TextView) mView.findViewById(R.id.commentBar_like);
-        mNoneView = (RelativeLayout) findViewById(noneLayout);
+        mNoneView = (RelativeLayout) findViewById(R.id.noneLayout);
         mCommentIndicator = (ImageView) findViewById(R.id.comment_indicator);
         mRetweetIndicator = (ImageView) findViewById(R.id.retweet_indicator);
         initWeiBoContent(context, status);

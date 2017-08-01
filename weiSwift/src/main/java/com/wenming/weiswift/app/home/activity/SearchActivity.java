@@ -3,11 +3,13 @@ package com.wenming.weiswift.app.home.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
@@ -26,6 +28,8 @@ import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.List;
 
+import static android.R.attr.delay;
+
 /**
  * Created by qhn on 2017/7/31.
  */
@@ -42,6 +46,7 @@ public class SearchActivity extends BaseAppCompatActivity {
     Button searchGreendaoDelete;
     ListView searchGreendaoLv;
     private RelativeLayout searchGreendaoRl;
+    private EditText textView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -76,7 +81,10 @@ public class SearchActivity extends BaseAppCompatActivity {
         adapter.notifyDataSetChanged();
 
     }
-
+    public void setText(String s){
+        textView.setText(s);
+        textView.setSelection(s.length());
+    }
 
     private void initDbHelp() {
         helper = new GreenDaoHelper(this);
@@ -110,7 +118,12 @@ public class SearchActivity extends BaseAppCompatActivity {
                 public void onClick(View v) {
                     intent.putExtra("key", name);
                     startActivity(intent);
-                    insertDB();
+                    new Handler().postDelayed(new Runnable(){
+                        public void run() {
+                            insertDB();
+                        }
+                    }, 1000);
+
                 }
            });
             searchGreendaoDelete.setOnClickListener(new View.OnClickListener() {
@@ -122,7 +135,7 @@ public class SearchActivity extends BaseAppCompatActivity {
             //设置字体
             int id = searchView.getContext().getResources().getIdentifier("android:id/search_src_text",null,null);
             //获取到TextView的控件
-            TextView textView = (TextView) searchView.findViewById(id);
+            textView = (EditText) searchView.findViewById(id);
             //设置字体大小为14sp
             textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
             android.widget.LinearLayout.LayoutParams layoutParams = (android.widget.LinearLayout.LayoutParams) textView.getLayoutParams();
@@ -135,7 +148,12 @@ public class SearchActivity extends BaseAppCompatActivity {
                     name = query;
                     intent.putExtra("key", query);
                     startActivity(intent);
-                    insertDB();
+                    new Handler().postDelayed(new Runnable(){
+                        public void run() {
+                            insertDB();
+                        }
+                    }, 1000);
+
                     return false;
                 }
 
@@ -162,7 +180,6 @@ public class SearchActivity extends BaseAppCompatActivity {
             adapter.notifyDataSetChanged();
             searchGreendaoRl.setVisibility(View.VISIBLE);
             searchGreendaoDelete.setVisibility(View.GONE);
-            Toast.makeText(mContext, "清空数据库", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             Log.e("exception-----delete", "message:" + e.getMessage() + "");
         }
@@ -192,7 +209,7 @@ public class SearchActivity extends BaseAppCompatActivity {
             }
             updateList();
         } catch (Exception e) {
-            Toast.makeText(mContext, "插入失败", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "失败", Toast.LENGTH_SHORT).show();
         }
 
     }

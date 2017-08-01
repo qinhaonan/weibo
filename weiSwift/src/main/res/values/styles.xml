@@ -5,6 +5,10 @@
         <item name="android:windowIsTranslucent">true</item>
     </style>
 
+    <style name="MyButtonStyle" parent="@style/Widget.AppCompat.Button.Borderless">
+        <item name="android:textSize">14sp</item>
+    </style>
+
     <style name="ArrowDialog" parent="android:style/Theme.Dialog">
         <!-- 背景颜色及透明程度 -->
         <item name="android:windowBackground">@android:color/transparent</item>
