@@ -27,10 +27,8 @@ import com.wenming.weiswift.R;
 import com.wenming.weiswift.app.api.StatusesAPI;
 import com.wenming.weiswift.app.common.FillContent;
 import com.wenming.weiswift.app.common.base.BaseSwipeActivity;
-import com.wenming.weiswift.app.common.entity.CropChannel;
 import com.wenming.weiswift.app.common.entity.Expert;
 import com.wenming.weiswift.app.common.entity.ExpertCategoryEnity;
-import com.wenming.weiswift.app.common.entity.ExpertEntity;
 import com.wenming.weiswift.app.common.entity.User;
 import com.wenming.weiswift.app.home.widget.SpinnerPopWindow;
 import com.wenming.weiswift.app.login.AccessTokenKeeper;
@@ -72,14 +70,14 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
     private TextView tvValue;
     private LinearLayout ll_expert;
     private TextView tv_sort;
-    private List<Expert.ExpertBean> expertBeanList=new ArrayList<Expert.ExpertBean>();
+    private List<Expert.ExpertBean> expertBeanList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.expert_layout);
         initData();
-        initExpertData();
+
         mContext = this;
         mFollowerActivityPresent = new FollowerActivityPresentImp(this);
         initRefreshLayout();
@@ -255,18 +253,20 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
                 Log.d("Expert", "onSuccess: ");
                 initPopUpWindow();
                 Gson gson = new Gson();
-                ExpertCategoryEnity expertCategory = gson.fromJson((String) responseInfo.result, ExpertCategoryEnity.class);
+                final ExpertCategoryEnity expertCategory = gson.fromJson((String) responseInfo.result, ExpertCategoryEnity.class);
+
+                final List<String> list=new ArrayList<String>();
+                for (int i = 0; i < expertCategory.getCategory().size(); i++) {
+                    list.add( expertCategory.getCategory().get(i).getTitle());
+                }
                 AdapterView.OnItemClickListener itemClickListener = new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         mSpinnerPopWindow.dismiss();
-                       Toast.makeText(ExpertActivity.this, "点击了 专家:" , Toast.LENGTH_LONG).show();
+                        Toast.makeText(ExpertActivity.this, "点击了"+list.get(position)+"专家:" , Toast.LENGTH_LONG).show();
+                        initExpertData(expertCategory.getCategory().get(position).getUser_official_category_id());
                     }
                 };
-                List<String> list=new ArrayList<String>();
-                for (int i = 0; i < expertCategory.getCategory().size(); i++) {
-                    list.add( expertCategory.getCategory().get(i).getTitle());
-                }
                 mSpinnerPopWindow = new SpinnerPopWindow<String>(ExpertActivity.this, list, itemClickListener,false);
                 mSpinnerPopWindow.setOnDismissListener(dismissListener);
             }
@@ -284,7 +284,7 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
         sortList.add("采纳数");
         sortList.add("智能排序");
     }
-    private void initExpertData(){
+    private void initExpertData(String cid){
 
         HttpUtils httpUtils = new HttpUtils();
         httpUtils.send(HttpRequest.HttpMethod.POST, Constants.ZHONGZHIWULIANG_REQUEST_URL+
@@ -293,7 +293,7 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
                 "&act=get_all_user" +
                 "&oauth_token=988b491a22040ef7634eb5b8f52e0986" +
                 "&oauth_token_secret=2a3d67f5f7bb03035e619518b364912e" +
-                "&cid=2", null, new RequestCallBack<Object>() {
+                "&cid="+cid, null, new RequestCallBack<Object>() {
             @Override
             public void onSuccess(ResponseInfo<Object> responseInfo) {
                 Log.d(TAG, "onSuccess: 获取专家");
@@ -302,7 +302,7 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
                 Expert expert = new Expert();
                 Type expertType = new TypeToken<HashMap<String, Expert.ExpertBean>>() {}.getType();
                 expert.expertMap = gson.fromJson((String) responseInfo.result, expertType);
-//                expertBeanList = new ArrayList<Expert.ExpertBean>();
+                expertBeanList = new ArrayList<Expert.ExpertBean>();
                 for (Expert.ExpertBean v : expert.expertMap.values()){
                     expertBeanList.add(v);
                 }

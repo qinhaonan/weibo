@@ -1,9 +1,6 @@
 package com.wenming.weiswift.app.common.entity;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by qhn on 2017/7/28.
@@ -78,16 +75,16 @@ public class Expert {
         //        private String login;
 //        private String login_salt;
         private String uname;
-        private UserGroup user_group;
+//        private UserGroup user_group;
 
-        public void setUser_group(UserGroup user_group) {
-            this.user_group = user_group;
-        }
-
-        public UserGroup getUser_group() {
-
-            return user_group;
-        }
+//        public void setUser_group(UserGroup user_group) {
+//            this.user_group = user_group;
+//        }
+//
+//        public UserGroup getUser_group() {
+//
+//            return user_group;
+//        }
 
         private String avatar_middle;
 
