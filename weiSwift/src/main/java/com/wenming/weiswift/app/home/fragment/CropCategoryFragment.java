@@ -130,8 +130,13 @@ public class CropCategoryFragment extends Fragment implements HomeFragmentView {
     private ArrayList<QuestionEntity> questionList;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        initData2();
-//        initData();
+        if(getArguments().getBoolean("isComeFromSearchActivity")){
+            //搜索
+            initData2();
+        }else {
+            //子页面
+            initData();
+        }
         mActivity = getActivity();
         mContext = getContext();
         mHomePresent = new HomeFragmentPresentImp(this);

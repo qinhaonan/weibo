@@ -2,6 +2,7 @@ package com.wenming.weiswift.app.home.adapter;
 
 
 import android.content.Context;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.util.Log;
@@ -12,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -65,15 +67,15 @@ public class CommentDetailAdapter extends RecyclerView.Adapter<ViewHolder> {
 
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        if(mDatas!=null&&mCommentData==null) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
+        if (mDatas != null && mCommentData == null) {
             User user = mDatas.get(position).user;
             String content = mDatas.get(position).text;
             FillContent.fillProfileImg(mContext, user, ((CommentViewHolder) holder).profile_img, ((CommentViewHolder) holder).profile_verified);
             FillContent.fillWeiBoContent(content, mContext, ((CommentViewHolder) holder).content);
             FillContent.setWeiBoName(((CommentViewHolder) holder).profile_name, user);
             FillContent.setWeiBoTime(mContext, ((CommentViewHolder) holder).profile_time, mDatas.get(position));
-        }else if (mCommentData!=null) {
+        } else if (mCommentData != null) {
             ((CommentViewHolder) holder).profile_name.setText(mCommentData.get(position).getAuthor_info().getUname());
             ((CommentViewHolder) holder).content.setText(mCommentData.get(position).getContent());
             ((CommentViewHolder) holder).profile_time.setText(mCommentData.get(position).getCtime());
@@ -90,58 +92,92 @@ public class CommentDetailAdapter extends RecyclerView.Adapter<ViewHolder> {
             ((CommentViewHolder) holder).ll_disagree.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    agreeListener();
+                    Toast.makeText(mContext, "点击了反对", Toast.LENGTH_SHORT).show();
+                    disagreeListener(mCommentData.get(position).getUid(), mCommentData.get(position).getReply_id(), ((CommentViewHolder) holder).tv_disagree_num, mCommentData.get(position).getOppose_count());
                 }
             });
             ((CommentViewHolder) holder).ll_agree.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    disagreeListener();
+                    Toast.makeText(mContext, "点击了赞同", Toast.LENGTH_SHORT).show();
+                    agreeListener(mCommentData.get(position).getUid(), mCommentData.get(position).getReply_id(), ((CommentViewHolder) holder).tv_agree_num, mCommentData.get(position).getAgree_count());
                 }
             });
         }
     }
 
-    private void agreeListener() {
+    private void agreeListener(String uid, String reply_id, final TextView tv_agree_num, final String agree_num) {
         RequestParams params = new RequestParams();
         params.addBodyParameter("app", "api");
         params.addBodyParameter("mod", "Weiba");
         params.addBodyParameter("act", "add_agree");
         params.addBodyParameter("oauth_token", "988b491a22040ef7634eb5b8f52e0986");
         params.addBodyParameter("oauth_token_secret", "2a3d67f5f7bb03035e619518b364912e");
-        params.addBodyParameter("uid", "1");
-        params.addBodyParameter("reply_id", "2");
-        RequestUtil.requestPost(HttpRequest.HttpMethod.POST,params,
-                Constants.ZHONGZHIWULIANG_REQUEST_URL, new RequestCallBack() {
+        params.addBodyParameter("uid", uid);
+        params.addBodyParameter("reply_id", reply_id);
+        RequestUtil.requestGet(Constants.ZHONGZHIWULIANG_REQUEST_URL +
+                        "app=api&" +
+                        "mod=Weiba&" +
+                        "act=add_agree&oauth_token=988b491a22040ef7634eb5b8f52e0986&" +
+                        "oauth_token_secret=2a3d67f5f7bb03035e619518b364912e&" +
+                        "uid=" + uid + "&" +
+                        "reply_id=" + reply_id,
+                new RequestCallBack() {
                     @Override
                     public void onSuccess(ResponseInfo responseInfo) {
-                        Log.d("tag", "onSuccess: ");
+                        if (((String) responseInfo.result).equals("1")) {
+                            int num = (Integer.valueOf(agree_num) + 1);
+                            tv_agree_num.setText(String.valueOf(num));
+                            Toast.makeText(mContext, "赞同成功", Toast.LENGTH_SHORT).show();
+
+                        } else {
+                            Toast.makeText(mContext, "赞同失败", Toast.LENGTH_SHORT).show();
+                        }
                     }
+
                     @Override
                     public void onFailure(HttpException e, String s) {
-                        Log.d(TAG, "onFailure: ");
+                        Log.d(TAG, "onFailure: " + s);
+                        Toast.makeText(mContext, "赞同失败", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
-    private void disagreeListener() {
+    private void disagreeListener(String uid, String reply_id, final TextView tv_disagree_num, final String disagree_num) {
         RequestParams params = new RequestParams();
         params.addBodyParameter("app", "api");
         params.addBodyParameter("mod", "Weiba");
-        params.addBodyParameter("act", "add_agree");
+        params.addBodyParameter("act", "add_oppose");
         params.addBodyParameter("oauth_token", "988b491a22040ef7634eb5b8f52e0986");
         params.addBodyParameter("oauth_token_secret", "2a3d67f5f7bb03035e619518b364912e");
-        params.addBodyParameter("uid", "1");
-        params.addBodyParameter("reply_id", "2");
-        RequestUtil.requestPost(HttpRequest.HttpMethod.POST,params,
-                Constants.ZHONGZHIWULIANG_REQUEST_URL, new RequestCallBack() {
+        params.addBodyParameter("uid", uid);
+        params.addBodyParameter("reply_id", reply_id);
+        RequestUtil.requestGet(
+                Constants.ZHONGZHIWULIANG_REQUEST_URL +
+                        "app=api&" +
+                        "mod=Weiba&" +
+                        "act=add_oppose&" +
+                        "oauth_token=988b491a22040ef7634eb5b8f52e0986&" +
+                        "oauth_token_secret=2a3d67f5f7bb03035e619518b364912e&" +
+                        "uid=" + uid + "&" +
+                        "reply_id=" + reply_id
+                , new RequestCallBack() {
                     @Override
                     public void onSuccess(ResponseInfo responseInfo) {
-                        Log.d("tag", "onSuccess: ");
+                        Log.d(TAG, "onFailure: " + responseInfo.result);
+                        if (((String) responseInfo.result).equals("1")) {
+                            int num = (Integer.valueOf(disagree_num) + 1);
+                            tv_disagree_num.setText(String.valueOf(num));
+                            Toast.makeText(mContext, "反对成功", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(mContext, "反对失败", Toast.LENGTH_SHORT).show();
+                        }
                     }
+
                     @Override
                     public void onFailure(HttpException e, String s) {
-
+                        Log.d(TAG, "onFailure: " + s);
+                        Toast.makeText(mContext, "反对失败", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -149,11 +185,11 @@ public class CommentDetailAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     @Override
     public int getItemCount() {
-        if (mDatas != null&&mCommentData==null) {
+        if (mDatas != null && mCommentData == null) {
             return mDatas.size();
-        } else if(mCommentData!=null){
+        } else if (mCommentData != null) {
             return mCommentData.size();
-        }else {
+        } else {
             return 0;
         }
     }
@@ -161,9 +197,12 @@ public class CommentDetailAdapter extends RecyclerView.Adapter<ViewHolder> {
     public void setData(ArrayList<Comment> data) {
         this.mDatas = data;
     }
-    public void setCommentData(ArrayList<CommentEntity> commentData){
+
+    public void setCommentData(ArrayList<CommentEntity> commentData) {
         mCommentData = commentData;
     }
+
+
     public class CommentViewHolder extends ViewHolder {
         //微博列表的控件
         public ImageView profile_img;
@@ -183,10 +222,10 @@ public class CommentDetailAdapter extends RecyclerView.Adapter<ViewHolder> {
             profile_name = (TextView) v.findViewById(R.id.comment_profile_name);
             profile_time = (TextView) v.findViewById(R.id.comment_profile_time);
             content = (EmojiTextView) v.findViewById(R.id.comment_content);
-            ll_disagree=(LinearLayout) v.findViewById(R.id.ll_disagree);
-            ll_agree=(LinearLayout) v.findViewById(R.id.ll_agree);
-            tv_agree_num=(TextView) v.findViewById(R.id.tv_agree_num);
-            tv_disagree_num=(TextView) v.findViewById(R.id.tv_disagree_num);
+            ll_disagree = (LinearLayout) v.findViewById(R.id.ll_disagree);
+            ll_agree = (LinearLayout) v.findViewById(R.id.ll_agree);
+            tv_agree_num = (TextView) v.findViewById(R.id.tv_agree_num);
+            tv_disagree_num = (TextView) v.findViewById(R.id.tv_disagree_num);
         }
     }
 

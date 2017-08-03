@@ -20,6 +20,7 @@ public class SearchResultActivity extends BaseAppCompatActivity {
 //        String weiba_id=getIntent().getStringExtra("weiba_id");
         Bundle bundle = new Bundle();
         bundle.putString("key",key);
+        bundle.putBoolean("isComeFromSearchActivity",true);
 //        bundle.putString("weiba_id",weiba_id);
         FragmentTransaction ft=getFragmentManager().beginTransaction();
         CropCategoryFragment cropCategoryFragment=CropCategoryFragment.newInstance(false);

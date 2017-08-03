@@ -11,12 +11,13 @@ import com.lidroid.xutils.http.client.HttpRequest;
 
 public class RequestUtil {
 
-    public static void requestGet(HttpRequest.HttpMethod method, String url, RequestCallBack callBack) {
+    public static void requestGet( String url, RequestCallBack callBack) {
         HttpUtils httpUtils=new HttpUtils();
-        httpUtils.send(method,url,null,callBack);
+        httpUtils.configCurrentHttpCacheExpiry(0);
+        httpUtils.send(HttpRequest.HttpMethod.GET,url,null,callBack);
     }
-    public static void requestPost(HttpRequest.HttpMethod method, RequestParams params, String url, RequestCallBack callBack) {
+    public static void requestPost( RequestParams params, String url, RequestCallBack callBack) {
         HttpUtils httpUtils=new HttpUtils();
-        httpUtils.send(method,url,params,callBack);
+        httpUtils.send(HttpRequest.HttpMethod.POST,url,params,callBack);
     }
 }

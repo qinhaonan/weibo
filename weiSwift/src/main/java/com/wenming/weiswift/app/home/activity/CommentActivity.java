@@ -32,6 +32,7 @@ public class CommentActivity extends BaseAppCompatActivity {
     private boolean isEmptyQuestion=true;
     private Button btn_commit;
     private String strComment;
+    private String strCommentTemp="";
     private TextView tv_comment_num;
 
     @Override
@@ -52,7 +53,9 @@ public class CommentActivity extends BaseAppCompatActivity {
             public void onClick(View v) {
                 if (strComment.isEmpty()||strComment.length()<10) {
                     Toast.makeText(mContext, "提交内容不能少于10个字", Toast.LENGTH_SHORT).show();
-                } else {
+                } else if (strCommentTemp.equals(strComment)){
+                    Toast.makeText(mContext, "不能发表内容重复的评论", Toast.LENGTH_SHORT).show();
+                }else {
                     submitComment(strComment);
                 }
             }
@@ -82,15 +85,17 @@ public class CommentActivity extends BaseAppCompatActivity {
     }
 
     private void submitComment(String comment) {
+        strCommentTemp=comment;
+        String s=getIntent().getStringExtra("post_id");
         RequestParams params = new RequestParams();
         params.addBodyParameter("app", "api");
         params.addBodyParameter("mod", "Weiba");
         params.addBodyParameter("act", "comment_post");
-        params.addBodyParameter("id", "8");
+        params.addBodyParameter("id", getIntent().getStringExtra("post_id"));
         params.addBodyParameter("content", comment);
         params.addBodyParameter("oauth_token", "988b491a22040ef7634eb5b8f52e0986");
         params.addBodyParameter("oauth_token_secret", "2a3d67f5f7bb03035e619518b364912e");
-        RequestUtil.requestPost(HttpRequest.HttpMethod.POST, params, Constants.ZHONGZHIWULIANG_REQUEST_URL, new RequestCallBack() {
+        RequestUtil.requestPost( params, Constants.ZHONGZHIWULIANG_REQUEST_URL, new RequestCallBack() {
             @Override
             public void onSuccess(ResponseInfo responseInfo) {
             if (((String)responseInfo.result).equals("1")){

@@ -22,6 +22,7 @@ public class CropCategoryActivity extends BaseAppCompatActivity {
         Bundle bundle = new Bundle();
         bundle.putString("CropName",cropName);
         bundle.putString("weiba_id",weiba_id);
+        bundle.putBoolean("isComeFromSearchActivity",false);
         FragmentTransaction ft=getFragmentManager().beginTransaction();
         CropCategoryFragment cropCategoryFragment=CropCategoryFragment.newInstance(false);
         cropCategoryFragment.setArguments(bundle);

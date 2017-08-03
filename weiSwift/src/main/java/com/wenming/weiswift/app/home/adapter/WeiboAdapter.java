@@ -119,6 +119,7 @@ public abstract class WeiboAdapter extends RecyclerView.Adapter<ViewHolder> {
                         Intent intent = new Intent(mContext, OriginPicTextCommentDetailSwipeActivity.class);
                         intent.putExtra("weiboitem", mDatas.get(position));
                         intent.putExtra("post_id", mDatas.get(position).id);
+                        intent.putExtra("comments_count",mDatas.get(position).comments_count);
                         mContext.startActivity(intent);
                     }
                 });
@@ -232,6 +233,7 @@ public abstract class WeiboAdapter extends RecyclerView.Adapter<ViewHolder> {
                 public void onClick(View v) {
                     Intent intent = new Intent(mContext, RetweetPicTextCommentDetailSwipeActivity.class);
                     intent.putExtra("weiboitem", mDatas.get(position));
+                    intent.putExtra("weiba_id",mDatas.get(position).id);
                     mContext.startActivity(intent);
                 }
             });

@@ -310,7 +310,22 @@ public class FillContent {
             }
         });
     }
-
+    public static void fillButtonBar(final Context context, LinearLayout bottombar_comment, final String id){
+        bottombar_comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                Intent intent = new Intent(context, IdeaSwipeActivity.class);
+//                intent.putExtra("ideaType", PostService.POST_SERVICE_COMMENT_STATUS);
+//                intent.putExtra("status", status);
+//                context.startActivity(intent);
+                Intent intent = new Intent(context, CommentActivity.class);
+                intent.putExtra("post_id",id);
+//                intent.putExtra("ideaType", PostService.POST_SERVICE_COMMENT_STATUS);
+//                intent.putExtra("status", status);
+                context.startActivity(intent);
+            }
+        });
+    }
     public static void fillDetailButtonBar(final Context context, final Status status, LinearLayout bottombar_retweet, LinearLayout bottombar_comment, LinearLayout bottombar_attitude) {
         //如果转发的内容已经被删除,则不允许转发
         if (status.retweeted_status != null && status.retweeted_status.user == null) {
@@ -333,15 +348,15 @@ public class FillContent {
             }
         });
 
-        bottombar_retweet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, IdeaSwipeActivity.class);
-                intent.putExtra("ideaType", PostService.POST_SERVICE_REPOST_STATUS);
-                intent.putExtra("status", status);
-                context.startActivity(intent);
-            }
-        });
+//        bottombar_retweet.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(context, IdeaSwipeActivity.class);
+//                intent.putExtra("ideaType", PostService.POST_SERVICE_REPOST_STATUS);
+//                intent.putExtra("status", status);
+//                context.startActivity(intent);
+//            }
+//        });
 
 //        bottombar_attitude.setOnClickListener(new View.OnClickListener() {
 //            @Override

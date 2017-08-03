@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -38,7 +39,14 @@ import com.wenming.weiswift.widget.endlessrecyclerview.HeaderAndFooterRecyclerVi
 import com.wenming.weiswift.widget.endlessrecyclerview.utils.RecyclerViewStateUtils;
 import com.wenming.weiswift.widget.endlessrecyclerview.weight.LoadingFooter;
 
+import java.io.IOException;
 import java.util.ArrayList;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 
 /**
@@ -69,7 +77,8 @@ public abstract class BaseDetailSwipeActivity extends BaseSwipeActivity implemen
     public LinearLayout bottombar_attitude;
     private ArrayList<CommentEntity> commentlist;
     private String post_id;
-
+    public String comments_count;
+    private boolean isRefresh=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +86,7 @@ public abstract class BaseDetailSwipeActivity extends BaseSwipeActivity implemen
         setContentView(R.layout.messagefragment_base_layout);
         post_id = getIntent().getStringExtra("post_id");
         initCommentData();
+//        requsetCommentData();
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.base_swipe_refresh_widget);
         bottombar_retweet = (LinearLayout) findViewById(R.id.bottombar_retweet);
         bottombar_comment = (LinearLayout) findViewById(R.id.bottombar_comment);
@@ -84,6 +94,7 @@ public abstract class BaseDetailSwipeActivity extends BaseSwipeActivity implemen
         TextView tv_toolbar= (TextView) findViewById(R.id.toolbar_username);
         mRecyclerView = (RecyclerView) findViewById(R.id.base_RecyclerView);
         mStatus = getIntent().getParcelableExtra("weiboitem");
+        comments_count=getIntent().getStringExtra("comments_count");
         tv_toolbar.setText(mStatus.user.name+"的问题");
         mDetailActivityPresent = new DetailActivityPresentImp(this);
         initRefreshLayout();
@@ -98,29 +109,90 @@ public abstract class BaseDetailSwipeActivity extends BaseSwipeActivity implemen
                 mDetailActivityPresent.pullToRefreshData(mCurrentGroup, mStatus, mContext);
             }
         });
-        FillContent.fillDetailButtonBar(mContext, mStatus, bottombar_retweet, bottombar_comment, bottombar_attitude);
+//        FillContent.fillDetailButtonBar(mContext, mStatus, bottombar_retweet, bottombar_comment, bottombar_attitude);
+        FillContent.fillButtonBar(mContext,bottombar_comment,post_id);
     }
+    private void requsetCommentData(){
+        String url=Constants.ZHONGZHIWULIANG_REQUEST_URL+"app=api&" +
+                "mod=Weiba&" +
+                "act=comment_list&" +
+                "oauth_token=988b491a22040ef7634eb5b8f52e0986&" +
+                "oauth_token_secret=2a3d67f5f7bb03035e619518b364912e&" +
+                "id="+post_id;
+        OkHttpClient okHttpClient = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+        Call call = okHttpClient.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
 
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String string=response.body().string();
+                System.out.println("我是异步线程,线程Id为:" + Thread.currentThread().getId());
+                if (string.isEmpty()) {
+                    Log.d("tag", "onSuccess: ");
+                    JsonParser jsonParser = new JsonParser();
+                    JsonArray jsonArray = jsonParser.parse(string).getAsJsonArray();
+                    Gson gson = new Gson();
+                    commentlist = new ArrayList<>();
+                    for (JsonElement question : jsonArray) {
+                        CommentEntity commentEntity = gson.fromJson(question, CommentEntity.class);
+                        commentlist.add(commentEntity);
+                    }
+                    updata();
+                    if(isRefresh) {
+                        mSwipeRefreshLayout.setRefreshing(false);
+                        isRefresh=false;
+                    }
+                }else {
+                    Toast.makeText(mContext,"请求失败",Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+        for (int i = 0; i < 10; i++) {
+            System.out.println("我是主线程,线程Id为:" + Thread.currentThread().getId());
+            try {
+                Thread.currentThread().sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
     private void initCommentData() {
-        RequestUtil.requestGet(HttpRequest.HttpMethod.GET,
-                Constants.ZHONGZHIWULIANG_REQUEST_URL+
-                        "app=api&mod=Weiba&" +
+        RequestUtil.requestGet(Constants.ZHONGZHIWULIANG_REQUEST_URL+
+                        "app=api&" +
+                        "mod=Weiba&" +
                         "act=comment_list&" +
                         "oauth_token=988b491a22040ef7634eb5b8f52e0986&" +
                         "oauth_token_secret=2a3d67f5f7bb03035e619518b364912e&" +
                         "id="+post_id, new RequestCallBack() {
                     @Override
                     public void onSuccess(ResponseInfo responseInfo) {
-                        Log.d("tag", "onSuccess: ");
-                        JsonParser jsonParser=new JsonParser();
-                        JsonArray jsonArray=jsonParser.parse((String)responseInfo.result).getAsJsonArray();
-                        Gson gson=new Gson();
-                        commentlist = new ArrayList<>();
-                        for (JsonElement question:jsonArray){
-                            CommentEntity commentEntity=gson.fromJson(question,CommentEntity.class);
-                            commentlist.add(commentEntity);
+                        if (!((String) responseInfo.result).isEmpty()) {
+                            Log.d("tag", "onSuccess: ");
+                            JsonParser jsonParser = new JsonParser();
+                            JsonArray jsonArray = jsonParser.parse((String) responseInfo.result).getAsJsonArray();
+                            Gson gson = new Gson();
+                            commentlist = new ArrayList<>();
+                            for (JsonElement question : jsonArray) {
+                                CommentEntity commentEntity = gson.fromJson(question, CommentEntity.class);
+                                commentlist.add(commentEntity);
+                            }
+                            updata();
+                            if(isRefresh) {
+                                mSwipeRefreshLayout.setRefreshing(false);
+                                isRefresh=false;
+                            }
+                        }else {
+                            Toast.makeText(mContext,"请求失败",Toast.LENGTH_SHORT).show();
                         }
-                        updata();
                     }
                     @Override
                     public void onFailure(HttpException e, String s) {
@@ -136,9 +208,12 @@ public abstract class BaseDetailSwipeActivity extends BaseSwipeActivity implemen
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mNoMoreData = false;
-                getWeiBoCount();
-                mDetailActivityPresent.pullToRefreshData(mCurrentGroup, mStatus, mContext);
+//                mNoMoreData = false;
+//                getWeiBoCount();
+//                mDetailActivityPresent.pullToRefreshData(mCurrentGroup, mStatus, mContext);
+                initCommentData();
+//                requsetCommentData();
+                isRefresh=true;
             }
         });
     }
@@ -260,6 +335,10 @@ public abstract class BaseDetailSwipeActivity extends BaseSwipeActivity implemen
         mCommentAdapter.setCommentData(commentlist);
         mCommentFooterAdapter.notifyDataSetChanged();
     }
+//    public void refreshData(){
+//        mCommentAdapter.setCommentData(commentlist,mSwipeRefreshLayout);
+//        mCommentFooterAdapter.notifyDataSetChanged();
+//    }
 
 
     public void updateEmptyRepostHeadView() {

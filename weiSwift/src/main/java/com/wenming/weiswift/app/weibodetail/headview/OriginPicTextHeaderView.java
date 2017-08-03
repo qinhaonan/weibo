@@ -68,6 +68,8 @@ public class OriginPicTextHeaderView extends LinearLayout {
     public void init(Context context, Status status) {
         mContext = context;
         mView = inflate(context, R.layout.mainfragment_weiboitem_detail_commentbar_origin_pictext_headview, this);
+        TextView tv_comment=(TextView) mView.findViewById(R.id.tv_comment);
+        tv_comment.setText(String.valueOf(status.comments_count));
         origin_weibo_layout = (LinearLayout) mView.findViewById(R.id.origin_weibo_layout);
         profile_img = (ImageView) mView.findViewById(R.id.profile_img);
         profile_verified = (ImageView) mView.findViewById(R.id.profile_verified);
