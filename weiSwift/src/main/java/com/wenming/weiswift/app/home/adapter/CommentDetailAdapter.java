@@ -81,6 +81,19 @@ public class CommentDetailAdapter extends RecyclerView.Adapter<ViewHolder> {
             ((CommentViewHolder) holder).profile_time.setText(mCommentData.get(position).getCtime());
             ((CommentViewHolder) holder).tv_agree_num.setText(mCommentData.get(position).getAgree_count());
             ((CommentViewHolder) holder).tv_disagree_num.setText(mCommentData.get(position).getOppose_count());
+            if(mCommentData.get(position).getIs_adopt().equals("0")){
+                ((CommentViewHolder) holder).img_adopt.setVisibility(View.INVISIBLE);
+                ((CommentViewHolder) holder).btn_adopt.setVisibility(View.VISIBLE);
+                ((CommentViewHolder) holder).btn_adopt.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        requestAdopt();
+                    }
+                });
+            }else {
+                ((CommentViewHolder) holder).img_adopt.setVisibility(View.VISIBLE);
+                ((CommentViewHolder) holder).btn_adopt.setVisibility(View.INVISIBLE);
+            }
             Glide.with(mContext)
                     .load(mCommentData.get(position).getAuthor_info().getAvatar_small())
                     .placeholder(R.drawable.loading)
@@ -93,20 +106,40 @@ public class CommentDetailAdapter extends RecyclerView.Adapter<ViewHolder> {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(mContext, "点击了反对", Toast.LENGTH_SHORT).show();
-                    disagreeListener(mCommentData.get(position).getUid(), mCommentData.get(position).getReply_id(), ((CommentViewHolder) holder).tv_disagree_num, mCommentData.get(position).getOppose_count());
+                    requestDisagree(mCommentData.get(position).getUid(), mCommentData.get(position).getReply_id(), ((CommentViewHolder) holder).tv_disagree_num, mCommentData.get(position).getOppose_count());
                 }
             });
             ((CommentViewHolder) holder).ll_agree.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(mContext, "点击了赞同", Toast.LENGTH_SHORT).show();
-                    agreeListener(mCommentData.get(position).getUid(), mCommentData.get(position).getReply_id(), ((CommentViewHolder) holder).tv_agree_num, mCommentData.get(position).getAgree_count());
+                    requestAgree(mCommentData.get(position).getUid(), mCommentData.get(position).getReply_id(), ((CommentViewHolder) holder).tv_agree_num, mCommentData.get(position).getAgree_count());
                 }
             });
         }
     }
+    private void requestAdopt(String reply_id,String post_id){
+        RequestUtil.requestGet(Constants.ZHONGZHIWULIANG_REQUEST_URL +
+                        "app=api&" +
+                        "mod=Weiba&" +
+                        "act=add_agree&oauth_token=988b491a22040ef7634eb5b8f52e0986&" +
+                        "oauth_token_secret=2a3d67f5f7bb03035e619518b364912e&" +
+                        "post_id=" + post_id + "&" +
+                        "reply_id=" + reply_id,
+                new RequestCallBack() {
+                    @Override
+                    public void onSuccess(ResponseInfo responseInfo) {
 
-    private void agreeListener(String uid, String reply_id, final TextView tv_agree_num, final String agree_num) {
+                    }
+
+                    @Override
+                    public void onFailure(HttpException e, String s) {
+                        Log.d(TAG, "onFailure: " + s);
+                        Toast.makeText(mContext, "采纳失败", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+    private void requestAgree(String uid, String reply_id, final TextView tv_agree_num, final String agree_num) {
         RequestParams params = new RequestParams();
         params.addBodyParameter("app", "api");
         params.addBodyParameter("mod", "Weiba");
@@ -143,7 +176,7 @@ public class CommentDetailAdapter extends RecyclerView.Adapter<ViewHolder> {
                 });
     }
 
-    private void disagreeListener(String uid, String reply_id, final TextView tv_disagree_num, final String disagree_num) {
+    private void requestDisagree(String uid, String reply_id, final TextView tv_disagree_num, final String disagree_num) {
         RequestParams params = new RequestParams();
         params.addBodyParameter("app", "api");
         params.addBodyParameter("mod", "Weiba");
@@ -214,7 +247,8 @@ public class CommentDetailAdapter extends RecyclerView.Adapter<ViewHolder> {
         public LinearLayout ll_disagree;
         public TextView tv_agree_num;
         public TextView tv_disagree_num;
-
+        public Button btn_adopt;
+        public ImageView img_adopt;
         public CommentViewHolder(View v) {
             super(v);
             profile_img = (ImageView) v.findViewById(R.id.profile_img);
@@ -226,6 +260,8 @@ public class CommentDetailAdapter extends RecyclerView.Adapter<ViewHolder> {
             ll_agree = (LinearLayout) v.findViewById(R.id.ll_agree);
             tv_agree_num = (TextView) v.findViewById(R.id.tv_agree_num);
             tv_disagree_num = (TextView) v.findViewById(R.id.tv_disagree_num);
+            img_adopt=(ImageView) v.findViewById(R.id.img_adopt);
+            btn_adopt=(Button) v.findViewById(R.id.btn_adopt);
         }
     }
 

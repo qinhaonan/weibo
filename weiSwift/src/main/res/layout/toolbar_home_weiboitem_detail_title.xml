@@ -1,45 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/toolbar_home_weiboitem_detail_title"
     android:layout_width="match_parent"
     android:layout_height="45dp"
+    android:orientation="vertical"
     android:background="@color/topbar_bg">
 
-    <ImageView
-        android:id="@+id/toolbar_back"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="8dp"
-        android:onClick="onArrorClick"
-        android:scaleType="centerCrop"
-        android:src="@drawable/navigationbar_back_auto" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/toolbar_username"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_margin="8dp"
-        android:gravity="center"
-        android:text="网友的问题"
-        android:textColor="@color/topbar_center"
-        android:textSize="20sp" />
+        <ImageView
+            android:id="@+id/toolbar_back"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center"
+            android:layout_marginLeft="8dp"
+            android:onClick="onArrorClick"
+            android:scaleType="centerCrop"
+            android:src="@drawable/navigationbar_back_auto" />
 
-    <ImageView
-        android:id="@+id/toolbar_more"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="8dp"
-        android:src="@drawable/navigationbar_more_auto" />
+        <TextView
+            android:id="@+id/toolbar_username"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="网友的问题"
+            android:textColor="@color/topbar_center"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/img_collect"
+            android:layout_width="30dp"
+            android:layout_gravity="center"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/selector_collect" />
+
+        <Button
+            android:id="@+id/img_share"
+            android:layout_gravity="center"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignRight="@+id/img_collect"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/question_share" />
+
+
+    </LinearLayout>
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_alignParentBottom="true"
         android:background="@color/topbar_bottom_drive" />
-
-</RelativeLayout>
+</LinearLayout>

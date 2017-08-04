@@ -23,7 +23,7 @@ import com.wenming.weiswift.app.discover.DiscoverFragment;
 import com.wenming.weiswift.app.home.fragment.HomeFragment;
 import com.wenming.weiswift.app.login.fragment.post.PostSwipeActivity;
 import com.wenming.weiswift.app.message.fragment.fragment.MessageFragment;
-import com.wenming.weiswift.app.myself.fragment.MySelfFragment;
+import com.wenming.weiswift.app.myself.fragment.MySelf2Fragment;
 import com.wenming.weiswift.utils.LogUtil;
 import com.wenming.weiswift.utils.SharedPreferencesUtil;
 
@@ -40,7 +40,7 @@ public class MainActivity extends BaseAppCompatActivity {
     private HomeFragment mHomeFragment;
     private MessageFragment mMessageFragment;
     private DiscoverFragment mDiscoverFragment;
-    private MySelfFragment mMySelfFragment;
+    private MySelf2Fragment mMySelf2Fragment;
     private FragmentManager mFragmentManager;
     private RelativeLayout mHomeTabRl, mMessageTabRl, mDiscoverTabRl, mMySelfTabRl;
     private ImageView mPostTabIv;
@@ -99,7 +99,7 @@ public class MainActivity extends BaseAppCompatActivity {
         if (!(boolean) SharedPreferencesUtil.get(this, "setNightMode", false)) {
             StatusBarUtils.from(this)
                     .setTransparentStatusbar(true)
-                    .setStatusBarColor(getResources().getColor(R.color.home_status_bg))
+                    .setStatusBarColor(getResources().getColor(R.color.black))
                     .setLightStatusBar(true)
                     .process(this);
         } else {
@@ -154,7 +154,7 @@ public class MainActivity extends BaseAppCompatActivity {
         mHomeFragment = (HomeFragment) mFragmentManager.findFragmentByTag(TAB_HOME_FRAGMENT);
         mMessageFragment = (MessageFragment) mFragmentManager.findFragmentByTag(TAB_MESSAGE_FRAGMENT);
         mDiscoverFragment = (DiscoverFragment) mFragmentManager.findFragmentByTag(TAB_DISCOVERY_FRAGMENT);
-        mMySelfFragment = (MySelfFragment) mFragmentManager.findFragmentByTag(TAB_PROFILE_FRAGMENT);
+        mMySelf2Fragment = (MySelf2Fragment) mFragmentManager.findFragmentByTag(TAB_PROFILE_FRAGMENT);
         switchToFragment(mCurrentIndex);
     }
 
@@ -252,24 +252,35 @@ public class MainActivity extends BaseAppCompatActivity {
         }
     }
 
+//    /**
+//     * 切换到关于我模块
+//     */
+//    private void showProfileFragment() {
+//        mMySelfTabRl.setSelected(true);
+//        if (mMySelf2Fragment == null) {
+//            if (mHomeFragment != null && mHomeFragment.getCurrentUser() != null) {
+//                mMySelf2Fragment = MySelf2Fragment.newInstance(mHomeFragment.getCurrentUser());
+//            } else {
+//                mMySelf2Fragment = MySelf2Fragment.newInstance();
+//            }
+//            mTransaction.add(R.id.main_content_fl, mMySelf2Fragment, TAB_PROFILE_FRAGMENT);
+//        } else {
+//            mTransaction.show(mMySelf2Fragment);
+//
+//        }
+//    }
     /**
-     * 切换到关于我模块
+     * 切换到我的模块
      */
     private void showProfileFragment() {
         mMySelfTabRl.setSelected(true);
-        if (mMySelfFragment == null) {
-            if (mHomeFragment != null && mHomeFragment.getCurrentUser() != null) {
-                mMySelfFragment = MySelfFragment.newInstance(mHomeFragment.getCurrentUser());
-            } else {
-                mMySelfFragment = MySelfFragment.newInstance();
-            }
-            mTransaction.add(R.id.main_content_fl, mMySelfFragment, TAB_PROFILE_FRAGMENT);
+        if (mMySelf2Fragment == null) {
+            mMySelf2Fragment = new MySelf2Fragment();
+            mTransaction.add(R.id.main_content_fl,  mMySelf2Fragment, TAB_PROFILE_FRAGMENT);
         } else {
-            mTransaction.show(mMySelfFragment);
-
+            mTransaction.show(mMySelf2Fragment);
         }
     }
-
 
     /**
      * 显示指定的fragment，并且把对应的导航栏的icon设置成高亮状态
@@ -333,8 +344,8 @@ public class MainActivity extends BaseAppCompatActivity {
         if (mDiscoverFragment != null) {
             transaction.hide(mDiscoverFragment);
         }
-        if (mMySelfFragment != null) {
-            transaction.hide(mMySelfFragment);
+        if (mMySelf2Fragment != null) {
+            transaction.hide(mMySelf2Fragment);
         }
         mHomeTabRl.setSelected(false);
         mMessageTabRl.setSelected(false);

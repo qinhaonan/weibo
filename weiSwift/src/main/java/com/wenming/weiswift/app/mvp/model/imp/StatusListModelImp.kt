@@ -71,7 +71,6 @@ class StatusListModelImp : StatusListModel {
                             override fun onWeiboException(p0: WeiboException?) {
                                 myPullToRefreshListener.onWeiboException(p0!!)
                             }
-
                             override fun onComplete(p0: String?) {
                                 myPullToRefreshListener.onComplete(p0!!, responseInfo.result)
                             }

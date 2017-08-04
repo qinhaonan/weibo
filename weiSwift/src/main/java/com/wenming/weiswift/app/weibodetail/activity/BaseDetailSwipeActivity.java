@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -79,6 +80,9 @@ public abstract class BaseDetailSwipeActivity extends BaseSwipeActivity implemen
     private String post_id;
     public String comments_count;
     private boolean isRefresh=false;
+    private Button btn_collect;
+    private Button btn_share;
+    private Boolean isCollect=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,7 +90,22 @@ public abstract class BaseDetailSwipeActivity extends BaseSwipeActivity implemen
         setContentView(R.layout.messagefragment_base_layout);
         post_id = getIntent().getStringExtra("post_id");
         initCommentData();
-//        requsetCommentData();
+        initView();
+        mSwipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                getWeiBoCount();
+                mDetailActivityPresent.pullToRefreshData(mCurrentGroup, mStatus, mContext);
+            }
+        });
+//        FillContent.fillDetailButtonBar(mContext, mStatus, bottombar_retweet, bottombar_comment, bottombar_attitude);
+        FillContent.fillButtonBar(mContext,bottombar_comment,post_id);
+    }
+
+    private void initView() {
+        //        requsetCommentData();
+        btn_collect = (Button) findViewById(R.id.img_collect);
+        btn_share = (Button) findViewById(R.id.img_share);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.base_swipe_refresh_widget);
         bottombar_retweet = (LinearLayout) findViewById(R.id.bottombar_retweet);
         bottombar_comment = (LinearLayout) findViewById(R.id.bottombar_comment);
@@ -102,15 +121,76 @@ public abstract class BaseDetailSwipeActivity extends BaseSwipeActivity implemen
         mLastestComments = mStatus.comments_count;
         mLastestReposts = mStatus.reposts_count;
         mLastestAttitudes = mStatus.attitudes_count;
-        mSwipeRefreshLayout.post(new Runnable() {
+        btn_collect.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void run() {
-                getWeiBoCount();
-                mDetailActivityPresent.pullToRefreshData(mCurrentGroup, mStatus, mContext);
+            public void onClick(View v) {
+            btn_collect.setSelected(true);
+//                Log.d("ddd", "onClick: 收藏");
+//                收藏帖子或者取消收藏
+                if(!isCollect){
+                    collect();
+                    btn_collect.setSelected(true);
+                    isCollect=true;
+                }else {
+                    cancelCollect();
+                    btn_collect.setSelected(false);
+                    isCollect=false;
+                }
+
             }
         });
-//        FillContent.fillDetailButtonBar(mContext, mStatus, bottombar_retweet, bottombar_comment, bottombar_attitude);
-        FillContent.fillButtonBar(mContext,bottombar_comment,post_id);
+        btn_share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+    }
+    private void collect(){
+        RequestUtil.requestGet(Constants.ZHONGZHIWULIANG_REQUEST_URL+
+                "app=api&" +
+                "mod=Weiba&" +
+                "act=post_favorite&" +
+                "oauth_token=988b491a22040ef7634eb5b8f52e0986&" +
+                "oauth_token_secret=2a3d67f5f7bb03035e619518b364912e&" +
+                "id="+post_id, new RequestCallBack() {
+            @Override
+            public void onSuccess(ResponseInfo responseInfo) {
+                if (!((String) responseInfo.result).isEmpty()) {
+                    Log.d("tag", "onSuccess: ");
+                    Toast.makeText(mContext,"收藏成功",Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(mContext,"收藏失败",Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onFailure(HttpException e, String s) {
+                Toast.makeText(mContext,"收藏失败",Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void cancelCollect(){
+        RequestUtil.requestGet(Constants.ZHONGZHIWULIANG_REQUEST_URL+
+                "app=api&" +
+                "mod=Weiba&" +
+                "act=post_unfavorite&" +
+                "oauth_token=988b491a22040ef7634eb5b8f52e0986&" +
+                "oauth_token_secret=2a3d67f5f7bb03035e619518b364912e&" +
+                "id="+post_id, new RequestCallBack() {
+            @Override
+            public void onSuccess(ResponseInfo responseInfo) {
+                if (!((String) responseInfo.result).isEmpty()) {
+                    Toast.makeText(mContext,"取消收藏成功",Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(mContext,"取消收藏失败",Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onFailure(HttpException e, String s) {
+                Toast.makeText(mContext,"取消收藏失败",Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
     private void requsetCommentData(){
         String url=Constants.ZHONGZHIWULIANG_REQUEST_URL+"app=api&" +
@@ -165,6 +245,7 @@ public abstract class BaseDetailSwipeActivity extends BaseSwipeActivity implemen
         }
 
     }
+    //请求帖子下的所有评论
     private void initCommentData() {
         RequestUtil.requestGet(Constants.ZHONGZHIWULIANG_REQUEST_URL+
                         "app=api&" +

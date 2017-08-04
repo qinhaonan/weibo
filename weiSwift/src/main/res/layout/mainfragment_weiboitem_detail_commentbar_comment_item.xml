@@ -163,6 +163,17 @@
         android:layout_alignParentTop="true"
         android:visibility="invisible"
         android:src="@drawable/already_accept"/>
+    <Button
+        android:id="@+id/btn_adopt"
+        android:layout_width="60dp"
+        android:layout_height="30dp"
+        android:layout_marginRight="15dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:text="采纳"
+        style="@style/MyButtonStyle"
+        android:textColor="#d5d5d5"
+        android:background="@drawable/shape_adopt"/>
 </RelativeLayout>
 
 
