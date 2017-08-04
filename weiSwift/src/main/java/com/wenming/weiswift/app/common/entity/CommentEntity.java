@@ -44,6 +44,16 @@ public class CommentEntity {
     private String comment_id;
     private int storey;
     private AuthorInfoBean author_info;
+    private String status;
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getStatus() {
+
+        return status;
+    }
 
     public String getReply_id() {
         return reply_id;
