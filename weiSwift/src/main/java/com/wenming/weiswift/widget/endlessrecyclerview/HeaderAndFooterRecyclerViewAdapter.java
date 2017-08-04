@@ -8,15 +8,13 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.wenming.weiswift.R;
 import com.wenming.weiswift.app.home.activity.ExpertActivity;
 import com.wenming.weiswift.app.home.activity.QuestionActivity;
+import com.wenming.weiswift.app.myself.activity.MyWatchListActivity;
 
 import java.util.ArrayList;
-
-import uk.co.senab.photoview.log.LoggerDefault;
 
 import static com.wenming.library.upload.UploadService.TAG;
 
@@ -177,7 +175,7 @@ public class HeaderAndFooterRecyclerViewAdapter extends RecyclerView.Adapter<Rec
         if (viewType < TYPE_HEADER_VIEW + headerViewsCountCount) {
             Log.d(TAG, "onCreateViewHolder: 头部");
             if(mHeaderViews!=null){
-            return new ViewHolder(mHeaderViews.get(viewType - TYPE_HEADER_VIEW),parent.getContext());
+                return new ViewHolder(mHeaderViews.get(viewType - TYPE_HEADER_VIEW),parent.getContext());
             }
             return new ViewHolder(mHeaderViews.get(viewType - TYPE_HEADER_VIEW));
         } else if (viewType >= TYPE_FOOTER_VIEW && viewType < Integer.MAX_VALUE / 2) {
@@ -242,6 +240,7 @@ public class HeaderAndFooterRecyclerViewAdapter extends RecyclerView.Adapter<Rec
                     @Override
                     public void onClick(View v) {
                         context.startActivity(new Intent(context, ExpertActivity.class));
+//                        context.startActivity(new Intent(context, MyWatchListActivity.class));
                     }
                 });
             }

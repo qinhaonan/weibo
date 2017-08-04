@@ -1,5 +1,6 @@
 package com.wenming.weiswift.app.home.activity;
 
+import android.graphics.Color;
 import android.provider.ContactsContract;
 import android.support.v7.widget.RecyclerView;
 import android.content.Context;
@@ -94,6 +95,7 @@ public class QuestionActivity extends BaseSwipeActivity implements ImgListAdapte
                     bundle.putParcelable("weiBoCreateBean", weiboBean);
                     intent.putExtras(bundle);
                     startService(intent);
+
                 }
             }
         });
@@ -113,8 +115,12 @@ public class QuestionActivity extends BaseSwipeActivity implements ImgListAdapte
             public void afterTextChanged(Editable s) {
                 if (s.length()==0) {
                     isEmptyQuestion=true;
+                    btn_commit.setSelected(false);
+                    btn_commit.setTextColor(Color.parseColor("#c5c5c5"));
                 }else {
                     isEmptyQuestion=false;
+                    btn_commit.setSelected(true);
+                    btn_commit.setTextColor(Color.WHITE);
                 }
                 tv_question_num.setText(String.valueOf(s.length())+"/"+ Constants.NUMBER_OF_WORDS);
 

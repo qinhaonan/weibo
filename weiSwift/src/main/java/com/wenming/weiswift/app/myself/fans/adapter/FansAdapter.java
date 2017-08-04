@@ -1,12 +1,14 @@
 package com.wenming.weiswift.app.myself.fans.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -15,7 +17,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.wenming.weiswift.R;
 import com.wenming.weiswift.app.common.entity.Expert;
 import com.wenming.weiswift.app.common.entity.User;
-import com.wenming.weiswift.app.common.FillContent;
+import com.wenming.weiswift.app.common.entity.WatchListEntity;
+import com.wenming.weiswift.app.home.activity.ExpertDetailsActivity;
 import com.wenming.weiswift.utils.CropCircleTransformation;
 
 import java.util.ArrayList;
@@ -27,6 +30,7 @@ import java.util.List;
 public abstract class FansAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     private List<Expert.ExpertBean> mDatas = new ArrayList<Expert.ExpertBean>();
+    private ArrayList<WatchListEntity> mWatchListDatas ;
     private Context mContext;
     private View mView;
 
@@ -35,7 +39,10 @@ public abstract class FansAdapter extends RecyclerView.Adapter<ViewHolder> {
         this.mDatas = datas;
         this.mContext = context;
     }
-
+    public FansAdapter(ArrayList<WatchListEntity> datas, Context context) {
+        this.mWatchListDatas = datas;
+        this.mContext = context;
+    }
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mView = LayoutInflater.from(mContext).inflate(R.layout.profilefragment_follower_item, parent, false);
@@ -60,15 +67,35 @@ public abstract class FansAdapter extends RecyclerView.Adapter<ViewHolder> {
 //                followerLayoutClick(mDatas.get(position), position, ((FollowerViewHolder) holder).follwerIcon, ((FollowerViewHolder) holder).follwerText);
 //            }
 //        });
-        ((FollowerViewHolder) holder).followerName.setText(mDatas.get(position).getUname());
-        Glide.with(mContext)
-                .load(mDatas.get(position).getAvatar_middle())
-                .placeholder(R.drawable.loading)
-                .error(R.drawable.loading)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .bitmapTransform(new CropCircleTransformation(mContext))
-                .crossFade(1000)
-                .into(((FollowerViewHolder) holder).followerImg);
+        if(mDatas!=null&&mWatchListDatas==null){
+            ((FollowerViewHolder) holder).followerName.setText(mDatas.get(position).getUname());
+            Glide.with(mContext)
+                    .load(mDatas.get(position).getAvatar_middle())
+                    .placeholder(R.drawable.loading)
+                    .error(R.drawable.loading)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .bitmapTransform(new CropCircleTransformation(mContext))
+                    .crossFade(1000)
+                    .into(((FollowerViewHolder) holder).followerImg);
+        }else if (mWatchListDatas!=null){
+            ((FollowerViewHolder) holder).followerName.setText(mWatchListDatas.get(position).getUname());
+            Glide.with(mContext)
+                    .load(mWatchListDatas.get(position).getAvatar_middle())
+                    .placeholder(R.drawable.loading)
+                    .error(R.drawable.loading)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .bitmapTransform(new CropCircleTransformation(mContext))
+                    .crossFade(1000)
+                    .into(((FollowerViewHolder) holder).followerImg);
+            ((FollowerViewHolder) holder).ll_expert_profile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent= new Intent(mContext, ExpertDetailsActivity.class);
+                    mContext.startActivity(intent);
+                }
+            });
+        }
+
 
 
     }
@@ -77,11 +104,12 @@ public abstract class FansAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     @Override
     public int getItemCount() {
-        if (mDatas != null) {
+        if (mDatas != null&&mWatchListDatas==null) {
             return mDatas.size();
-        } else {
-            return 0;
+        } else if(mWatchListDatas!=null){
+            return mWatchListDatas.size();
         }
+        return 0;
     }
 
 
@@ -90,6 +118,9 @@ public abstract class FansAdapter extends RecyclerView.Adapter<ViewHolder> {
 //    }
     public void setExpertData(List<Expert.ExpertBean> data) {
         mDatas = data;
+    }
+    public void setmWatchListDatas(ArrayList<WatchListEntity> data) {
+        mWatchListDatas = data;
     }
 
     protected class FollowerViewHolder extends ViewHolder {
@@ -100,7 +131,7 @@ public abstract class FansAdapter extends RecyclerView.Adapter<ViewHolder> {
         public TextView profile_comefrom;
         public TextView follwerText;
         public RelativeLayout follower_layout;
-
+        public LinearLayout ll_expert_profile;
 
         public FollowerViewHolder(View view) {
             super(view);
@@ -111,6 +142,7 @@ public abstract class FansAdapter extends RecyclerView.Adapter<ViewHolder> {
             profile_comefrom = (TextView) view.findViewById(R.id.profile_comefrom);
             follwerText = (TextView) view.findViewById(R.id.follwer_relation_text);
             follower_layout = (RelativeLayout) view.findViewById(R.id.follow_layout);
+            ll_expert_profile=(LinearLayout)view.findViewById(R.id.ll_expert_profile);
         }
     }
 }

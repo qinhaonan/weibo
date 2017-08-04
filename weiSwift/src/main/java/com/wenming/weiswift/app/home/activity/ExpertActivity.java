@@ -67,7 +67,7 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
     private SpinnerPopWindow<String> mSpinnerPopWindow2;
     private List<String> list;
     private List<String> sortList;
-    private TextView tvValue;
+    private TextView tv_expert_type;
     private LinearLayout ll_expert;
     private TextView tv_sort;
     private List<Expert.ExpertBean> expertBeanList;
@@ -195,11 +195,11 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
     private void initPopUpWindow() {
 
         initData2();
-        tvValue = (TextView) findViewById(R.id.tv_expert_type);
+        tv_expert_type = (TextView) findViewById(R.id.tv_expert_type);
         ll_expert = (LinearLayout) findViewById(R.id.ll_expert);
         tv_sort = (TextView) findViewById(R.id.tv_sort);
         tv_sort.setOnClickListener(clickListener);
-        tvValue.setOnClickListener(clickListener);
+        tv_expert_type.setOnClickListener(clickListener);
         mSpinnerPopWindow2 = new SpinnerPopWindow<String>(this, sortList, itemClickListener2,true);
 
         mSpinnerPopWindow2.setOnDismissListener(dismissListener);
@@ -213,7 +213,6 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
                 case R.id.tv_expert_type:
                     mSpinnerPopWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
                     mSpinnerPopWindow.showAsDropDown(ll_expert);
-//                    setTextImage(R.mipmap.ic_launcher);
                     break;
                 case R.id.tv_sort:
                     mSpinnerPopWindow2.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
@@ -227,9 +226,11 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             mSpinnerPopWindow2.dismiss();
-            Toast.makeText(ExpertActivity.this, "点击了 排序:"+sortList.get(position) , Toast.LENGTH_LONG).show();
+            tv_sort.setText(sortList.get(position));
+//            Toast.makeText(ExpertActivity.this, "点击了 排序:"+sortList.get(position) , Toast.LENGTH_LONG).show();
         }
     };
+
     private PopupWindow.OnDismissListener dismissListener = new PopupWindow.OnDismissListener() {
         @Override
         public void onDismiss() {
@@ -263,7 +264,8 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         mSpinnerPopWindow.dismiss();
-                        Toast.makeText(ExpertActivity.this, "点击了"+list.get(position)+"专家:" , Toast.LENGTH_LONG).show();
+                        tv_expert_type.setText(list.get(position));
+//                        Toast.makeText(ExpertActivity.this, "点击了"+list.get(position)+"专家:" , Toast.LENGTH_LONG).show();
                         initExpertData(expertCategory.getCategory().get(position).getUser_official_category_id());
                     }
                 };

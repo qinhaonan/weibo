@@ -59,7 +59,7 @@
         <activity android:name=".app.home.activity.SearchActivity"/>
         <activity android:name=".app.home.activity.SearchResultActivity"/>
         <activity android:name=".app.message.comment.activity.CommentSwipeActivity" />
-
+        <activity android:name=".app.myself.activity.MyWatchListActivity"/>
         <activity android:name=".app.myself.myweibo.activity.MyWeiBoSwipeActivity" />
 
         <activity android:name=".app.discover.hotweibo.HotWeiBoSwipeActivity" />
