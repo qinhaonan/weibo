@@ -178,13 +178,17 @@ public class PostService extends Service {
         params.addBodyParameter("app","api");
         params.addBodyParameter("mod","WeiboStatuses");
         params.addBodyParameter("act","upload");
-        params.addBodyParameter("oauth_token","988b491a22040ef7634eb5b8f52e0986");
-//        params.addBodyParameter("oauth_token","553cb8005c5dff47cca58aabefd74de7");
+        params.addBodyParameter("oauth_token","52ee71b27bd89de1f558802a5b0378d6");
+//        params.addBodyParameter("oauth_token","988b491a22040ef7634eb5b8f52e0986");
         params.addBodyParameter("content",weiBoCreateBean.content);
-        params.addBodyParameter("oauth_token_secret","2a3d67f5f7bb03035e619518b364912e");
-//        params.addBodyParameter("oauth_token_secret","4dfa52f77ffe6d55fb1039fe70c70436");
+        params.addBodyParameter("oauth_token_secret","210ba54bf78f700c36653088fa00e705");
+//        params.addBodyParameter("oauth_token_secret","2a3d67f5f7bb03035e619518b364912e");
         params.addBodyParameter("form","2");
-        params.addBodyParameter("file",new File( weiBoCreateBean.selectImgList.get(0).getImageFile().getAbsolutePath()));
+        for (int i = 0; i <weiBoCreateBean.selectImgList.size() ; i++) {
+            params.addBodyParameter("file"+"["+i+"]",new File( weiBoCreateBean.selectImgList.get(i).getImageFile().getAbsolutePath()));
+        }
+//        params.addBodyParameter("file",new File( weiBoCreateBean.selectImgList.get(0).getImageFile().getAbsolutePath()));
+        params.addBodyParameter("XDEBUG_SESSION_START","17481");
         httpUtils.send(HttpRequest.HttpMethod.POST,Constants.ZHONGZHIWULIANG_REQUEST_URL ,params, new RequestCallBack<Object>() {
             @Override
             public void onSuccess(ResponseInfo<Object> responseInfo) {

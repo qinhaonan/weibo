@@ -22,6 +22,15 @@ public class Expert {
         }
         private List<String> tag;
 
+        public void setAge(String age) {
+            this.age = age;
+        }
+
+        public String getAge() {
+            return age;
+        }
+
+        private String age;
         public void setTag(List<String> tag) {
             this.tag = tag;
         }

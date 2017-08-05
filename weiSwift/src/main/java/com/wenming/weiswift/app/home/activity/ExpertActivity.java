@@ -241,7 +241,6 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
 
 
     private void initData() {
-
         RequestParams params = new RequestParams();
         params.addBodyParameter("app", "api");
         params.addBodyParameter("mod", "Weiba");

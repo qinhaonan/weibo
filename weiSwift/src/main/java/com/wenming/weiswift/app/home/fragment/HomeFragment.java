@@ -54,6 +54,7 @@ import com.wenming.weiswift.app.home.weiboitem.TimelineArrowWindow;
 import com.wenming.weiswift.app.home.widget.GroupPopWindow;
 import com.wenming.weiswift.app.home.widget.IGroupItemClick;
 import com.wenming.weiswift.app.login.Constants;
+import com.wenming.weiswift.app.login.fragment.post.bean.WeiBoCreateBean;
 import com.wenming.weiswift.app.mvp.presenter.HomeFragmentPresent;
 import com.wenming.weiswift.app.mvp.presenter.imp.HomeFragmentPresentImp;
 import com.wenming.weiswift.app.mvp.view.HomeFragmentView;
@@ -69,6 +70,7 @@ import com.wenming.weiswift.widget.endlessrecyclerview.weight.LoadingFooter;
 import net.lucode.hackware.magicindicator.MagicIndicator;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
 
+import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -156,7 +158,7 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
 //        rl_gridview = (RelativeLayout) vp_View.findViewById(R.id.rl_gridview);
         viewPager = (ViewPager) homeHeadView.findViewById(R.id.vp_channel);
         btn_search= (Button) homeHeadView.findViewById(R.id.btn_search);
-        initData2();
+//        initData2();
         initView();
         //屏蔽tittle的点击事件。
         //  initGroupWindows();
@@ -233,6 +235,33 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
 
 
     }
+    private void upLoadd(WeiBoCreateBean weiBoCreateBean) {
+        RequestParams params = new RequestParams();
+        HttpUtils httpUtils = new HttpUtils();
+        params.addBodyParameter("app","api");
+        params.addBodyParameter("mod","WeiboStatuses");
+        params.addBodyParameter("act","upload");
+        params.addBodyParameter("oauth_token","52ee71b27bd89de1f558802a5b0378d6");
+//        params.addBodyParameter("oauth_token","988b491a22040ef7634eb5b8f52e0986");
+        params.addBodyParameter("content",weiBoCreateBean.content);
+        params.addBodyParameter("oauth_token_secret","210ba54bf78f700c36653088fa00e705");
+//        params.addBodyParameter("oauth_token_secret","2a3d67f5f7bb03035e619518b364912e");
+        params.addBodyParameter("form","2");
+        params.addBodyParameter("file",new File( weiBoCreateBean.selectImgList.get(0).getImageFile().getAbsolutePath()));
+        params.addBodyParameter("XDEBUG_SESSION_START","17481");
+        httpUtils.send(HttpRequest.HttpMethod.POST,Constants.ZHONGZHIWULIANG_REQUEST_URL ,params, new RequestCallBack<Object>() {
+            @Override
+            public void onSuccess(ResponseInfo<Object> responseInfo) {
+                Log.d("PPPP", "onSuccess: "+"成功了"+responseInfo.result);
+            }
+
+            @Override
+            public void onFailure(HttpException e, String s) {
+                Log.d("PPPP", "onFailure: "+s);
+            }
+        });
+    }
+
     //如果登录,获取关注的微吧
     private void initData2(){
         RequestParams params = new RequestParams();

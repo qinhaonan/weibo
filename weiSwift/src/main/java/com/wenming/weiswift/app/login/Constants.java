@@ -77,7 +77,8 @@ public interface Constants {
 
     //URL
 //    public static final String ZHONGZHIWULIANG_REQUEST_URL="http://192.168.1.176/thinksns_v3.0/index.php?";
+    public static final String ZHONGZHIWULIANG_REQUEST_URL="http://192.168.1.227/thinksns_v3.0/index.php?";
 //    public static final String ZHONGZHIWULIANG_REQUEST_URL="http://192.168.2.108/thinksns_v3.0/index.php?";
-    public static final String ZHONGZHIWULIANG_REQUEST_URL="http://192.168.1.86/thinksns_v3.0/index.php?";
+//    public static final String ZHONGZHIWULIANG_REQUEST_URL="http://192.168.1.86/thinksns_v3.0/index.php?";
 
 }

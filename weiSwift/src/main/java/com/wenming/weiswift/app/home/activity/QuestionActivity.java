@@ -84,7 +84,7 @@ public class QuestionActivity extends BaseSwipeActivity implements ImgListAdapte
         btn_commit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: 提交");
+                Toast.makeText(mContext,"点击提交",Toast.LENGTH_SHORT).show();
                 if (isEmptyName||isEmptyQuestion) {
                     Toast.makeText(mContext,"文字不能为空",Toast.LENGTH_LONG).show();
                 }else if(mSelectImgList!=null){
