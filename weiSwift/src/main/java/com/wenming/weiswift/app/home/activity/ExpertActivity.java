@@ -71,6 +71,7 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
     private LinearLayout ll_expert;
     private TextView tv_sort;
     private List<Expert.ExpertBean> expertBeanList;
+    private String strExpertType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,9 +151,9 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
 //        mAdapter.setData(userlist);
 //        mHeaderAndFooterRecyclerViewAdapter.notifyDataSetChanged();
     }
-    public void update(List<Expert.ExpertBean> expertBeen){
+    public void update(List<Expert.ExpertBean> expertBeen,String strExpertType){
         expertBeanList=expertBeen;
-        mAdapter.setExpertData(expertBeen);
+        mAdapter.setExpertData(expertBeen,strExpertType);
         mHeaderAndFooterRecyclerViewAdapter.notifyDataSetChanged();
     }
 
@@ -264,9 +265,10 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         mSpinnerPopWindow.dismiss();
-                        tv_expert_type.setText(list.get(position));
+                        strExpertType = list.get(position);
+                        tv_expert_type.setText(strExpertType);
 //                        Toast.makeText(ExpertActivity.this, "点击了"+list.get(position)+"专家:" , Toast.LENGTH_LONG).show();
-                        initExpertData(expertCategory.getCategory().get(position).getUser_official_category_id());
+                        initExpertData(expertCategory.getCategory().get(position).getUser_official_category_id(),strExpertType);
                     }
                 };
                 mSpinnerPopWindow = new SpinnerPopWindow<String>(ExpertActivity.this, list, itemClickListener,false);
@@ -286,7 +288,7 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
         sortList.add("采纳数");
         sortList.add("智能排序");
     }
-    private void initExpertData(String cid){
+    private void initExpertData(String cid, final String strExpertType){
 
         HttpUtils httpUtils = new HttpUtils();
         httpUtils.send(HttpRequest.HttpMethod.POST, Constants.ZHONGZHIWULIANG_REQUEST_URL+
@@ -309,7 +311,7 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
                     expertBeanList.add(v);
                 }
                 Log.d(TAG, "onSuccess: "+expertBeanList.get(0));
-                update(expertBeanList);
+                update(expertBeanList,strExpertType);
             }
 
             @Override

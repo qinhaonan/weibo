@@ -26,6 +26,7 @@ import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -185,7 +186,7 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
         });
 
     }
-
+//未登录获取微吧列表
     private void initData() {
         RequestParams params = new RequestParams();
             params.addBodyParameter("app", "api");
@@ -238,37 +239,39 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
         params.addBodyParameter("app", "api");
         params.addBodyParameter("mod", "Tom");
         params.addBodyParameter("act", "get_follow_weiba");
-//            params.addBodyParameter("oauth_token", "553cb8005c5dff47cca58aabefd74de7");
         params.addBodyParameter("oauth_token", "988b491a22040ef7634eb5b8f52e0986");
-//            params.addBodyParameter("oauth_token_secret", "4dfa52f77ffe6d55fb1039fe70c70436");
         params.addBodyParameter("oauth_token_secret", "2a3d67f5f7bb03035e619518b364912e");
         HttpUtils httpUtils = new HttpUtils();
         httpUtils.send(HttpRequest.HttpMethod.POST, Constants.ZHONGZHIWULIANG_REQUEST_URL, params, new RequestCallBack<Object>() {
             @Override
             public void onSuccess(ResponseInfo<Object> responseInfo) {
                 Log.d("PPPP", "onSuccess: " + "成" + responseInfo.result);
-                Type type = new TypeToken<List<Crop>>() {
-                }.getType();
-                Gson gson = new Gson();
-                cropList = gson.fromJson((String) responseInfo.result, type);
-                int count = 0;
-                if (cropList.size()<5){
-                    RelativeLayout.LayoutParams params= (RelativeLayout.LayoutParams) viewPager.getLayoutParams();
-                    params.height=DensityUtil.dp2px(mContext,100);
-                    viewPager.setLayoutParams(params);
-                }else {
-                    RelativeLayout.LayoutParams params= (RelativeLayout.LayoutParams) viewPager.getLayoutParams();
-                    params.height=DensityUtil.dp2px(mContext,170);
-                    viewPager.setLayoutParams(params);
-                }
-                if (cropList.size() % 9 == 0) {
-                    count = cropList.size() / 9;
+                if (responseInfo.result.equals("[]")) {
+                    Toast.makeText(mContext,"请求关注作物列表失败",Toast.LENGTH_SHORT).show();
                 } else {
-                    count = cropList.size() / 9 +1;
+                    Type type = new TypeToken<List<Crop>>() {
+                    }.getType();
+                    Gson gson = new Gson();
+                    cropList = gson.fromJson((String) responseInfo.result, type);
+                    int count = 0;
+                    if (cropList.size() < 5) {
+                        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) viewPager.getLayoutParams();
+                        params.height = DensityUtil.dp2px(mContext, 100);
+                        viewPager.setLayoutParams(params);
+                    } else {
+                        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) viewPager.getLayoutParams();
+                        params.height = DensityUtil.dp2px(mContext, 170);
+                        viewPager.setLayoutParams(params);
+                    }
+                    if (cropList.size() % 9 == 0) {
+                        count = cropList.size() / 9;
+                    } else {
+                        count = cropList.size() / 9 + 1;
+                    }
+                    initGridView(count);
+                    viewPager.setAdapter(mGridPagerAdapter);
+                    initMagicIndicator1(count);
                 }
-                initGridView(count);
-                viewPager.setAdapter(mGridPagerAdapter);
-                initMagicIndicator1(count);
             }
 
             @Override

@@ -1,6 +1,7 @@
 package com.wenming.weiswift.app.common.entity;
 
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by qhn on 2017/7/28.
@@ -18,6 +19,16 @@ public class Expert {
     public static class ExpertBean {
         public void setUname(String uname) {
             this.uname = uname;
+        }
+        private List<String> tag;
+
+        public void setTag(List<String> tag) {
+            this.tag = tag;
+        }
+
+        public List<String> getTag() {
+
+            return tag;
         }
 
         public String getUname() {
@@ -123,6 +134,8 @@ public class Expert {
 //        private String space_link;
 //        private String space_link_no;
         public static class UserGroup {
+
+
             public static class UserGroupBean {
                 /**
                  * user_group_id : 5
