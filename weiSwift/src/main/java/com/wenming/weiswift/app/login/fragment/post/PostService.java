@@ -185,7 +185,7 @@ public class PostService extends Service {
 //        params.addBodyParameter("oauth_token_secret","2a3d67f5f7bb03035e619518b364912e");
         params.addBodyParameter("form","2");
         for (int i = 0; i <weiBoCreateBean.selectImgList.size() ; i++) {
-            params.addBodyParameter("file"+"["+i+"]",new File( weiBoCreateBean.selectImgList.get(i).getImageFile().getAbsolutePath()));
+            params.addBodyParameter("file"+i,new File( weiBoCreateBean.selectImgList.get(i).getImageFile().getAbsolutePath()));
         }
 //        params.addBodyParameter("file",new File( weiBoCreateBean.selectImgList.get(0).getImageFile().getAbsolutePath()));
         params.addBodyParameter("XDEBUG_SESSION_START","17481");

@@ -195,7 +195,7 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
     //    专家类型 和智能排序
     private void initPopUpWindow() {
 
-        initData2();
+        initExpertData();
         tv_expert_type = (TextView) findViewById(R.id.tv_expert_type);
         ll_expert = (LinearLayout) findViewById(R.id.ll_expert);
         tv_sort = (TextView) findViewById(R.id.tv_sort);
@@ -281,7 +281,7 @@ public class ExpertActivity extends BaseSwipeActivity implements FollowActivityV
         });
     }
 
-    private void initData2() {
+    private void initExpertData() {
         sortList = new ArrayList<String>();
         sortList.add("距离");
         sortList.add("采纳数");

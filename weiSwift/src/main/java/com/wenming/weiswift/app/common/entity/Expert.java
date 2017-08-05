@@ -21,6 +21,55 @@ public class Expert {
             this.uname = uname;
         }
         private List<String> tag;
+        private String intro;
+        private String age;
+        private String adopt_count;
+        public class UserData{
+            private String feed_count;
+            private String following_count;
+            private String weibo_count;
+
+            public void setFeed_count(String feed_count) {
+                this.feed_count = feed_count;
+            }
+
+            public void setFollowing_count(String following_count) {
+                this.following_count = following_count;
+            }
+
+            public void setWeibo_count(String weibo_count) {
+                this.weibo_count = weibo_count;
+            }
+
+            public String getFeed_count() {
+                return feed_count;
+            }
+
+            public String getFollowing_count() {
+                return following_count;
+            }
+
+            public String getWeibo_count() {
+                return weibo_count;
+            }
+        }
+
+        public void setAdopt_count(String adopt_count) {
+            this.adopt_count = adopt_count;
+        }
+
+        public String getAdopt_count() {
+            return adopt_count;
+        }
+
+        public String getIntro() {
+            return intro;
+        }
+
+        public void setIntro(String intro) {
+            this.intro = intro;
+        }
+
 
         public void setAge(String age) {
             this.age = age;
@@ -30,7 +79,6 @@ public class Expert {
             return age;
         }
 
-        private String age;
         public void setTag(List<String> tag) {
             this.tag = tag;
         }
